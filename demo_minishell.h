@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/31 17:14:25 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/01 15:24:43 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,8 @@
 	char *tgoto(const char *cap, int col, int row);
 	int tputs(const char *str, int affcnt, int (*putc)(int));
 */
+
+void	sig_handler(int signo);
+void	sig_fork_handler(int signo);
 
 #endif
