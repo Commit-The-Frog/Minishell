@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 06:58:15 by macbookpro        #+#    #+#             */
-/*   Updated: 2024/01/03 08:26:57 by macbookpro       ###   ########.fr       */
+/*   Updated: 2024/01/03 08:34:40 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,4 @@ void    print_logo(void)
 	printf("%s║                                                                                                          ║%s\n", yellow, white);
 	printf("%s╚══════════════════════════════════════════════════════════════════════════════════════════════════════════╝%s\n", yellow, white);
 	printf("\n");
-}
-
-int main(void)
-{
-    print_logo();
 }
