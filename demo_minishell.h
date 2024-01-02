@@ -106,6 +106,8 @@
 	int tputs(const char *str, int affcnt, int (*putc)(int));
 */
 
+void	sig_handler(int signo);
+void	sig_fork_handler(int signo);
 void	get_more_input(char **origin);
 void	tokenize(t_list **list, char *str);
 

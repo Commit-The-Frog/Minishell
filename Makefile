@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := all
 SRCS = \
-		demo_main.c
+		demo_main.c sighandler.c
 SRCS_BONUS = \
 
 LIBFT_DIR = ./libft
