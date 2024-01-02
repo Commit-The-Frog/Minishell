@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 16:15:29 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/02 18:20:47 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,8 @@
 	char *tgoto(const char *cap, int col, int row);
 	int tputs(const char *str, int affcnt, int (*putc)(int));
 */
+
+void	get_more_input(char **origin);
+void	tokenize(t_list **list, char *str);
 
 #endif

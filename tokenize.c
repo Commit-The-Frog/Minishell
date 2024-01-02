@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/02 17:53:15 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/02 20:28:39 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ char	is_operator(char c)
 int	is_comb_operator(char c1, char c2)
 {
 	const char	*control_operator_double[2] = {"<<", ">>"};
-
-	int	i;
+	int			i;
 	
 	i = 0;
 	while (i < 2)
@@ -73,11 +72,12 @@ void	tokenize(t_list **list, char *str)
 
 	start = 0;
 	end = 0;
-	end++;
 	while (str[end])
 	{
 		if (str[end] == '\'')
 		{
+			make_token(list, str, start, end);
+			start = end;
 			end++;
 			while (str[end] && str[end] != '\'')
 				end++;
@@ -86,6 +86,8 @@ void	tokenize(t_list **list, char *str)
 		}
 		else if (str[end] == '\"')
 		{
+			make_token(list, str, start, end);
+			start = end;
 			end++;
 			while (str[end] && str[end] != '\"')
 				end++;
@@ -94,33 +96,11 @@ void	tokenize(t_list **list, char *str)
 		}
 		else if (str[end] == ' ')
 		{
-			if (str[end - 1] != '\'' && str[end - 1] != '\"' && str[end - 1] != ' ')
+			if (end >= 1 && str[end - 1] != '\'' && str[end - 1] != '\"' && str[end - 1] != ' ')
 				make_token(list, str, start, end);
 			start = end + 1;
 		}
 		end++;
 	}
 	make_token(list, str, start, end);
-}
-
-int	main(int argc, char **argv)
-{
-	int		i;
-	t_list	*token_list;
-	t_list	*cur;
-
-	i = 0;
-	if (argc < 2)
-		return (0);
-	tokenize(&token_list, argv[1]);
-	cur = token_list;
-	i = 0;
-	while (cur)
-	{
-		printf("[%s] ", (char *)cur->content);
-		i++;
-		cur = cur->next;
-	}
-	printf("\n");
-	return (0);
 }
