@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   mini_exec.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 20:57:58 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/02 22:12:38 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINI_EXEC_H
 # define MINI_EXEC_H
 
-# include "demo_minishell.h"
+# include "minishell.h"
 
 typedef struct	s_redirect_node
 {

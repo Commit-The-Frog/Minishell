@@ -6,11 +6,11 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/02 21:55:48 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/02 22:12:53 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "demo_minishell.h"
+#include "minishell.h"
 
 int	check_quote(char *str)
 {
@@ -68,6 +68,7 @@ int	main(void)
 	t_list	*cur;
 
 	// atexit(check_leak);
+	printf("\033[0;32m");
 	origin = readline("minishell> ");
 	get_more_input(&origin);
 	tokenize(&token_list, origin);
@@ -79,5 +80,6 @@ int	main(void)
 		cur = cur->next;
 	}
 	printf("\n");
+	printf("\033[0m");
 	free(origin);
 }

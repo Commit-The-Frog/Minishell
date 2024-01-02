@@ -6,11 +6,11 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/02 21:53:51 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/02 22:13:00 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "demo_minishell.h"
+#include "minishell.h"
 
 char	is_operator(char c)
 {

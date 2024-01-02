@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sighandelr.c                                       :+:      :+:    :+:   */
+/*   sighandler.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:24:02 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/01 15:25:43 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/02 22:13:08 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "demo_minishell.h"
+#include "minishell.h"
 
 void	sig_handler(int signo)
 {
