@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 15:49:11 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/02 20:57:58 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,13 @@ typedef struct s_dict
 {
 	char			*key;
 	char			*value;
+	char			*env;
+	struct s_dict	*next;
 }	t_dict;
 
+char	**generate_envp(t_dict *env_dict);
+t_dict	*dict_init(char	**envp);
+void	add_node_back(t_dict **list, char *key, char *value);
+t_dict	*get_node_with_key(t_dict *list, char *key);
+void	free_double_ptr(char **ptr);
 #endif
