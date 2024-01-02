@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/02 20:06:17 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/02 21:55:48 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ int	main(void)
 	cur = token_list;
 	while (cur)
 	{
-		printf("[%s] ", (char *)cur->content);
+		if (ft_strlen((char *)cur->content) > 0)
+			printf("[%s] ", (char *)cur->content);
 		cur = cur->next;
 	}
 	printf("\n");

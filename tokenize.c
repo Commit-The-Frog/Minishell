@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/02 20:28:39 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/02 21:53:51 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	is_comb_operator(char c1, char c2)
 	while (i < 2)
 	{
 		if (c1 == control_operator_double[i][0] && c2 == control_operator_double[i][1] || \
-			c2 == control_operator_double[i][1] && c2 == control_operator_double[i][0])
+			c2 == control_operator_double[i][1] && c1 == control_operator_double[i][0])
 			return (1);
 		i++;
 	}
@@ -74,7 +74,29 @@ void	tokenize(t_list **list, char *str)
 	end = 0;
 	while (str[end])
 	{
-		if (str[end] == '\'')
+		if (end >= 1 && !is_operator(str[end]) && is_operator(str[end - 1]))
+		{
+			make_token(list, str, start, end);
+			start = end;
+		}
+		if (end >= 1 && is_operator(str[end]) && !is_operator(str[end - 1]))
+		{
+			make_token(list, str, start, end);
+			start = end;
+		}
+		else if (end >= 1 && is_operator(str[end]) && !is_comb_operator(str[end], str[end - 1]))
+		{
+			make_token(list, str, start, end);
+			start = end;
+		}
+		else if (end >=1 && is_comb_operator(str[end], str[end - 1]))
+		{
+			make_token(list, str, start, ++end);
+			start = end;
+		}
+		else if (str[end] == '#')
+			break;
+		else if (str[end] == '\'')
 		{
 			make_token(list, str, start, end);
 			start = end;
