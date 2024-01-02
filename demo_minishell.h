@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   demo_minishell.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/31 17:14:25 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/02 18:20:47 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEMO_MINISHELL_H
 # define DEMO_MINISHELL_H
 
-# include "libft.h"
+# include "libft/libft.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -105,5 +105,8 @@
 	char *tgoto(const char *cap, int col, int row);
 	int tputs(const char *str, int affcnt, int (*putc)(int));
 */
+
+void	get_more_input(char **origin);
+void	tokenize(t_list **list, char *str);
 
 #endif
