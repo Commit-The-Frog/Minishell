@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 11:44:26 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:04:38 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,13 +128,58 @@ void	redirect_file(t_redirect_node *redirect)
 		redirect_file(redirect->right);
 }
 
+int	run_builtin_cmds(char *bin_name)
+{
+	const char	*builtins[7] = \
+		{"echo", "cd", "pwd", "export", "unset", "env", "exit"};
+	int			idx;
+
+	idx = 0;
+	while (idx < 7)
+	{
+		if (ft_strncmp(builtins[idx], bin_name, ft_strlen(bin_name) + 1) == 0)
+			break;
+		idx++;
+	}
+	// builtin cmd has to be run
+	if (idx == 7)
+		return (0);
+	return (1);
+}
+
+char	*get_bin_path(char	*bin_name)
+{
+	char	*bin_path;
+	char	*path_env;
+	char	**path_list;
+	char	*tmp;
+
+	path_env = getenv("PATH");
+	if (run_builtin_cmds(bin_name))
+		return (NULL);
+	if (!path_env)
+	path_list = ft_split(path_env, ':');
+	if (!path_list)
+		exit(EXIT_FAILURE); // malloc error
+}
+
 void	execute_simple_cmd(t_simple_cmd_node *simple_cmd)
 {
-	execve("/bin/cat", NULL, NULL);
+	char	*bin_path;
+
+	if (!simple_cmd || !simple_cmd->argv)
+	{
+		execve("/bin/cat", NULL, NULL);
+		return ;
+	}
+	bin_path = get_bin_path(simple_cmd->argv[0]);
+	// execve(bin_path, simple_cmd->argv, simple_cmd->envp);
 }
 
 void	execute_child(t_cmd_node *cmd, int	*pipe_fd)
 {
+	if (!cmd)
+		return ;
 	if (pipe_fd[0] >= 0 && pipe_fd[1] >= 0)
 	{
 		close(pipe_fd[0]);
@@ -142,12 +187,15 @@ void	execute_child(t_cmd_node *cmd, int	*pipe_fd)
 			exit(EXIT_FAILURE); // dup2 error
 		close(pipe_fd[1]);
 	}
-	redirect_file(cmd->redirect);
+	if (cmd->redirect)
+		redirect_file(cmd->redirect);
 	execute_simple_cmd(cmd->simple_cmd);
 }
 
 void	heredoc_sub_preprocess(t_redirect_node *redirect, int *cnt)
 {
+	if (!redirect)
+		return ;
 	if (redirect->type == T_HEREDOC)
 	{
 		redirect_heredoc(&redirect->file_name, *cnt);
@@ -259,18 +307,19 @@ int	main()
 	head = (t_pipe_node *)malloc(sizeof(t_pipe_node));
 	head->cmd = (t_cmd_node *)malloc(sizeof(t_cmd_node));
 	head->cmd->simple_cmd = NULL;
-	head->cmd->redirect = create_redirect_node("EOF1", T_HEREDOC);
-	head->cmd->redirect->left = create_redirect_node("EOF2", T_HEREDOC);
-	head->cmd->redirect->right = create_redirect_node("outfile1", T_OUTPUT);
+	head->cmd->redirect = NULL;
+	// head->cmd->redirect = create_redirect_node("EOF1", T_HEREDOC);
+	// head->cmd->redirect->left = create_redirect_node("EOF2", T_HEREDOC);
+	// head->cmd->redirect->right = create_redirect_node("outfile1", T_OUTPUT);
 
 	head->next_pipe = (t_pipe_node *)malloc(sizeof(t_pipe_node));
 	head->next_pipe->cmd = (t_cmd_node *)malloc(sizeof(t_cmd_node));
 	head->next_pipe->cmd->simple_cmd = NULL;
+	head->next_pipe->cmd->redirect = NULL;
 	// head->next_pipe->cmd->redirect = create_redirect_node("EOF1", T_HEREDOC);
 	// head->next_pipe->cmd->redirect->left = create_redirect_node("EOF2", T_HEREDOC);
-	head->next_pipe->cmd->redirect = create_redirect_node("outfile2", T_OUTPUT);
+	// head->next_pipe->cmd->redirect = create_redirect_node("outfile2", T_APPEND);
 	head->next_pipe->next_pipe = NULL;
-
 	execute_main(head);
 	exit(EXIT_SUCCESS);
 }

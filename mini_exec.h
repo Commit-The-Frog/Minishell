@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 11:44:13 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/02 15:49:11 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,11 @@ typedef enum	e_redirect_type
 	T_APPEND,
 	T_HEREDOC
 }	t_redirect_type;
+
+typedef struct s_dict
+{
+	char			*key;
+	char			*value;
+}	t_dict;
 
 #endif
