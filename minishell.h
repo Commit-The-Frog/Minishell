@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   demo_minishell.h                                   :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 18:20:47 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/03 14:17:11 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,61 @@
 	int tputs(const char *str, int affcnt, int (*putc)(int));
 */
 
+    // E_TYPE_DOUBLE_AMPERSAND,
+    // E_TYPE_BRACKET,
+    // E_TYPE_REDIR_ARG_HEREDOC_QUOTED,
+	
+enum e_token_type {
+    E_TYPE_AMPERSAND = 0,
+    E_TYPE_DOUBLE_AMPERSAND,
+    E_TYPE_DOUBLE_PIPE,
+    E_TYPE_PIPE,
+    E_TYPE_SIMPLE_CMD,
+    E_TYPE_REDIR_APPEND,
+    E_TYPE_REDIR_HEREDOC,
+    E_TYPE_REDIR_RIGHT,
+	E_TYPE_REDIR_LEFT,
+    E_TYPE_WHITESPACE,
+    E_TYPE_DEFAULT,
+	E_TYPE_SEMICOLON
+}	t_token_type;
+
+typedef struct	s_token
+{
+	int		type;
+	char	*str;
+}	t_token;
+
+typedef struct	s_redirect_node
+{
+	int						type;
+	char					*file_name;
+	struct s_redirect_node	*left;
+	struct s_redirect_node	*right;
+}	t_redirect_node;
+
+typedef struct	s_simple_cmd_node
+{
+	char	*path;
+	char	**argv;
+}	t_simple_cmd_node;
+
+typedef struct	s_cmd_node
+{
+	t_redirect_node		*redirect;
+	t_simple_cmd_node	*simple_cmd;
+}	t_cmd_node;
+
+typedef struct	s_pipe_node
+{
+	t_cmd_node			*cmd;
+	struct s_pipe_node	*next_pipe;
+}	t_pipe_node;
+
 void	sig_handler(int signo);
 void	sig_fork_handler(int signo);
 void	get_more_input(char **origin);
 void	tokenize(t_list **list, char *str);
+void    print_logo(void);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dequote.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/02 22:12:53 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/03 14:02:36 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void	get_more_input(char **origin)
 	}
 }
 
-
 void	check_leak(void)
 {
 	system("leaks a.out");
@@ -68,18 +67,17 @@ int	main(void)
 	t_list	*cur;
 
 	// atexit(check_leak);
-	printf("\033[0;32m");
+	print_logo();
 	origin = readline("minishell> ");
 	get_more_input(&origin);
 	tokenize(&token_list, origin);
 	cur = token_list;
 	while (cur)
 	{
-		if (ft_strlen((char *)cur->content) > 0)
-			printf("[%s] ", (char *)cur->content);
+		if (ft_strlen(((t_token *)cur->content)->str) > 0)
+			printf("[%s|%u] ", ((t_token *)cur->content)->str, (unsigned int)((t_token *)cur->content)->type);
 		cur = cur->next;
 	}
 	printf("\n");
-	printf("\033[0m");
 	free(origin);
 }

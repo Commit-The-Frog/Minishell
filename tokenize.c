@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/02 22:13:00 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/03 14:29:51 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ char	is_operator(char c)
 
 int	is_comb_operator(char c1, char c2)
 {
-	const char	*control_operator_double[2] = {"<<", ">>"};
+	const char	*control_operator_double[4] = {"<<", ">>", "||", "&&"};
 	int			i;
 	
 	i = 0;
-	while (i < 2)
+	while (i < 4)
 	{
 		if (c1 == control_operator_double[i][0] && c2 == control_operator_double[i][1] || \
 			c2 == control_operator_double[i][1] && c1 == control_operator_double[i][0])
@@ -51,18 +51,51 @@ int	is_comb_operator(char c1, char c2)
 	return (0);
 }
 
+int	get_type(t_token *token)
+{
+	char	*str;
+
+	str = token->str;
+	if (ft_strlen(str) == 1 && !ft_strncmp(str, "|", 1))
+		return (E_TYPE_PIPE);
+	else if (ft_strlen(str) == 1 && !ft_strncmp(str, "&", 1))
+		return (E_TYPE_AMPERSAND);
+	else if (ft_strlen(str) == 1 && !ft_strncmp(str, ";", 1))
+		return (E_TYPE_SEMICOLON);
+	else if (ft_strlen(str) == 1 && !ft_strncmp(str, "<", 1))
+		return (E_TYPE_REDIR_LEFT);
+	else if (ft_strlen(str) == 1 && !ft_strncmp(str, ">", 1))
+		return (E_TYPE_REDIR_RIGHT);
+	else if (ft_strlen(str) == 2 && !ft_strncmp(str, ">>", 2))
+		return (E_TYPE_REDIR_APPEND);
+	else if (ft_strlen(str) == 2 && !ft_strncmp(str, "<<", 2))
+		return (E_TYPE_REDIR_HEREDOC);
+	else if (ft_strlen(str) == 2 && !ft_strncmp(str, "&&", 2))
+		return (E_TYPE_DOUBLE_AMPERSAND);
+	else if (ft_strlen(str) == 2 && !ft_strncmp(str, "||", 2))
+		return (E_TYPE_DOUBLE_PIPE);
+	else
+		return (E_TYPE_SIMPLE_CMD);
+}
+
 void	make_token(t_list **list, char *str, int start, int end)
 {
-	t_list	*token;
-	char	*substr;
+	t_token			*token;
+	t_list			*new;
+	char			*substr;
 
 	substr = ft_substr(str, start, end - start);
 	if (str == NULL)
 		exit(EXIT_FAILURE);
-	token = ft_lstnew((void *)substr);
+	token = (t_token *)ft_calloc(1, sizeof(t_token));
 	if (token == NULL)
 		exit(EXIT_FAILURE);
-	ft_lstadd_back(list, token);
+	token->str = substr;
+	token->type = get_type(token);
+	new = ft_lstnew((void *)token);
+	if (new == NULL)
+		exit(EXIT_FAILURE);
+	ft_lstadd_back(list, new);
 }
 
 void	tokenize(t_list **list, char *str)
@@ -120,7 +153,7 @@ void	tokenize(t_list **list, char *str)
 		{
 			if (end >= 1 && str[end - 1] != '\'' && str[end - 1] != '\"' && str[end - 1] != ' ')
 				make_token(list, str, start, end);
-			start = end + 1;
+			start = end;
 		}
 		end++;
 	}
