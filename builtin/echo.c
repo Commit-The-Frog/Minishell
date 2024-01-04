@@ -1,43 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/02 18:17:51 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 12:23:53 by minjacho         ###   ########.fr       */
+/*   Created: 2024/01/04 11:47:43 by minjacho          #+#    #+#             */
+/*   Updated: 2024/01/04 15:14:41 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_exec.h"
 
-void	free_double_ptr(char **lists)
+int	ft_echo(char **argv, t_dict **env_dict)
 {
+	int	argc;
+	int	n_flag;
 	int	idx;
 
-	idx = 0;
-	while (lists[idx])
+	argc = 0;
+	n_flag = 0;
+	idx = 1;
+	while (argv[argc])
+		argc++;
+	if (argc > 1 && ft_strcmp(argv[1], "-n") == 0)
+		n_flag = 1;
+	if (n_flag)
+		idx++;
+	while (idx < argc)
 	{
-		free(lists[idx]);
+		write(STDIN_FILENO, argv[idx], ft_strlen(argv[idx]));
 		idx++;
 	}
-	free(lists);
-}
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	unsigned char	*c1;
-	unsigned char	*c2;
-
-	c1 = (unsigned char *)s1;
-	c2 = (unsigned char *)s2;
-	while (*c1 && *c2)
-	{
-		if (*c1 != *c2)
-			return (*c1 - *c2);
-		c1++;
-		c2++;
-	}
-	return (*c1 - *c2);
+	if (!n_flag)
+		write(STDIN_FILENO, "\n", 1);
+	return (0);
 }

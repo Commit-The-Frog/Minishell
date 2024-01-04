@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 21:56:12 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:49:27 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	exit_malloc_error(void)
 	write(2, err_str, ft_strlen(err_str));
 }
 
-int	get_pipe_size(t_pipe_node *head)
+int	get_proc_cnt(t_pipe_node *head)
 {
 	t_pipe_node	*node;
 	int			size;
@@ -128,23 +128,62 @@ void	redirect_file(t_redirect_node *redirect)
 		redirect_file(redirect->right);
 }
 
-int	run_builtin_cmds(char *bin_name, t_dict **env_dict)
+void	*get_builtin_func(char *func)
 {
-	const char	*builtins[8] = \
-		{"echo", "cd", "pwd", "export", "unset", "env", "exit", "minishell"};
-	int			idx;
+	if (ft_strcmp(func, "echo") == 0)
+		return (ft_echo);
+	if (ft_strcmp(func, "cd") == 0)
+		return (ft_cd);
+	if (ft_strcmp(func, "pwd") == 0)
+		return (ft_pwd);
+	if (ft_strcmp(func, "export") == 0)
+		return (ft_export);
+	if (ft_strcmp(func, "unset") == 0)
+		return (ft_unset);
+	if (ft_strcmp(func, "env") == 0)
+		return (ft_env);
+	if (ft_strcmp(func, "exit") == 0)
+		return (ft_exit);
+	return (NULL);
+}
+
+int	is_builtin_cmd(t_cmd_node *cmd)
+{
+	if (!cmd)
+		return (0);
+	if (!cmd->simple_cmd)
+		return (0);
+	if (!cmd->simple_cmd->argv)
+		return (0);
+	if (ft_strcmp(cmd->simple_cmd->argv[0], "echo") == 0)
+		return (1);
+	if (ft_strcmp(cmd->simple_cmd->argv[0], "cd") == 0)
+		return (1);
+	if (ft_strcmp(cmd->simple_cmd->argv[0], "pwd") == 0)
+		return (1);
+	if (ft_strcmp(cmd->simple_cmd->argv[0], "export") == 0)
+		return (1);
+	if (ft_strcmp(cmd->simple_cmd->argv[0], "unset") == 0)
+		return (1);
+	if (ft_strcmp(cmd->simple_cmd->argv[0], "env") == 0)
+		return (1);
+	if (ft_strcmp(cmd->simple_cmd->argv[0], "exit") == 0)
+		return (1);
+	return (0);
+}
+
+int	run_builtin_cmds(char **argv, t_dict **env_dict)
+{
+	int	idx;
+	int	(*builtin_func)(char **, t_dict **);
+	int	return_val;
 
 	idx = 0;
-	while (idx < 7)
-	{
-		if (ft_strncmp(builtins[idx], bin_name, ft_strlen(bin_name) + 1) == 0)
-			break;
-		idx++;
-	}
-
-	if (idx == 7)
-		return (0);
-	return (1);
+	builtin_func = get_builtin_func(argv[0]);
+	if (!builtin_func)
+		return (-1);
+	return_val = builtin_func(argv, env_dict);
+	return (return_val);
 }
 
 char	**get_bin_path_list(char *path)
@@ -201,17 +240,16 @@ char	*get_bin_path(char	*bin_name, t_dict **env_dict)
 void	execute_simple_cmd(t_simple_cmd_node *simple_cmd, t_dict **env_dict)
 {
 	char	*bin_path;
+	char	**envp;
+	int		exit_code;
 
 	if (!simple_cmd || !simple_cmd->argv)
-	{
-		bin_path = get_bin_path("cat", env_dict);
-		execve("/bin/cat", NULL, NULL);
-		return ;
-	}
-	if (run_builtin_cmds(simple_cmd->argv[0], env_dict))
-		return ;
+		exit(EXIT_FAILURE); // command not found
+	exit_code = run_builtin_cmds(simple_cmd->argv, env_dict);
+	if (exit_code >= 0)
+		exit(exit_code);
 	if (ft_strncmp(simple_cmd->argv[0], "./", 2) == 0 ||
-			ft_strncmp(simple_cmd->argv[0], ",./", 2) == 0 ||
+			ft_strncmp(simple_cmd->argv[0], "../", 3) == 0 ||
 				ft_strncmp(simple_cmd->argv[0], "/", 1) == 0)
 	{
 		if (access(simple_cmd->argv[0], X_OK) == 0)
@@ -223,7 +261,8 @@ void	execute_simple_cmd(t_simple_cmd_node *simple_cmd, t_dict **env_dict)
 		if (!bin_path)
 			exit(EXIT_FAILURE); // command not found
 	}
-	execve(bin_path, simple_cmd->argv, generate_envp(*env_dict));
+	envp = generate_envp(*env_dict);
+	execve(bin_path, simple_cmd->argv, envp);
 }
 
 void	execute_child(t_cmd_node *cmd, int	*pipe_fd, t_dict **env_dict)
@@ -286,7 +325,7 @@ void	unlink_tmpfile(int cnt)
 int	execute_main(t_pipe_node *head, t_dict **env_dict)
 {
 	t_pipe_node	*pipe_node;
-	int			pipe_size;
+	int			proc_cnt;
 	t_pstat		*pstat;
 	int			pipe_fd[2];
 	int			idx;
@@ -296,10 +335,14 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	signal(SIGINT, sig_fork_handler);
 	signal(SIGQUIT, sig_fork_handler);
 	pipe_node = head;
-	pipe_size = get_pipe_size(head);
+	proc_cnt = get_proc_cnt(head);
 	tmpfile_cnt = 0;
 	heredoc_preprocess(head, &tmpfile_cnt);
-	pstat = (t_pstat *)malloc(sizeof(t_pstat) * pipe_size);
+	if (proc_cnt == 1 && is_builtin_cmd(head->cmd))
+	{
+		return (run_builtin_cmds(head->cmd->simple_cmd->argv, env_dict));
+	}
+	pstat = (t_pstat *)malloc(sizeof(t_pstat) * proc_cnt);
 	if (!pstat)
 		exit_malloc_error();
 	idx = 0;
@@ -329,7 +372,7 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 		idx++;
 	}
 	idx = 0;
-	while (idx < pipe_size)
+	while (idx < proc_cnt)
 	{
 		waitpid(pstat[idx].pid, &pstat[idx].exit_stat, 0);
 		idx++;
@@ -354,11 +397,36 @@ t_redirect_node	*create_redirect_node(char *filename, int type)
 	return (node);
 }
 
-// void	f(void)
-// {
-// 	system("leaks a.out");
-// }
+void	f(void)
+{
+	system("leaks a.out");
+}
 
+int	main(int argc, char *argv[], char **envp)
+{
+	t_pipe_node *head;
+	t_dict	*env_dict;
+	int		exit_status;
+	int		idx;
+
+	atexit(f);
+	env_dict = dict_init(envp);
+	head = (t_pipe_node *)malloc(sizeof(t_pipe_node));
+	head->cmd = (t_cmd_node *)malloc(sizeof(t_cmd_node));
+	head->cmd->simple_cmd = (t_simple_cmd_node *)malloc(sizeof(t_simple_cmd_node));
+	head->cmd->redirect = NULL;
+	head->next_pipe = NULL;
+	idx = 1;
+	while (idx < argc)
+	{
+		head->cmd->simple_cmd->argv = ft_split(argv[idx], ' ');
+		exit_status = execute_main(head, &env_dict);
+		free_double_ptr(head->cmd->simple_cmd->argv);
+		idx++;
+	}
+	exit(WEXITSTATUS(exit_status));
+}
+/*
 int	main(int argc, char *argv[], char **envp)
 {
 	t_pipe_node *head;
@@ -374,8 +442,8 @@ int	main(int argc, char *argv[], char **envp)
 	head->cmd->redirect = NULL;
 	// head->cmd->redirect = create_redirect_node("EOF1", T_HEREDOC);
 	head->cmd->redirect = create_redirect_node("/dev/urandom", T_INPUT);
-	head->cmd->redirect->left = create_redirect_node("EOF2", T_HEREDOC);
-	head->cmd->redirect->right = create_redirect_node("outfile1", T_OUTPUT);
+	// head->cmd->redirect->left = create_redirect_node("EOF2", T_HEREDOC);
+	// head->cmd->redirect->right = create_redirect_node("outfile1", T_OUTPUT);
 	head->next_pipe = (t_pipe_node *)malloc(sizeof(t_pipe_node));
 	head->next_pipe->cmd = (t_cmd_node *)malloc(sizeof(t_cmd_node));
 	head->next_pipe->cmd->simple_cmd = NULL;
@@ -389,3 +457,4 @@ int	main(int argc, char *argv[], char **envp)
 	exit_status = execute_main(head, &env_dict);
 	exit(WEXITSTATUS(exit_status));
 }
+*/

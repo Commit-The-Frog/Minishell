@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:49:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 21:04:10 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:59:37 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,59 +19,87 @@ t_dict	*create_dict_node_env(char *env)
 	t_dict	*env_dict;
 	char	*assign_loc;
 
-	env_dict = (t_dict *)malloc(sizeof(t_dict));
+	env_dict = (t_dict *)ft_calloc(1, sizeof(t_dict));
 	if (!env_dict)
 		exit(EXIT_FAILURE);
-	value = ft_strchr(env, '=');
-	if (!value)
-		return (NULL);
-	value++;
-	if (!*value)
-		env_dict->value = NULL;
-	else
-		env_dict->value = ft_strdup(value);
 	env_dict->key = ft_strcdup(env, '=');
+	if (!env_dict->key)
+		exit(EXIT_FAILURE);
 	assign_loc = ft_strchr(env_dict->key, '=');
-	*assign_loc = 0;
-	if (!env_dict->key || !env_dict->value)
-		exit(EXIT_FAILURE);
-	env_dict->env = NULL;
-	env_dict->next = NULL;
+	if (assign_loc)
+		*assign_loc = 0;
+	value = ft_strchr(env, '=');
+	if (value)
+	{
+		env_dict->value = ft_strdup(value + 1);
+		if (!env_dict->value)
+			exit(EXIT_FAILURE);
+	}
 	return (env_dict);
 }
 
-t_dict	*create_dict_node(char *key, char *value)
+// t_dict	*create_dict_node(char *key, char *value)
+// {
+// 	char	**key_value;
+// 	t_dict	*env_dict;
+
+// 	env_dict = (t_dict *)malloc(sizeof(t_dict));
+// 	if (!env_dict)
+// 		exit(EXIT_FAILURE);
+// 	env_dict->key = ft_strdup(key);
+// 	env_dict->value = ft_strdup(value);
+// 	env_dict->next = NULL;
+// 	if (!env_dict->key || !env_dict->value)
+// 		exit(EXIT_FAILURE);
+// 	return (env_dict);
+// }
+
+void	exchange_node_content(t_dict *dst, t_dict *src)
 {
-	char	**key_value;
-	t_dict	*env_dict;
+	char	*tmp_value;
 
-	env_dict = (t_dict *)malloc(sizeof(t_dict));
-	if (!env_dict)
-		exit(EXIT_FAILURE);
-	env_dict->key = ft_strdup(key);
-	env_dict->value = ft_strdup(value);
-	env_dict->next = NULL;
-	env_dict->env = NULL;
-	if (!env_dict->key || !env_dict->value)
-		exit(EXIT_FAILURE);
-	return (env_dict);
+	if (!src->value)
+	{
+		free(src->key);
+		free(src->value);
+		free(src);
+		return ;
+	}
+	tmp_value = dst->value;
+	dst->value = src->value;
+	free(src->key);
+	free(tmp_value);
+	free(src);
+	return ;
 }
 
-void	add_node_back(t_dict **list, char *key, char *value)
+void	add_node_back(t_dict **list, char *env)
 {
 	t_dict	*tmp;
+	t_dict	*prev;
+	t_dict	*new_node;
+	char	*tmp_value;
 
 	if (!list)
 		return ;
+	new_node = create_dict_node_env(env);
+	if (!new_node)
+		exit(EXIT_FAILURE);
 	if (!(*list))
 	{
-		*list = create_dict_node(key, value);
+		*list = new_node;
 		return ;
 	}
 	tmp = (*list);
-	while (tmp->next)
+	prev = tmp;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, new_node->key) == 0)
+			return(exchange_node_content(tmp, new_node));
+		prev = tmp;
 		tmp = tmp->next;
-	tmp->next = create_dict_node(key, value);
+	}
+	prev->next = new_node;
 }
 
 t_dict	*get_node_with_key(t_dict *list, char *key)
@@ -81,7 +109,7 @@ t_dict	*get_node_with_key(t_dict *list, char *key)
 	tmp = list;
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->key, key, ft_strlen(key) + 1) == 0)
+		if (ft_strcmp(tmp->key, key) == 0)
 			return (tmp);
 		tmp = tmp->next;
 	}
@@ -110,20 +138,26 @@ t_dict	*dict_init(char	**envp)
 	return (dict_list);
 }
 
-static void	generate_env_str(t_dict *env_dict)
+static char	*generate_env_str(t_dict *env_dict)
 {
 	char	*tmp_str;
+	char	*env;
 
+	if (!env_dict->value)
+	{
+		env = ft_strdup(env_dict->key);
+		if (!env)
+			exit(EXIT_FAILURE);
+		return (env);
+	}
 	tmp_str = ft_strjoin(env_dict->key, "=");
 	if (!tmp_str)
 		exit(EXIT_FAILURE);
-	free(env_dict->env);
-	if (!env_dict->value)
-		env_dict->env = ft_strjoin(tmp_str, "");
-	else
-		env_dict->env = ft_strjoin(tmp_str, env_dict->value);
-	if (!env_dict->env)
+	env = ft_strjoin(tmp_str, env_dict->value);
+	if (!env)
 		exit(EXIT_FAILURE);
+	free(tmp_str);
+	return (env);
 }
 
 char	**generate_envp(t_dict *env_dict)
@@ -137,7 +171,6 @@ char	**generate_envp(t_dict *env_dict)
 	tmp = env_dict;
 	while (tmp)
 	{
-		generate_env_str(tmp);
 		tmp = tmp->next;
 		size++;
 	}
@@ -148,9 +181,35 @@ char	**generate_envp(t_dict *env_dict)
 	tmp = env_dict;
 	while (++idx < size)
 	{
-		envp[idx] = tmp->env;
+		envp[idx] =	generate_env_str(tmp);
 		tmp = tmp->next;
 	}
 	envp[idx] = NULL;
 	return (envp);
+}
+
+void	del_node_with_key(t_dict **env_dict, char *key)
+{
+	t_dict	*tmp;
+	t_dict	*prev;
+
+	tmp = *env_dict;
+	prev = tmp;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, key) == 0)
+		{
+			if (tmp == prev)
+				*env_dict = tmp->next;
+			else
+				prev->next = tmp->next;
+			free(tmp->key);
+			free(tmp->value);
+			free(tmp);
+			tmp = prev->next;
+			break;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
 }

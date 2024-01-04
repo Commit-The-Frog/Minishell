@@ -1,43 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/02 18:17:51 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 12:23:53 by minjacho         ###   ########.fr       */
+/*   Created: 2024/01/04 15:19:12 by minjacho          #+#    #+#             */
+/*   Updated: 2024/01/04 17:04:42 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_exec.h"
 
-void	free_double_ptr(char **lists)
+int		ft_unset(char **argv, t_dict **env_dict)
 {
+	int	argc;
 	int	idx;
 
-	idx = 0;
-	while (lists[idx])
+	argc = 0;
+	while (argv && argv[argc])
+		argc++;
+	idx = 1;
+	while (idx < argc)
 	{
-		free(lists[idx]);
+		del_node_with_key(env_dict, argv[idx]);
 		idx++;
 	}
-	free(lists);
-}
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	unsigned char	*c1;
-	unsigned char	*c2;
-
-	c1 = (unsigned char *)s1;
-	c2 = (unsigned char *)s2;
-	while (*c1 && *c2)
-	{
-		if (*c1 != *c2)
-			return (*c1 - *c2);
-		c1++;
-		c2++;
-	}
-	return (*c1 - *c2);
+	return (0);
 }

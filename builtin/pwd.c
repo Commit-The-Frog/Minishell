@@ -1,43 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/02 18:17:51 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 12:23:53 by minjacho         ###   ########.fr       */
+/*   Created: 2024/01/04 11:58:39 by minjacho          #+#    #+#             */
+/*   Updated: 2024/01/04 16:23:40 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_exec.h"
 
-void	free_double_ptr(char **lists)
+int	ft_pwd(char **argv, t_dict **env_dict)
 {
-	int	idx;
+	char	*cur_dir;
 
-	idx = 0;
-	while (lists[idx])
-	{
-		free(lists[idx]);
-		idx++;
-	}
-	free(lists);
-}
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	unsigned char	*c1;
-	unsigned char	*c2;
-
-	c1 = (unsigned char *)s1;
-	c2 = (unsigned char *)s2;
-	while (*c1 && *c2)
-	{
-		if (*c1 != *c2)
-			return (*c1 - *c2);
-		c1++;
-		c2++;
-	}
-	return (*c1 - *c2);
+	cur_dir = NULL;
+	cur_dir = getcwd(cur_dir, 0);
+	if (!cur_dir)
+		exit(EXIT_FAILURE);
+	write(STDIN_FILENO, cur_dir, ft_strlen(cur_dir));
+	write(STDIN_FILENO, "\n", 1);
+	free(cur_dir);
+	return (0);
 }
