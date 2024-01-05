@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize.c                                         :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/03 14:29:51 by macbookpro       ###   ########.fr       */
+/*   Updated: 2024/01/05 19:38:03 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	is_operator(char c)
 	return (0);
 }
 
-int	is_comb_operator(char c1, char c2)
+int	is_double_operator(char c1, char c2)
 {
 	const char	*control_operator_double[4] = {"<<", ">>", "||", "&&"};
 	int			i;
@@ -80,19 +80,19 @@ int	get_type(t_token *token)
 
 void	make_token(t_list **list, char *str, int start, int end)
 {
-	t_token			*token;
-	t_list			*new;
-	char			*substr;
+	t_token		*token;
+	t_list		*new;
+	char		*substr;
 
 	substr = ft_substr(str, start, end - start);
-	if (str == NULL)
+	if (substr == NULL)
 		exit(EXIT_FAILURE);
 	token = (t_token *)ft_calloc(1, sizeof(t_token));
 	if (token == NULL)
 		exit(EXIT_FAILURE);
 	token->str = substr;
 	token->type = get_type(token);
-	new = ft_lstnew((void *)token);
+	new = ft_lstnew(token);
 	if (new == NULL)
 		exit(EXIT_FAILURE);
 	ft_lstadd_back(list, new);
@@ -100,62 +100,6 @@ void	make_token(t_list **list, char *str, int start, int end)
 
 void	tokenize(t_list **list, char *str)
 {
-	int	start;
-	int	end;
-
-	start = 0;
-	end = 0;
-	while (str[end])
-	{
-		if (end >= 1 && !is_operator(str[end]) && is_operator(str[end - 1]))
-		{
-			make_token(list, str, start, end);
-			start = end;
-		}
-		if (end >= 1 && is_operator(str[end]) && !is_operator(str[end - 1]))
-		{
-			make_token(list, str, start, end);
-			start = end;
-		}
-		else if (end >= 1 && is_operator(str[end]) && !is_comb_operator(str[end], str[end - 1]))
-		{
-			make_token(list, str, start, end);
-			start = end;
-		}
-		else if (end >=1 && is_comb_operator(str[end], str[end - 1]))
-		{
-			make_token(list, str, start, ++end);
-			start = end;
-		}
-		else if (str[end] == '#')
-			break;
-		else if (str[end] == '\'')
-		{
-			make_token(list, str, start, end);
-			start = end;
-			end++;
-			while (str[end] && str[end] != '\'')
-				end++;
-			make_token(list, str, start + 1, end);
-			start = end + 1;
-		}
-		else if (str[end] == '\"')
-		{
-			make_token(list, str, start, end);
-			start = end;
-			end++;
-			while (str[end] && str[end] != '\"')
-				end++;
-			make_token(list, str, start + 1, end);
-			start = end + 1;
-		}
-		else if (str[end] == ' ')
-		{
-			if (end >= 1 && str[end - 1] != '\'' && str[end - 1] != '\"' && str[end - 1] != ' ')
-				make_token(list, str, start, end);
-			start = end;
-		}
-		end++;
-	}
-	make_token(list, str, start, end);
+	sep_by_space(list, str);
+	remove_quote(list);
 }

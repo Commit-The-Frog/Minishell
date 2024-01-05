@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dequote.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/03 14:02:36 by macbookpro       ###   ########.fr       */
+/*   Updated: 2024/01/05 19:11:41 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,10 @@ int	main(void)
 	char	*origin;
 	t_list	*token_list;
 	t_list	*cur;
+	t_token	*tmp_token;
 
 	// atexit(check_leak);
+	token_list = NULL;
 	print_logo();
 	origin = readline("minishell> ");
 	get_more_input(&origin);
@@ -74,8 +76,9 @@ int	main(void)
 	cur = token_list;
 	while (cur)
 	{
-		if (ft_strlen(((t_token *)cur->content)->str) > 0)
-			printf("[%s|%u] ", ((t_token *)cur->content)->str, (unsigned int)((t_token *)cur->content)->type);
+		tmp_token = (t_token *)cur->content;
+		if (cur->content != NULL && ft_strlen(tmp_token->str) > 0)
+			printf("[%s|%u] ", tmp_token->str, (unsigned int)tmp_token->type);
 		cur = cur->next;
 	}
 	printf("\n");

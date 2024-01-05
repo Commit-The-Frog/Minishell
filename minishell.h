@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/03 14:17:11 by macbookpro       ###   ########.fr       */
+/*   Updated: 2024/01/05 19:24:19 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,5 +162,10 @@ void	sig_fork_handler(int signo);
 void	get_more_input(char **origin);
 void	tokenize(t_list **list, char *str);
 void    print_logo(void);
+void	sep_by_space(t_list **list, char *str);
+void	make_token(t_list **list, char *str, int start, int end);
+void	remove_quote(t_list **list);
+char	is_operator(char c);
+int		is_double_operator(char c1, char c2);
 
 #endif
