@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 18:17:51 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 12:23:53 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/05 20:03:23 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_double_ptr(char **lists)
 	int	idx;
 
 	idx = 0;
-	while (lists[idx])
+	while (lists && lists[idx])
 	{
 		free(lists[idx]);
 		idx++;

@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 17:00:25 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/05 20:04:47 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINI_EXEC_H
 
 # include "minishell.h"
+# include <sys/stat.h>
 
 typedef struct	s_redirect_node
 {
@@ -78,4 +79,6 @@ int		ft_pwd(char **argv, t_dict **env_dict);
 int		ft_unset(char **argv, t_dict **env_dict);
 int		ft_env(char **argv, t_dict **env_dict);
 int		ft_exit(char **argv, t_dict **env_dict);
+
+int		execute_main(t_pipe_node *head, t_dict **env_dict);
 #endif

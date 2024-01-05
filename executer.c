@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 16:49:27 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/05 20:31:03 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,8 +252,9 @@ void	execute_simple_cmd(t_simple_cmd_node *simple_cmd, t_dict **env_dict)
 			ft_strncmp(simple_cmd->argv[0], "../", 3) == 0 ||
 				ft_strncmp(simple_cmd->argv[0], "/", 1) == 0)
 	{
-		if (access(simple_cmd->argv[0], X_OK) == 0)
+		if (access(simple_cmd->argv[0], X_OK) != 0)
 			exit(EXIT_FAILURE); // no such file or directory
+		bin_path = simple_cmd->argv[0];
 	}
 	else
 	{
@@ -402,30 +403,30 @@ void	f(void)
 	system("leaks a.out");
 }
 
-int	main(int argc, char *argv[], char **envp)
-{
-	t_pipe_node *head;
-	t_dict	*env_dict;
-	int		exit_status;
-	int		idx;
+// int	main(int argc, char *argv[], char **envp)
+// {
+// 	t_pipe_node *head;
+// 	t_dict	*env_dict;
+// 	int		exit_status;
+// 	int		idx;
 
-	atexit(f);
-	env_dict = dict_init(envp);
-	head = (t_pipe_node *)malloc(sizeof(t_pipe_node));
-	head->cmd = (t_cmd_node *)malloc(sizeof(t_cmd_node));
-	head->cmd->simple_cmd = (t_simple_cmd_node *)malloc(sizeof(t_simple_cmd_node));
-	head->cmd->redirect = NULL;
-	head->next_pipe = NULL;
-	idx = 1;
-	while (idx < argc)
-	{
-		head->cmd->simple_cmd->argv = ft_split(argv[idx], ' ');
-		exit_status = execute_main(head, &env_dict);
-		free_double_ptr(head->cmd->simple_cmd->argv);
-		idx++;
-	}
-	exit(WEXITSTATUS(exit_status));
-}
+// 	// atexit(f);
+// 	env_dict = dict_init(envp);
+// 	head = (t_pipe_node *)malloc(sizeof(t_pipe_node));
+// 	head->cmd = (t_cmd_node *)malloc(sizeof(t_cmd_node));
+// 	head->cmd->simple_cmd = (t_simple_cmd_node *)malloc(sizeof(t_simple_cmd_node));
+// 	head->cmd->redirect = NULL;
+// 	head->next_pipe = NULL;
+// 	idx = 1;
+// 	while (idx < argc)
+// 	{
+// 		head->cmd->simple_cmd->argv = ft_split(argv[idx], ' ');
+// 		exit_status = execute_main(head, &env_dict);
+// 		free_double_ptr(head->cmd->simple_cmd->argv);
+// 		idx++;
+// 	}
+// 	exit(WEXITSTATUS(exit_status));
+// }
 /*
 int	main(int argc, char *argv[], char **envp)
 {
