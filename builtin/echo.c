@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:47:43 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 15:14:41 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:29:08 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ int	ft_echo(char **argv, t_dict **env_dict)
 		idx++;
 	while (idx < argc)
 	{
-		write(STDIN_FILENO, argv[idx], ft_strlen(argv[idx]));
+		write(STDOUT_FILENO, argv[idx], ft_strlen(argv[idx]));
+		if (idx != argc - 1)
+			write(STDOUT_FILENO, " ", 1);
 		idx++;
 	}
 	if (!n_flag)
-		write(STDIN_FILENO, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }

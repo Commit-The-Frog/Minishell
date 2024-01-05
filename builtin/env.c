@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:01 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 16:53:04 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/05 16:48:45 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ static void	print_env(char **envp)
 	{
 		has_assign = 0;
 		j = 0;
+		if (!ft_strchr(envp[i], '='))
+			continue ;
 		while (envp[i][j])
 		{
 			write(STDOUT_FILENO, &envp[i][j], 1);
