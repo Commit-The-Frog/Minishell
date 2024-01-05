@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/05 19:38:03 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/05 22:31:13 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,27 +78,35 @@ int	get_type(t_token *token)
 		return (E_TYPE_SIMPLE_CMD);
 }
 
-void	make_token(t_list **list, char *str, int start, int end)
+void	make_token(t_token **list, char *str, int start, int end)
 {
-	t_token		*token;
-	t_list		*new;
+	t_token		*new;
+	t_token		*cur;
 	char		*substr;
 
+	if (start == end)
+		return ;
 	substr = ft_substr(str, start, end - start);
 	if (substr == NULL)
 		exit(EXIT_FAILURE);
-	token = (t_token *)ft_calloc(1, sizeof(t_token));
-	if (token == NULL)
-		exit(EXIT_FAILURE);
-	token->str = substr;
-	token->type = get_type(token);
-	new = ft_lstnew(token);
+	new = (t_token *)ft_calloc(1, sizeof(t_token));
 	if (new == NULL)
 		exit(EXIT_FAILURE);
-	ft_lstadd_back(list, new);
+	new->str = substr;
+	new->type = get_type(new);
+	new->next = NULL;
+	if (*list == NULL)
+	{
+		*list = new;
+		return ;
+	}
+	cur = *list;
+	while (cur->next)
+		cur = cur->next;
+	cur->next = new;
 }
 
-void	tokenize(t_list **list, char *str)
+void	tokenize(t_token **list, char *str)
 {
 	sep_by_space(list, str);
 	remove_quote(list);

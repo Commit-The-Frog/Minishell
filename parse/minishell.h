@@ -6,14 +6,14 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/05 19:24:19 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/05 22:03:24 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEMO_MINISHELL_H
 # define DEMO_MINISHELL_H
 
-# include "libft/libft.h"
+# include "../libft/libft.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -127,27 +127,26 @@ enum e_token_type {
 
 typedef struct	s_token
 {
-	int		type;
-	char	*str;
+	int				type;
+	char			*str;
+	struct s_token	*next;
 }	t_token;
 
-typedef struct	s_redirect_node
+typedef struct	s_redir_node
 {
-	int						type;
-	char					*file_name;
-	struct s_redirect_node	*left;
-	struct s_redirect_node	*right;
-}	t_redirect_node;
+	int					type;
+	char				*file_name;
+	struct s_redir_node	*next;
+}	t_redir_node;
 
 typedef struct	s_simple_cmd_node
 {
-	char	*path;
 	char	**argv;
 }	t_simple_cmd_node;
 
 typedef struct	s_cmd_node
 {
-	t_redirect_node		*redirect;
+	t_redir_node		*redirect;
 	t_simple_cmd_node	*simple_cmd;
 }	t_cmd_node;
 
@@ -160,12 +159,13 @@ typedef struct	s_pipe_node
 void	sig_handler(int signo);
 void	sig_fork_handler(int signo);
 void	get_more_input(char **origin);
-void	tokenize(t_list **list, char *str);
+void	tokenize(t_token **list, char *str);
 void    print_logo(void);
-void	sep_by_space(t_list **list, char *str);
-void	make_token(t_list **list, char *str, int start, int end);
-void	remove_quote(t_list **list);
+void	sep_by_space(t_token **list, char *str);
+void	make_token(t_token **list, char *str, int start, int end);
+void	remove_quote(t_token **list);
 char	is_operator(char c);
 int		is_double_operator(char c1, char c2);
+void	get_ast(t_pipe_node **ast, t_token **token_list);
 
 #endif

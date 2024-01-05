@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/05 19:11:41 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/05 22:19:58 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ void	check_leak(void)
 
 int	main(void)
 {
-	char	*origin;
-	t_list	*token_list;
-	t_list	*cur;
-	t_token	*tmp_token;
+	char		*origin;
+	t_token		*token_list;
+	t_token		*cur;
+	t_pipe_node	*ast;
 
 	// atexit(check_leak);
 	token_list = NULL;
@@ -76,11 +76,11 @@ int	main(void)
 	cur = token_list;
 	while (cur)
 	{
-		tmp_token = (t_token *)cur->content;
-		if (cur->content != NULL && ft_strlen(tmp_token->str) > 0)
-			printf("[%s|%u] ", tmp_token->str, (unsigned int)tmp_token->type);
+		if (cur->str != NULL)
+			printf("[%s|%u] ", cur->str, (unsigned int)cur->type);
 		cur = cur->next;
 	}
 	printf("\n");
+	get_ast(&ast, &token_list);
 	free(origin);
 }
