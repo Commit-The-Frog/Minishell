@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_exec.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 22:12:38 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 11:45:31 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 # define MINI_EXEC_H
 
 # include "minishell.h"
+# include <sys/stat.h>
 
 typedef struct	s_redirect_node
 {
 	int						type;
 	char					*file_name;
-	struct s_redirect_node	*left;
-	struct s_redirect_node	*right;
+	struct s_redirect_node	*next;
 }	t_redirect_node;
 
 typedef struct	s_simple_cmd_node
@@ -33,6 +33,7 @@ typedef struct	s_cmd_node
 {
 	t_redirect_node		*redirect;
 	t_simple_cmd_node	*simple_cmd;
+	char				**argv;
 }	t_cmd_node;
 
 typedef struct	s_pipe_node
@@ -59,13 +60,25 @@ typedef struct s_dict
 {
 	char			*key;
 	char			*value;
-	char			*env;
 	struct s_dict	*next;
 }	t_dict;
 
 char	**generate_envp(t_dict *env_dict);
 t_dict	*dict_init(char	**envp);
-void	add_node_back(t_dict **list, char *key, char *value);
+t_dict	*create_dict_node_env(char *env);
+void	add_node_back(t_dict **list, char *env);
 t_dict	*get_node_with_key(t_dict *list, char *key);
+void	del_node_with_key(t_dict **env_dict, char *key);
 void	free_double_ptr(char **ptr);
+int		ft_strcmp(char *s1, char *s2);
+
+int		ft_echo(char **argv, t_dict **env_dict);
+int		ft_export(char **argv, t_dict **env_dict);
+int		ft_cd(char **argv, t_dict **env_dict);
+int		ft_pwd(char **argv, t_dict **env_dict);
+int		ft_unset(char **argv, t_dict **env_dict);
+int		ft_env(char **argv, t_dict **env_dict);
+int		ft_exit(char **argv, t_dict **env_dict);
+
+int		execute_main(t_pipe_node *head, t_dict **env_dict);
 #endif

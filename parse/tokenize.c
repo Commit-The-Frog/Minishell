@@ -82,3 +82,4 @@ void	remove_quote(t_token **list)
 		cur = cur->next;
 	}
 }
+
