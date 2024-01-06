@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:40:12 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 19:48:50 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,5 @@ void	init_pipe(int *pipe_fd, t_pipe_node *next_pipe);
 char	**generate_envp(t_dict *env_dict);
 t_dict	*get_node_with_key(t_dict *list, char *key);
 void	del_node_with_key(t_dict **env_dict, char *key);
+char	*get_value_with_key(t_dict *list, char *key);
 #endif

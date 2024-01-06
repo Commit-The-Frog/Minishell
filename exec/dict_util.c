@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:39:23 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:39:38 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 19:46:55 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ t_dict	*get_node_with_key(t_dict *list, char *key)
 		tmp = tmp->next;
 	}
 	return (NULL);
+}
+
+char	*get_value_with_key(t_dict *list, char *key)
+{
+	t_dict	*tmp;
+
+	tmp = get_node_with_key(list, key);
+	if (!tmp)
+		return (NULL);
+	return (tmp->value);
 }
 
 void	del_node_with_key(t_dict **env_dict, char *key)
