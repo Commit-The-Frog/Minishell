@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   mini_exec.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:32:50 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:51:56 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINI_EXEC_H
 # define MINI_EXEC_H
+
+#include "mini_type.h"
 
 char	**generate_envp(t_dict *env_dict);
 t_dict	*dict_init(char	**envp);

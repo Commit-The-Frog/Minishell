@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 18:47:56 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 20:25:25 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int main(int argc, char *argv[], char **envp)
 			break ;
 		}
 		add_history(line);
-		ast = parse(line);
+		ast = parse(line, env_dict);
 		if (ast == NULL)
 			continue ;
 		free(line);

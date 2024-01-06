@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 13:25:02 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 21:29:09 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	get_simple_cmd_node(t_simple_cmd_node **simple_cmd, t_token **cur)
 	t_simple_cmd_node	*new;
 	t_simple_cmd_node	*cur_simple_cmd;
 
+	if ((*cur)->str == NULL)
+		return ;
 	new = (t_simple_cmd_node *)ft_calloc(1, sizeof(t_simple_cmd_node));
 	if (new == NULL)
 		exit(EXIT_FAILURE);
@@ -86,7 +88,8 @@ char	**conv_list_to_array(t_simple_cmd_node *list)
 	cur = list;
 	while (cur)
 	{
-		array[i++] = ft_strdup(cur->argv);
+		if (cur->argv != NULL)
+			array[i++] = ft_strdup(cur->argv);
 		cur = cur->next;
 	}
 	return (array);
@@ -140,7 +143,6 @@ void	get_ast(t_pipe_node **ast, t_token **token_list)
 	int					i;
 
 	get_pipe_node(ast, token_list);
-
 	// // printing..
 	// cur = *ast;
 	// while (cur)
