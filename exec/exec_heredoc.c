@@ -6,31 +6,31 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:04:20 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:34:59 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 21:27:04 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	heredoc_sub_preprocess(t_redir_node *redirect, int *cnt)
+void	heredoc_sub_preprocess(t_redir_node *redir, int *cnt, char *start_dir)
 {
-	if (!redirect)
+	if (!redir)
 		return ;
-	if (redirect->type == E_TYPE_REDIR_HEREDOC)
+	if (redir->type == E_TYPE_REDIR_HEREDOC)
 	{
-		redirect_heredoc(&redirect->file_name, *cnt);
+		redir_heredoc(&redir->file_name, *cnt, start_dir);
 		(*cnt)++;
 	}
-	if (redirect->next)
-		heredoc_sub_preprocess(redirect->next, cnt);
+	if (redir->next)
+		heredoc_sub_preprocess(redir->next, cnt, start_dir);
 }
 
-void	heredoc_preprocess(t_pipe_node *head, int *cnt)
+void	heredoc_preprocess(t_pipe_node *head, int *cnt, char *start_dir)
 {
 	if (head->cmd)
-		heredoc_sub_preprocess(head->cmd->redirect, cnt);
+		heredoc_sub_preprocess(head->cmd->redirect, cnt, start_dir);
 	if (head->next_pipe)
-		heredoc_preprocess(head->next_pipe, cnt);
+		heredoc_preprocess(head->next_pipe, cnt, start_dir);
 }
 
 static void	heredoc_file(int fd, char **deli)
@@ -52,19 +52,24 @@ static void	heredoc_file(int fd, char **deli)
 	free(buf);
 }
 
-void	redirect_heredoc(char **deli, int cnt)
+void	redirect_heredoc(char **deli, int cnt, char *start_dir)
 {
 	char	*tmp_file;
 	char	*str_cnt;
 	int		fd;
+	char	*heredoc_prefix;
 
+	heredoc_prefix = ft_strjoin(start_dir, "/.heredoc-");
+	if (!heredoc_prefix)
+		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	str_cnt = ft_itoa(cnt);
 	if (!str_cnt)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
-	tmp_file = ft_strjoin(".heredoc_dir/", str_cnt);
+	tmp_file = ft_strjoin(heredoc_prefix, str_cnt);
 	if (!tmp_file)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	free(str_cnt);
+	free(heredoc_prefix);
 	fd = open(tmp_file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (fd < 0)
 		exit_custom_err(NULL, tmp_file, "File open error", 1);
@@ -73,20 +78,29 @@ void	redirect_heredoc(char **deli, int cnt)
 	close(fd);
 }
 
-void	unlink_tmpfile(int cnt)
+void	unlink_tmpfile(int cnt, char *start_dir)
 {
 	char	*str_num;
 	char	*file_name;
 	int		idx;
+	char	*heredoc_prefix;
 
+	heredoc_prefix = ft_strjoin(start_dir, "/.heredoc-");
+	if (!heredoc_prefix)
+		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	idx = 0;
 	while (idx < cnt)
 	{
 		str_num = ft_itoa(idx);
-		file_name = ft_strjoin(".heredoc_dir/", str_num);
+		if (!str_num)
+			exit_custom_err(NULL, NULL, "Malloc error", 1);
+		file_name = ft_strjoin(heredoc_prefix, str_num);
+		if (!file_name)
+			exit_custom_err(NULL, NULL, "Malloc error", 1);
 		unlink(file_name);
 		free(str_num);
 		free(file_name);
 		idx++;
 	}
+	free(heredoc_prefix);
 }
