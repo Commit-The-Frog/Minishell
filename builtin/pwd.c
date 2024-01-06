@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:58:39 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 18:37:50 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:53:01 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 int	ft_pwd(char **argv, t_dict **env_dict)
 {

@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:19:12 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 18:54:25 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:53:04 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 int	is_valid_id(char *str)
 {
