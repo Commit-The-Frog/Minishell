@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:49:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:39:48 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:35:02 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 t_dict	*create_dict_node_env(char *env)
 {

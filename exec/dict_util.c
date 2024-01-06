@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:39:23 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:46:55 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:34:37 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 t_dict	*get_node_with_key(t_dict *list, char *key)
 {
