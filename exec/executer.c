@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/05 20:31:03 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 11:53:49 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,10 +122,8 @@ void	redirect_file(t_redirect_node *redirect)
 		redirect_input(redirect->file_name, redirect->type);
 	if (redirect->type == T_APPEND)
 		redirect_append(redirect->file_name);
-	if (redirect->left)
-		redirect_file(redirect->left);
-	if (redirect->right)
-		redirect_file(redirect->right);
+	if (redirect->next)
+		redirect_file(redirect->next);
 }
 
 void	*get_builtin_func(char *func)
@@ -151,23 +149,21 @@ int	is_builtin_cmd(t_cmd_node *cmd)
 {
 	if (!cmd)
 		return (0);
-	if (!cmd->simple_cmd)
+	if (!cmd->argv)
 		return (0);
-	if (!cmd->simple_cmd->argv)
-		return (0);
-	if (ft_strcmp(cmd->simple_cmd->argv[0], "echo") == 0)
+	if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		return (1);
-	if (ft_strcmp(cmd->simple_cmd->argv[0], "cd") == 0)
+	if (ft_strcmp(cmd->argv[0], "cd") == 0)
 		return (1);
-	if (ft_strcmp(cmd->simple_cmd->argv[0], "pwd") == 0)
+	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		return (1);
-	if (ft_strcmp(cmd->simple_cmd->argv[0], "export") == 0)
+	if (ft_strcmp(cmd->argv[0], "export") == 0)
 		return (1);
-	if (ft_strcmp(cmd->simple_cmd->argv[0], "unset") == 0)
+	if (ft_strcmp(cmd->argv[0], "unset") == 0)
 		return (1);
-	if (ft_strcmp(cmd->simple_cmd->argv[0], "env") == 0)
+	if (ft_strcmp(cmd->argv[0], "env") == 0)
 		return (1);
-	if (ft_strcmp(cmd->simple_cmd->argv[0], "exit") == 0)
+	if (ft_strcmp(cmd->argv[0], "exit") == 0)
 		return (1);
 	return (0);
 }
@@ -237,33 +233,33 @@ char	*get_bin_path(char	*bin_name, t_dict **env_dict)
 	return (bin_path);
 }
 
-void	execute_simple_cmd(t_simple_cmd_node *simple_cmd, t_dict **env_dict)
+void	execute_simple_cmd(char **argv, t_dict **env_dict)
 {
 	char	*bin_path;
 	char	**envp;
 	int		exit_code;
 
-	if (!simple_cmd || !simple_cmd->argv)
+	if (!argv || !argv[0])
 		exit(EXIT_FAILURE); // command not found
-	exit_code = run_builtin_cmds(simple_cmd->argv, env_dict);
+	exit_code = run_builtin_cmds(argv, env_dict);
 	if (exit_code >= 0)
 		exit(exit_code);
-	if (ft_strncmp(simple_cmd->argv[0], "./", 2) == 0 ||
-			ft_strncmp(simple_cmd->argv[0], "../", 3) == 0 ||
-				ft_strncmp(simple_cmd->argv[0], "/", 1) == 0)
+	if (ft_strncmp(argv[0], "./", 2) == 0 ||
+			ft_strncmp(argv[0], "../", 3) == 0 ||
+				ft_strncmp(argv[0], "/", 1) == 0)
 	{
-		if (access(simple_cmd->argv[0], X_OK) != 0)
+		if (access(argv[0], X_OK) != 0)
 			exit(EXIT_FAILURE); // no such file or directory
-		bin_path = simple_cmd->argv[0];
+		bin_path = argv[0];
 	}
 	else
 	{
-		bin_path = get_bin_path(simple_cmd->argv[0], env_dict);
+		bin_path = get_bin_path(argv[0], env_dict);
 		if (!bin_path)
 			exit(EXIT_FAILURE); // command not found
 	}
 	envp = generate_envp(*env_dict);
-	execve(bin_path, simple_cmd->argv, envp);
+	execve(bin_path, argv, envp);
 }
 
 void	execute_child(t_cmd_node *cmd, int	*pipe_fd, t_dict **env_dict)
@@ -279,7 +275,7 @@ void	execute_child(t_cmd_node *cmd, int	*pipe_fd, t_dict **env_dict)
 	}
 	if (cmd->redirect)
 		redirect_file(cmd->redirect);
-	execute_simple_cmd(cmd->simple_cmd, env_dict);
+	execute_simple_cmd(cmd->argv, env_dict);
 }
 
 void	heredoc_sub_preprocess(t_redirect_node *redirect, int *cnt)
@@ -291,10 +287,8 @@ void	heredoc_sub_preprocess(t_redirect_node *redirect, int *cnt)
 		redirect_heredoc(&redirect->file_name, *cnt);
 		(*cnt)++;
 	}
-	if (redirect->left)
-		heredoc_sub_preprocess(redirect->left, cnt);
-	if (redirect->right)
-		heredoc_sub_preprocess(redirect->right, cnt);
+	if (redirect->next)
+		heredoc_sub_preprocess(redirect->next, cnt);
 }
 
 void	heredoc_preprocess(t_pipe_node *head, int *cnt)
@@ -341,7 +335,7 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	heredoc_preprocess(head, &tmpfile_cnt);
 	if (proc_cnt == 1 && is_builtin_cmd(head->cmd))
 	{
-		return (run_builtin_cmds(head->cmd->simple_cmd->argv, env_dict));
+		return (run_builtin_cmds(head->cmd->argv, env_dict));
 	}
 	pstat = (t_pstat *)malloc(sizeof(t_pstat) * proc_cnt);
 	if (!pstat)
@@ -391,8 +385,7 @@ t_redirect_node	*create_redirect_node(char *filename, int type)
 	node = (t_redirect_node *)malloc(sizeof(t_redirect_node));
 	if (!node)
 		exit(EXIT_FAILURE);
-	node->left = NULL;
-	node->right = NULL;
+	node->next = NULL;
 	node->file_name = filename;
 	node->type = type;
 	return (node);

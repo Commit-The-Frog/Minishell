@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/05 20:04:47 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 11:45:31 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ typedef struct	s_redirect_node
 {
 	int						type;
 	char					*file_name;
-	struct s_redirect_node	*left;
-	struct s_redirect_node	*right;
+	struct s_redirect_node	*next;
 }	t_redirect_node;
 
 typedef struct	s_simple_cmd_node
@@ -34,6 +33,7 @@ typedef struct	s_cmd_node
 {
 	t_redirect_node		*redirect;
 	t_simple_cmd_node	*simple_cmd;
+	char				**argv;
 }	t_cmd_node;
 
 typedef struct	s_pipe_node
