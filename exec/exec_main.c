@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executer.c                                         :+:      :+:    :+:   */
+/*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:32:10 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:34:58 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 void	execute_simple_cmd(char **argv, t_dict **env_dict)
 {

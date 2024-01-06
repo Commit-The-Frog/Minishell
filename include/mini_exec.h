@@ -6,28 +6,12 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:48:50 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:32:50 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINI_EXEC_H
 # define MINI_EXEC_H
-
-# include "minishell.h"
-# include "sys/errno.h"
-
-typedef struct	s_pstat
-{
-	pid_t	pid;
-	int		exit_stat;
-}	t_pstat;
-
-typedef struct s_dict
-{
-	char			*key;
-	char			*value;
-	struct s_dict	*next;
-}	t_dict;
 
 char	**generate_envp(t_dict *env_dict);
 t_dict	*dict_init(char	**envp);

@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:58:54 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:31:47 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:34:58 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 void	redirect_input(char *file_name, int type)
 {
