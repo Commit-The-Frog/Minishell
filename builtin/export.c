@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 12:03:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 18:56:35 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:52:57 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 static void	print_export(char **envp)
 {
