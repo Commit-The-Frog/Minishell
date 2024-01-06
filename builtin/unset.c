@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:19:12 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 21:19:07 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 18:54:25 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,15 @@ int	is_valid_id(char *str)
 		}
 		else
 		{
-			if (!(ft_isalpha(str[idx]) || str[idx] == '_' || ft_isdigit(str[idx])))
+			if (!(ft_isalpha(str[idx]) || \
+				str[idx] == '_' || ft_isdigit(str[idx])))
 				return (0);
 		}
 		idx++;
 	}
 	return (1);
 }
+
 static int	invalid_id_err(char	*str)
 {
 	const char	*err_str = ": not a valid identifier\n";
@@ -46,7 +48,7 @@ static int	invalid_id_err(char	*str)
 	return (1);
 }
 
-int		ft_unset(char **argv, t_dict **env_dict)
+int	ft_unset(char **argv, t_dict **env_dict)
 {
 	int	argc;
 	int	idx;

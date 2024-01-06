@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:03 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 17:52:48 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 18:53:48 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,22 @@ static int	ft_isspace(char c)
 	return (0);
 }
 
-static int	return_numeric_err(const char *str)
+static int	return_numeric_err(const char *str, int *custom_err)
 {
 	const char	*err_str = "numeric argument required\n";
 
+	write(2, "minishell", ft_strlen("minishell"));
+	write(2, ": ", 2);
+	write(2, "exit", ft_strlen("exit"));
+	write(2, ": ", 2);
 	write(STDERR_FILENO, str, ft_strlen(str));
 	write(STDERR_FILENO, ": ", ft_strlen(": "));
 	write(STDERR_FILENO, err_str, ft_strlen(err_str));
+	*custom_err = 255;
 	return (255);
 }
 
-int	exit_atoi(const char *str)
+int	exit_atoi(const char *str, int *custom_err)
 {
 	int	i;
 	int	num;
@@ -50,7 +55,7 @@ int	exit_atoi(const char *str)
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
-			return(return_numeric_err(str));
+			return (return_numeric_err(str, custom_err));
 		num *= 10;
 		num += (str[i] - '0') * sign;
 		i++;
@@ -58,23 +63,31 @@ int	exit_atoi(const char *str)
 	return (num);
 }
 
-int		ft_exit(char **argv, t_dict **env_dict)
+int	ft_exit(char **argv, t_dict **env_dict)
 {
 	int			argc;
+	int			exit_code;
+	int			custom_err;
 	const char	*err_str = "too many arguments\n";
 
 	argc = 0;
+	custom_err = 0;
 	while (argv && argv[argc])
 		argc++;
 	write(STDOUT_FILENO, "exit\n", 5);
+	if (argc > 1)
+	{
+		exit_code = exit_atoi(argv[1], &custom_err);
+		if (custom_err == 255)
+			exit(255);
+	}
 	if (argc > 2)
 	{
 		write(2, err_str, ft_strlen(err_str));
-		//error message write
 		return (1);
 	}
 	if (argc == 1)
 		exit(0);
 	else
-		exit(exit_atoi(argv[1]));
+		exit(exit_code);
 }
