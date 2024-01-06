@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/05 23:37:14 by macbookpro       ###   ########.fr       */
+/*   Updated: 2024/01/06 11:40:04 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,13 +141,15 @@ typedef struct	s_redir_node
 
 typedef struct	s_simple_cmd_node
 {
-	char	*argv;
+	char						*argv;
+	struct s_simple_cmd_node	*next;
 }	t_simple_cmd_node;
 
 typedef struct	s_cmd_node
 {
 	t_redir_node		*redirect;
 	t_simple_cmd_node	*simple_cmd;
+	char				**argv;
 }	t_cmd_node;
 
 typedef struct	s_pipe_node
