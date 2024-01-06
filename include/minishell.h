@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:42:56 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 19:54:23 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ void		remove_quote(t_token **list);
 char		is_operator(char c);
 int			is_double_operator(char c1, char c2);
 void		get_ast(t_pipe_node **ast, t_token **token_list);
-t_pipe_node	*parse(char *str, t_dict *dict);
+t_pipe_node	*parse(char *str);
 void		*quote_err(char c);
 char		is_quote(char *str, int	idx);
 

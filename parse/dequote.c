@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 19:47:32 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 19:54:41 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	check_quote(char *str)
 // 	}
 // }
 
-t_pipe_node	*parse(char *str, t_dict *dict)
+t_pipe_node	*parse(char *str)
 {
 	t_token		*token_list;
 	t_token		*cur;
