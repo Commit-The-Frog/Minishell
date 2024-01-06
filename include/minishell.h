@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 13:21:15 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 19:42:56 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,17 +162,19 @@ typedef struct	s_pipe_node
 
 # include "mini_exec.h"
 
-void	sig_handler(int signo);
-void	sig_fork_handler(int signo);
-void	get_more_input(char **origin);
-void	tokenize(t_token **list, char *str);
-void    print_logo(void);
-void	sep_by_space(t_token **list, char *str);
-void	make_token(t_token **list, char *str, int start, int end);
-void	remove_quote(t_token **list);
-char	is_operator(char c);
-int		is_double_operator(char c1, char c2);
-void	get_ast(t_pipe_node **ast, t_token **token_list);
-t_pipe_node	*parse(char *str);
+void		sig_handler(int signo);
+void		sig_fork_handler(int signo);
+void		get_more_input(char **origin);
+void		tokenize(t_token **list, char *str);
+void    	print_logo(void);
+void		sep_by_space(t_token **list, char *str);
+void		make_token(t_token **list, char *str, int start, int end);
+void		remove_quote(t_token **list);
+char		is_operator(char c);
+int			is_double_operator(char c1, char c2);
+void		get_ast(t_pipe_node **ast, t_token **token_list);
+t_pipe_node	*parse(char *str, t_dict *dict);
+void		*quote_err(char c);
+char		is_quote(char *str, int	idx);
 
 #endif

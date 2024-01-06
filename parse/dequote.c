@@ -6,69 +6,77 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 13:24:40 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 19:47:32 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_quote(char *str)
+char	check_quote(char *str)
 {
-	int	i;
+	int		i;
+	char	quote;
 	
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'')
+		quote = is_quote(str, i);
+		if (quote != 0)
 		{
 			i++;
-			while (str[i] && str[i] != '\'')
+			while (str[i] && is_quote(str, i) == 0)
 				i++;
 			if (str[i] == 0)
-				return (0);
-		}
-		if (str[i] == '\"')
-		{
-			i++;
-			while (str[i] && str[i] != '\"')
-				i++;
-			if (str[i] == 0)
-				return (0);
+				return (quote);
 		}
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
-void	get_more_input(char **origin)
-{
-	char	*buff;
-	char	*joined_str;
+// void	get_more_input(char **origin)
+// {
+// 	char	*buff;
+// 	char	*joined_str;
 
-	while (!check_quote(*origin))
-	{
-		buff = readline("> ");
-		joined_str = ft_strjoin(*origin, buff);
-		free(*origin);
-		free(buff);
-		*origin = joined_str;
-	}
-}
+// 	while (!check_quote(*origin))
+// 	{
+// 		buff = readline("> ");
+// 		joined_str = ft_strjoin(*origin, buff);
+// 		free(*origin);
+// 		free(buff);
+// 		*origin = joined_str;
+// 	}
+// }
 
-void	check_leak(void)
-{
-	system("leaks a.out");
-}
-
-t_pipe_node	*parse(char *str)
+t_pipe_node	*parse(char *str, t_dict *dict)
 {
 	t_token		*token_list;
+	t_token		*cur;
 	t_pipe_node	*ast;
+	char		quote;
 
-	// get_more_input(&str);
+	if (str == NULL || ft_strlen(str) == 0)
+		return (NULL);
 	token_list = NULL;
 	ast = NULL;
+	quote = check_quote(str);
+	if (quote != 0)
+	{
+		quote_err(quote);
+		return (NULL);
+	}
 	tokenize(&token_list, str);
+	// ======print=======
+	// cur = token_list;
+	// while (cur)
+	// {
+	// 	if (cur->str != NULL)
+	// 		printf("[%s|%u] ", cur->str, (unsigned int)cur->type);
+	// 	cur = cur->next;
+	// }
+	// printf("\n");
+	// ==================
 	get_ast(&ast, &token_list);
 	return (ast);
 }

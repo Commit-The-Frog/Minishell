@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:53:35 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/05 22:31:28 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 19:36:40 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	sep_by_space(t_token **list, char *str)
 	end = 0;
 	while (str[end])
 	{
-		if (str[end] == '\'' || str[end] == '\"')
+		quote = is_quote(str, end);
+		if (quote != 0)
 		{
-			quote = str[end];
 			end++;
-			while (str[end] && str[end] != quote)
+			while (str[end] && is_quote(str, end) == 0)
 				end++;
 		}
 		else if (str[end] == ' ')
@@ -54,6 +54,7 @@ void	remove_quote(t_token **list)
 	t_token	*cur;
 	char	*new_str;
 	char	qoute;
+	char	*tmp;
 	int		i;
 	int		j;
 
@@ -67,19 +68,26 @@ void	remove_quote(t_token **list)
 		j = 0;
 		while (cur->str[j])
 		{
-			if (cur->str[j] == '\'' || cur->str[j] == '\"')
+			qoute = is_quote(cur->str, j);
+			if (qoute != 0)
 			{
-				qoute = cur->str[j];
 				j++;
-				while (cur->str[j] != qoute)
-					new_str[i++] = cur->str[j++];
+				while (is_quote(cur->str, j) == 0)
+				{
+					if (cur->str[j] == '\\' &&
+					(cur->str[j + 1] == '\'' || cur->str[j + 1] == '\"'))
+						j++;
+					else
+						new_str[i++] = cur->str[j++];
+				}
 			}
 			else
 				new_str[i++] = cur->str[j];
 			j++;
 		}
+		tmp = cur->str;
 		cur->str = new_str;
+		free(tmp);
 		cur = cur->next;
 	}
 }
-
