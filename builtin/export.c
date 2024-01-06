@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 12:03:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/04 21:17:08 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 18:56:35 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,31 +69,31 @@ static void	sort_print_env(t_dict *env_dict)
 	free_double_ptr(envp);
 }
 
-static int	is_valid_id(char *str)
+static int	is_valid_id(char *s)
 {
-	int	idx;
+	int	i;
 	int	after_assign;
 
-	idx = 0;
+	i = 0;
 	after_assign = 0;
-	while (str[idx])
+	while (s[i])
 	{
-		if (idx == 0)
+		if (i == 0)
 		{
-			if (!(ft_isalpha(str[idx]) || str[idx] == '_'))
+			if (!(ft_isalpha(s[i]) || s[i] == '_'))
 				return (0);
 		}
 		else
 		{
-			if (str[idx] == '=')
+			if (s[i] == '=')
 				after_assign = 1;
 			if (!after_assign)
 			{
-				if (!(ft_isalpha(str[idx]) || str[idx] == '_' || ft_isdigit(str[idx])))
+				if (!(ft_isalpha(s[i]) || s[i] == '_' || ft_isdigit(s[i])))
 					return (0);
 			}
 		}
-		idx++;
+		i++;
 	}
 	return (1);
 }
@@ -109,7 +109,7 @@ static int	invalid_id_err(char	*str)
 	return (1);
 }
 
-int	 ft_export(char **argv, t_dict **env_dict)
+int	ft_export(char **argv, t_dict **env_dict)
 {
 	int	argc;
 	int	idx;
@@ -125,7 +125,7 @@ int	 ft_export(char **argv, t_dict **env_dict)
 		if (is_valid_id(argv[idx]))
 			add_node_back(env_dict, argv[idx]);
 		else
-			result = invalid_id_err(argv[idx]);//error 발생
+			result = invalid_id_err(argv[idx]);
 		idx++;
 	}
 	if (argc == 1)
