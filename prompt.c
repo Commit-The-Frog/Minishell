@@ -6,63 +6,38 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/02 22:12:21 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 16:47:04 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main()
+int main(int argc, char *argv[], char **envp)
 {
-	static int	recent_exit = 0;
-	const char	*prompt = "minishell-1.0$ ";
+	const char	*prompt = "minishell-2.0$ ";
+	int			recent_exit = 0;
 	char		*line;
-	pid_t		pid;
+	t_pipe_node *ast;
+	t_dict		*env_dict;
 
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
+	env_dict = dict_init(envp);
 	while (1)
 	{
 		signal(SIGINT, sig_handler);
 		signal(SIGQUIT, sig_handler);
 		line = readline(prompt);
+		// printf("[%s]\n", line);
 		if (!line)
 		{
 			printf("exit\n"); // test_mini$ exit으로 표시되어야 됨.
 			break ;
 		}
 		add_history(line);
+		ast = parse(line);
 		free(line);
-		if (ft_strncmp(line, "exit", 5) == 0)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (ft_strncmp(line, "cat", 4) == 0)
-		{
-			signal(SIGINT, sig_fork_handler);
-			signal(SIGQUIT, sig_fork_handler);
-			pid = fork();
-			if (pid == 0)
-				execve("/bin/cat", NULL, NULL);
-			else
-			{
-				waitpid(pid, &recent_exit, 0);
-			}
-		}
-		if (ft_strncmp(line, "sleep", 4) == 0)
-		{
-			signal(SIGINT, sig_fork_handler);
-			signal(SIGQUIT, sig_fork_handler);
-			pid = fork();
-			char	*sleep_arg[2] = {"sleep", "5"};
-			if (pid == 0)
-				execve("/bin/sleep", sleep_arg, NULL);
-			else
-			{
-				waitpid(pid, &recent_exit, 0);
-			}
-		}
+		recent_exit = execute_main(ast, &env_dict);
 	}
 	rl_clear_history();
 	exit(WEXITSTATUS(recent_exit));

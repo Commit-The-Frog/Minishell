@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 12:28:32 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 13:24:40 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,20 @@ void	check_leak(void)
 	system("leaks a.out");
 }
 
+t_pipe_node	*parse(char *str)
+{
+	t_token		*token_list;
+	t_pipe_node	*ast;
+
+	// get_more_input(&str);
+	token_list = NULL;
+	ast = NULL;
+	tokenize(&token_list, str);
+	get_ast(&ast, &token_list);
+	return (ast);
+}
+
+/*
 int	main(void)
 {
 	char		*origin;
@@ -94,4 +108,4 @@ int	main(void)
 	// 	}
 	// }
 	free(origin);
-}
+}*/

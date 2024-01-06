@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 12:51:39 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 13:25:02 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,33 +141,33 @@ void	get_ast(t_pipe_node **ast, t_token **token_list)
 
 	get_pipe_node(ast, token_list);
 
-	// printing..
-	cur = *ast;
-	while (cur)
-	{
-		cur_cmd = cur->cmd;
-		cur_redir = cur_cmd->redirect;
-		cur_scmd = cur_cmd->simple_cmd;
-		printf("====redirects====\n");
-		while (cur_redir)
-		{
-			printf("%u, %s\n", (unsigned int)cur_redir->type, cur_redir->file_name);
-			cur_redir = cur_redir->next;
-		}
-		printf("====simple cmd====\n");
-		while (cur_scmd)
-		{
-			printf("%s\n", cur_scmd->argv);
-			cur_scmd = cur_scmd->next;
-		}
-		printf("====argv====\n");
-		i = 0;
-		while (cur_cmd->argv[i])
-		{
-			printf("%s\n", cur_cmd->argv[i++]);
-		}
-		cur = cur->next_pipe;
-	}
+	// // printing..
+	// cur = *ast;
+	// while (cur)
+	// {
+	// 	cur_cmd = cur->cmd;
+	// 	cur_redir = cur_cmd->redirect;
+	// 	cur_scmd = cur_cmd->simple_cmd;
+	// 	printf("====redirects====\n");
+	// 	while (cur_redir)
+	// 	{
+	// 		printf("%u, %s\n", (unsigned int)cur_redir->type, cur_redir->file_name);
+	// 		cur_redir = cur_redir->next;
+	// 	}
+	// 	printf("====simple cmd====\n");
+	// 	while (cur_scmd)
+	// 	{
+	// 		printf("%s\n", cur_scmd->argv);
+	// 		cur_scmd = cur_scmd->next;
+	// 	}
+	// 	printf("====argv====\n");
+	// 	i = 0;
+	// 	while (cur_cmd->argv[i])
+	// 	{
+	// 		printf("%s\n", cur_cmd->argv[i++]);
+	// 	}
+	// 	cur = cur->next_pipe;
+	// }
 
 	// freeing tokenlist...
 	cur_token = *token_list;

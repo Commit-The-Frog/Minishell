@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 11:53:49 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 16:38:42 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	redirect_input(char *file_name, int type)
 	if (dup2(fd, STDIN_FILENO) < 0)
 		exit(EXIT_FAILURE); // dup fail
 	close(fd);
-	if (type == T_HEREDOC)
+	if (type == E_TYPE_REDIR_HEREDOC)
 		free(file_name);
 }
 
@@ -110,17 +110,17 @@ int	get_proc_cnt(t_pipe_node *head)
 	return (size);
 }
 
-void	redirect_file(t_redirect_node *redirect)
+void	redirect_file(t_redir_node *redirect)
 {
 	int	fd;
 
-	if (redirect->type == T_INPUT)
+	if (redirect->type == E_TYPE_REDIR_LEFT)
 		redirect_input(redirect->file_name, redirect->type);
-	if (redirect->type == T_OUTPUT)
+	if (redirect->type == E_TYPE_REDIR_RIGHT)
 		redirect_output(redirect->file_name);
-	if (redirect->type == T_HEREDOC)
+	if (redirect->type == E_TYPE_REDIR_HEREDOC)
 		redirect_input(redirect->file_name, redirect->type);
-	if (redirect->type == T_APPEND)
+	if (redirect->type == E_TYPE_REDIR_APPEND)
 		redirect_append(redirect->file_name);
 	if (redirect->next)
 		redirect_file(redirect->next);
@@ -278,11 +278,11 @@ void	execute_child(t_cmd_node *cmd, int	*pipe_fd, t_dict **env_dict)
 	execute_simple_cmd(cmd->argv, env_dict);
 }
 
-void	heredoc_sub_preprocess(t_redirect_node *redirect, int *cnt)
+void	heredoc_sub_preprocess(t_redir_node *redirect, int *cnt)
 {
 	if (!redirect)
 		return ;
-	if (redirect->type == T_HEREDOC)
+	if (redirect->type == E_TYPE_REDIR_HEREDOC)
 	{
 		redirect_heredoc(&redirect->file_name, *cnt);
 		(*cnt)++;
@@ -326,6 +326,7 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	int			idx;
 	int			tmpfile_cnt;
 	int			exit_stat;
+	int			origin_stdin;
 
 	signal(SIGINT, sig_fork_handler);
 	signal(SIGQUIT, sig_fork_handler);
@@ -341,8 +342,10 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	if (!pstat)
 		exit_malloc_error();
 	idx = 0;
+	origin_stdin = dup(STDIN_FILENO);
 	while (pipe_node)
 	{
+		// printf("proc \n");
 		if (pipe_node->next_pipe)
 		{
 			if (pipe(pipe_fd) < 0)
@@ -366,9 +369,11 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 		pipe_node = pipe_node->next_pipe;
 		idx++;
 	}
+	dup2(origin_stdin, STDIN_FILENO);
 	idx = 0;
 	while (idx < proc_cnt)
 	{
+		// printf("%d\n", pstat[idx].pid);
 		waitpid(pstat[idx].pid, &pstat[idx].exit_stat, 0);
 		idx++;
 	}
@@ -378,23 +383,18 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	return (exit_stat);
 }
 
-t_redirect_node	*create_redirect_node(char *filename, int type)
-{
-	t_redirect_node	*node;
+// t_redir_node	*create_redirect_node(char *filename, int type)
+// {
+// 	t_redir_node	*node;
 
-	node = (t_redirect_node *)malloc(sizeof(t_redirect_node));
-	if (!node)
-		exit(EXIT_FAILURE);
-	node->next = NULL;
-	node->file_name = filename;
-	node->type = type;
-	return (node);
-}
-
-void	f(void)
-{
-	system("leaks a.out");
-}
+// 	node = (t_redir_node *)malloc(sizeof(t_redir_node));
+// 	if (!node)
+// 		exit(EXIT_FAILURE);
+// 	node->next = NULL;
+// 	node->file_name = filename;
+// 	node->type = type;
+// 	return (node);
+// }
 
 // int	main(int argc, char *argv[], char **envp)
 // {
@@ -434,19 +434,19 @@ int	main(int argc, char *argv[], char **envp)
 	head->cmd->simple_cmd = (t_simple_cmd_node *)malloc(sizeof(t_simple_cmd_node));
 	head->cmd->simple_cmd->argv = ft_split(argv[1], ' ');
 	head->cmd->redirect = NULL;
-	// head->cmd->redirect = create_redirect_node("EOF1", T_HEREDOC);
-	head->cmd->redirect = create_redirect_node("/dev/urandom", T_INPUT);
-	// head->cmd->redirect->left = create_redirect_node("EOF2", T_HEREDOC);
-	// head->cmd->redirect->right = create_redirect_node("outfile1", T_OUTPUT);
+	// head->cmd->redirect = create_redirect_node("EOF1", E_TYPE_REDIR_HEREDOC);
+	head->cmd->redirect = create_redirect_node("/dev/urandom", E_TYPE_REDIR_LEFT);
+	// head->cmd->redirect->left = create_redirect_node("EOF2", E_TYPE_REDIR_HEREDOC);
+	// head->cmd->redirect->right = create_redirect_node("outfile1", E_TYPE_REDIR_RIGHT);
 	head->next_pipe = (t_pipe_node *)malloc(sizeof(t_pipe_node));
 	head->next_pipe->cmd = (t_cmd_node *)malloc(sizeof(t_cmd_node));
 	head->next_pipe->cmd->simple_cmd = NULL;
 	head->next_pipe->cmd->simple_cmd = (t_simple_cmd_node *)malloc(sizeof(t_simple_cmd_node));
 	head->next_pipe->cmd->simple_cmd->argv = ft_split(argv[2], ' ');
 	head->next_pipe->cmd->redirect = NULL;
-	// head->next_pipe->cmd->redirect = create_redirect_node("EOF1", T_HEREDOC);
-	// head->next_pipe->cmd->redirect->left = create_redirect_node("EOF2", T_HEREDOC);
-	head->next_pipe->cmd->redirect = create_redirect_node("outfile2", T_OUTPUT);
+	// head->next_pipe->cmd->redirect = create_redirect_node("EOF1", E_TYPE_REDIR_HEREDOC);
+	// head->next_pipe->cmd->redirect->left = create_redirect_node("EOF2", E_TYPE_REDIR_HEREDOC);
+	head->next_pipe->cmd->redirect = create_redirect_node("outfile2", E_TYPE_REDIR_RIGHT);
 	head->next_pipe->next_pipe = NULL;
 	exit_status = execute_main(head, &env_dict);
 	exit(WEXITSTATUS(exit_status));
