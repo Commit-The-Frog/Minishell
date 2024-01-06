@@ -1,56 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   demo_main.c                                        :+:      :+:    :+:   */
+/*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2023/12/31 17:18:54 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 18:47:56 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "demo_minishell.h"
+#include "minishell.h"
 
-void	sig_handler(int signo)
+int main(int argc, char *argv[], char **envp)
 {
-	// ^C 뜨는거 없애고 새로운 줄로 출력할 필요.
-	if (signo == SIGINT)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	if (signo == SIGQUIT)
-	{
-		// do nothing
-	}
-}
-
-int main()
-{
-	static int	recent_exit = 0;
-	const char	*prompt = "minishell$ ";
+	const char	*prompt = "minishell-2.0$ ";
+	int			recent_exit = 0;
 	char		*line;
+	t_pipe_node *ast;
+	t_dict		*env_dict;
 
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
+	env_dict = dict_init(envp);
 	while (1)
 	{
+		signal(SIGINT, sig_handler);
+		signal(SIGQUIT, sig_handler);
 		line = readline(prompt);
+		// printf("[%s]\n", line);
 		if (!line)
 		{
 			printf("exit\n"); // test_mini$ exit으로 표시되어야 됨.
 			break ;
 		}
 		add_history(line);
+		ast = parse(line);
+		if (ast == NULL)
+			continue ;
 		free(line);
-		if (ft_strncmp(line, "exit", 5) == 0)
-		{
-			printf("exit\n");
-			break ;
-		}
+		recent_exit = execute_main(ast, &env_dict);
 	}
 	rl_clear_history();
 	exit(WEXITSTATUS(recent_exit));
