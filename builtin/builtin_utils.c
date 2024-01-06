@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:07:42 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:08:57 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:52:45 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 void	*get_builtin_func(char *func)
 {
