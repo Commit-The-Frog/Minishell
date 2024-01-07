@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:04:20 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 12:37:15 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 16:36:07 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	redirect_heredoc(char **deli, int cnt, char *start_dir)
 	if (fd < 0)
 		exit_custom_err(NULL, tmp_file, "File open error", 1);
 	heredoc_file(fd, deli);
+	free(*deli);
 	*deli = tmp_file;
 	close(fd);
 }
@@ -103,4 +104,5 @@ void	unlink_tmpfile(int cnt, char *start_dir)
 		idx++;
 	}
 	free(heredoc_prefix);
+	free(start_dir);
 }

@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:07:42 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 13:17:41 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 16:36:09 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,29 @@ int	is_builtin_cmd(t_cmd_node *cmd)
 	return (0);
 }
 
-int	run_builtin_cmds(char **argv, t_dict **env_dict)
+int	run_builtin(t_cmd_node *cmd, t_dict **env_dict, int tmp_cnt, char *tmp_dir)
 {
 	int	idx;
 	int	(*builtin_func)(char **, t_dict **);
 	int	return_val;
+	int	origin_stdin;
 
 	idx = 0;
-	builtin_func = get_builtin_func(argv[0]);
+	builtin_func = get_builtin_func(cmd->argv[0]);
 	if (!builtin_func)
 		return (-1);
-	return_val = builtin_func(argv, env_dict);
+	if (cmd->redirect)
+	{
+		origin_stdin = dup(STDIN_FILENO);
+		redirect_file(cmd->redirect, 1);
+	}
+	return_val = builtin_func(cmd->argv, env_dict);
+	if (tmp_dir)
+		unlink_tmpfile(tmp_cnt, tmp_dir);
+	if (cmd->redirect)
+	{
+		dup2(origin_stdin, STDIN_FILENO);
+		close(origin_stdin);
+	}
 	return (return_val);
 }
