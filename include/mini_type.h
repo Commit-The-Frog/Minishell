@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_type.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 20:30:12 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:31:17 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 15:50:06 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,18 @@
 
 enum e_token_type {
     E_TYPE_AMPERSAND = 0,
-    E_TYPE_DOUBLE_AMPERSAND,
-    E_TYPE_DOUBLE_PIPE,
-    E_TYPE_PIPE,
-    E_TYPE_SIMPLE_CMD,
-    E_TYPE_REDIR_APPEND,
-    E_TYPE_REDIR_HEREDOC,
-    E_TYPE_REDIR_RIGHT,
-	E_TYPE_REDIR_LEFT,
-    E_TYPE_WHITESPACE,
-    E_TYPE_DEFAULT,
-	E_TYPE_SEMICOLON
+    E_TYPE_DOUBLE_AMPERSAND = 1,
+    E_TYPE_DOUBLE_PIPE = 2,
+    E_TYPE_PIPE = 3,
+    E_TYPE_SIMPLE_CMD = 4,
+    E_TYPE_REDIR_APPEND = 5,
+    E_TYPE_REDIR_HEREDOC = 6,
+    E_TYPE_REDIR_RIGHT = 7,
+	E_TYPE_REDIR_LEFT = 8,
+    E_TYPE_WHITESPACE = 9,
+    E_TYPE_DEFAULT = 10,
+	E_TYPE_SEMICOLON = 11,
+	E_TYPE_EXPAND = 12 
 }	t_token_type;
 
 typedef struct	s_token
@@ -44,6 +45,7 @@ typedef struct	s_redir_node
 
 typedef struct	s_simple_cmd_node
 {
+	int							is_expand;
 	char						*argv;
 	struct s_simple_cmd_node	*next;
 }	t_simple_cmd_node;

@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 21:29:09 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/07 17:04:59 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,16 @@ void	get_simple_cmd_node(t_simple_cmd_node **simple_cmd, t_token **cur)
 	t_simple_cmd_node	*new;
 	t_simple_cmd_node	*cur_simple_cmd;
 
-	if ((*cur)->str == NULL)
-		return ;
 	new = (t_simple_cmd_node *)ft_calloc(1, sizeof(t_simple_cmd_node));
 	if (new == NULL)
 		exit(EXIT_FAILURE);
+	new->is_expand = 0;
+	if ((*cur)->type == E_TYPE_EXPAND)
+		new->is_expand = 1;
 	new->argv = ft_strdup((*cur)->str);
 	if (new->argv == NULL)
 		exit(EXIT_FAILURE);
+	// printf("simple cmd: %s\n", new->argv);
 	new->next = NULL;
 	if (*simple_cmd == NULL)
 	{
@@ -48,9 +50,11 @@ void	get_redir_node(t_redir_node **redir, t_token **cur)
 		exit (EXIT_FAILURE);
 	new->type = (*cur)->type;
 	*cur = (*cur)->next;
+	if (*cur == NULL)
+		return ;
 	if ((*cur)->type >= 5 && (*cur)->type <= 8)
 	{
-		printf("error!\n");
+		syntax_err((*cur)->str);
 		return ;
 	}
 	new->file_name = ft_strdup((*cur)->str);
@@ -67,32 +71,57 @@ void	get_redir_node(t_redir_node **redir, t_token **cur)
 	}
 }
 
+void	get_argv_array(t_simple_cmd_node *list, char **arr)
+{
+	t_simple_cmd_node	*cur;
+	char				**tmp_arr;
+	int					i;
+	int					j;
+
+	cur = list;
+	i = 0;
+	while (cur)
+	{
+		if (cur->is_expand == 1)
+		{
+			tmp_arr = ft_split(cur->argv, ' ');
+			j = 0;
+			while (tmp_arr[j])
+			{
+				arr[i++] = ft_strdup(tmp_arr[j]);
+				free(tmp_arr[j]);
+				j++;
+			}
+			free(tmp_arr);
+			tmp_arr = NULL;
+		}
+		else
+			arr[i++] = ft_strdup(cur->argv);
+		cur = cur->next;
+	}
+}
+
 char	**conv_list_to_array(t_simple_cmd_node *list)
 {
 	t_simple_cmd_node	*cur;
 	int					count;
-	char				**array;
-	int					i;
+	char				**arr;
 
 	cur = list;
 	count = 0;
 	while (cur)
 	{
-		count++;
+		if (cur->is_expand == 1)
+			count += count_word(cur->argv) + 1;
+		else
+			count++;
 		cur = cur->next;
 	}
-	array = (char **)ft_calloc(count + 1, sizeof(char *));
-	if (array == NULL)
+	arr = (char **)ft_calloc(count + 1, sizeof(char *));
+	if (arr == NULL)
 		exit(EXIT_FAILURE);
-	i = 0;
-	cur = list;
-	while (cur)
-	{
-		if (cur->argv != NULL)
-			array[i++] = ft_strdup(cur->argv);
-		cur = cur->next;
-	}
-	return (array);
+	get_argv_array(list, arr);
+	return (arr);
 }
 
 t_cmd_node	*get_cmd_node(t_pipe_node *pipe, t_token **cur)
@@ -108,8 +137,10 @@ t_cmd_node	*get_cmd_node(t_pipe_node *pipe, t_token **cur)
 	{
 		if ((*cur)->type >= 5 && (*cur)->type <= 8)
 			get_redir_node(&(cmd->redirect), cur);
-		else if ((*cur)->type == E_TYPE_SIMPLE_CMD)
+		else if ((*cur)->type == E_TYPE_SIMPLE_CMD || (*cur)->type == E_TYPE_EXPAND)
 			get_simple_cmd_node(&(cmd->simple_cmd), cur);
+		if (*cur == NULL)
+			break;
 		*cur = (*cur)->next;
 	}
 	cmd->argv = conv_list_to_array(cmd->simple_cmd);
@@ -143,7 +174,7 @@ void	get_ast(t_pipe_node **ast, t_token **token_list)
 	int					i;
 
 	get_pipe_node(ast, token_list);
-	// // printing..
+	// printing..
 	// cur = *ast;
 	// while (cur)
 	// {
@@ -159,15 +190,16 @@ void	get_ast(t_pipe_node **ast, t_token **token_list)
 	// 	printf("====simple cmd====\n");
 	// 	while (cur_scmd)
 	// 	{
-	// 		printf("%s\n", cur_scmd->argv);
+	// 		printf("[%s]", cur_scmd->argv);
 	// 		cur_scmd = cur_scmd->next;
 	// 	}
-	// 	printf("====argv====\n");
+	// 	printf("\n====argv====\n");
 	// 	i = 0;
 	// 	while (cur_cmd->argv[i])
 	// 	{
-	// 		printf("%s\n", cur_cmd->argv[i++]);
+	// 		printf("[%s] ", cur_cmd->argv[i++]);
 	// 	}
+	// 	printf("\n");
 	// 	cur = cur->next_pipe;
 	// }
 
