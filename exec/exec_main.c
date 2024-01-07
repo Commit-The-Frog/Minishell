@@ -6,41 +6,42 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 21:39:32 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 16:01:28 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_simple_cmd(char **argv, t_dict **env_dict)
+void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 {
 	char	*bin_path;
 	char	**envp;
 	int		exit_code;
 
-	if (!argv || !argv[0])
+	if (!cmd->argv || !cmd->argv[0])
 		exit(EXIT_SUCCESS);
-	exit_code = run_builtin_cmds(argv, env_dict);
+	exit_code = run_builtin(cmd, env_dict, 0, NULL);
 	if (exit_code >= 0)
 		exit(exit_code);
-	if (ft_strncmp(argv[0], "./", 2) == 0 || ft_strncmp(argv[0], "../", 3) == 0
-		|| ft_strncmp(argv[0], "/", 1) == 0)
+	if (ft_strncmp(cmd->argv[0], "./", 2) == 0
+		|| ft_strncmp(cmd->argv[0], "../", 3) == 0
+		|| ft_strncmp(cmd->argv[0], "/", 1) == 0)
 	{
-		if (access(argv[0], X_OK) != 0)
-			exit_custom_err(NULL, argv[0], "No such file or directory", 1);
-		bin_path = argv[0];
+		if (access(cmd->argv[0], X_OK) != 0)
+			exit_custom_err(NULL, cmd->argv[0], "No such file or directory", 1);
+		bin_path = cmd->argv[0];
 	}
 	else
 	{
-		bin_path = get_bin_path(argv[0], env_dict);
+		bin_path = get_bin_path(cmd->argv[0], env_dict);
 		if (!bin_path)
-			exit_custom_err(NULL, argv[0], "command not found", 127);
+			exit_custom_err(NULL, cmd->argv[0], "command not found", 127);
 	}
 	envp = generate_envp(*env_dict);
-	execve(bin_path, argv, envp);
+	execve(bin_path, cmd->argv, envp);
 }
 
-void	execute_child(t_cmd_node *cmd, int	*pipe_fd, t_dict **env_dict)
+void	execute_child(t_cmd_node *cmd, int *pipe_fd, t_dict **env_dict)
 {
 	if (!cmd)
 		return ;
@@ -52,8 +53,8 @@ void	execute_child(t_cmd_node *cmd, int	*pipe_fd, t_dict **env_dict)
 		close(pipe_fd[1]);
 	}
 	if (cmd->redirect)
-		redirect_file(cmd->redirect);
-	execute_simple_cmd(cmd->argv, env_dict);
+		redirect_file(cmd->redirect, 0);
+	execute_simple_cmd(cmd, env_dict);
 }
 
 void	execute_pipe(t_pipe_node *head, t_dict **env_dict, t_pstat *pstat)
@@ -117,7 +118,7 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	heredoc_preprocess(head, &tmpfile_cnt, start_dir);
 	if (proc_cnt == 1 && is_builtin_cmd(head->cmd))
-		return (run_builtin_cmds(head->cmd->argv, env_dict));
+		return (run_builtin(head->cmd, env_dict, tmpfile_cnt, start_dir));
 	pstat = (t_pstat *)malloc(sizeof(t_pstat) * proc_cnt);
 	if (!pstat)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);

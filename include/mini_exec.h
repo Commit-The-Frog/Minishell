@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_exec.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 21:12:33 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 16:07:09 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,17 @@ int		execute_main(t_pipe_node *head, t_dict **env_dict);
 void	exit_with_str(char *str, int custom_errno);
 void	exit_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 int		print_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
-void	redirect_input(char *file_name, int type);
-void	redirect_output(char *file_name);
+int		redirect_input(char *file_name, int type, int is_builtin);
+int		redirect_output(char *file_name, int is_builtin);
 void	redirect_heredoc(char **deli, int cnt, char *start_dir);
-void	redirect_append(char *file_name);
-void	redirect_file(t_redir_node *redirect);
+int		redirect_append(char *file_name, int is_builtin);
+int		redirect_file(t_redir_node *redirect, int is_builtin);
 void	heredoc_sub_preprocess(t_redir_node *redirect, int *cnt, char *start_dir);
 void	heredoc_preprocess(t_pipe_node *head, int *cnt, char *start_dir);
 void	unlink_tmpfile(int cnt, char *start_dir);
 void	*get_builtin_func(char *func);
 int		is_builtin_cmd(t_cmd_node *cmd);
-int		run_builtin_cmds(char **argv, t_dict **env_dict);
+int		run_builtin(t_cmd_node *cmd, t_dict **env_dict, int tmp_cnt, char *tmp_dir);
 int		get_proc_cnt(t_pipe_node *head);
 char	**get_bin_path_list(char *path);
 char	*get_bin_path(char	*bin_name, t_dict **env_dict);

@@ -6,17 +6,31 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:58:54 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 13:19:26 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 16:04:44 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	redirect_input(char *file_name, int type)
+int	redirect_input(char *file_name, int type, int is_builtin)
 {
 	int	fd;
+	int	res;
 
 	fd = open(file_name, O_RDONLY);
+	if (is_builtin)
+	{
+		if (fd < 0)
+			return (print_custom_err(NULL, file_name,
+					"No such file or directory", 1));
+		if (access(file_name, R_OK) < 0)
+			return (print_custom_err(NULL, file_name, "Permission denied", 1));
+		if (dup2(fd, STDIN_FILENO) < 0)
+			return (print_custom_err(NULL, file_name,
+					"Duplicate file error", 1));
+		close(fd);
+		return (0);
+	}
 	if (fd < 0)
 		exit_custom_err(NULL, file_name, "No such file or directory", 1);
 	if (access(file_name, R_OK) < 0)
@@ -24,15 +38,27 @@ void	redirect_input(char *file_name, int type)
 	if (dup2(fd, STDIN_FILENO) < 0)
 		exit_custom_err(NULL, file_name, "Duplicate file error", 1);
 	close(fd);
-	if (type == E_TYPE_REDIR_HEREDOC)
-		free(file_name);
+	return (0);
 }
 
-void	redirect_output(char *file_name)
+int	redirect_output(char *file_name, int is_builtin)
 {
 	int	fd;
 
 	fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (is_builtin)
+	{
+		if (fd < 0)
+			return (print_custom_err(NULL, file_name,
+					"No such file or directory", 1));
+		if (access(file_name, R_OK) < 0)
+			return (print_custom_err(NULL, file_name, "Permission denied", 1));
+		if (dup2(fd, STDIN_FILENO) < 0)
+			return (print_custom_err(NULL, file_name,
+					"Duplicate file error", 1));
+		close(fd);
+		return (0);
+	}
 	if (fd < 0)
 		exit_custom_err(NULL, file_name, "File create error", 1);
 	if (access(file_name, W_OK) < 0)
@@ -40,13 +66,27 @@ void	redirect_output(char *file_name)
 	if (dup2(fd, STDOUT_FILENO) < 0)
 		exit_custom_err(NULL, file_name, "Duplicate file error", 1);
 	close(fd);
+	return (0);
 }
 
-void	redirect_append(char *file_name)
+int	redirect_append(char *file_name, int is_builtin)
 {
 	int	fd;
 
 	fd = open(file_name, O_WRONLY | O_APPEND | O_CREAT, 0644);
+	if (is_builtin)
+	{
+		if (access(file_name, W_OK) < 0)
+			return (print_custom_err(NULL, file_name, "Permission denied", 1));
+		if (fd < 0)
+			return (print_custom_err(NULL, file_name,
+					"No such file or directory", 1));
+		if (dup2(fd, STDOUT_FILENO) < 0)
+			return (print_custom_err(NULL, file_name,
+					"Duplicate file error", 1));
+		close(fd);
+		return (0);
+	}
 	if (access(file_name, W_OK) < 0)
 		exit_custom_err(NULL, file_name, "Permission denied", 1);
 	if (fd < 0)
@@ -54,22 +94,28 @@ void	redirect_append(char *file_name)
 	if (dup2(fd, STDOUT_FILENO) < 0)
 		exit_custom_err(NULL, file_name, "Duplicate file error", 1);
 	close(fd);
+	return (0);
 }
 
-void	redirect_file(t_redir_node *redirect)
+int	redirect_file(t_redir_node *redirect, int is_builtin)
 {
 	int	fd;
+	int	res;
 
+	res = 0;
 	if (redirect->type == E_TYPE_REDIR_LEFT)
-		redirect_input(redirect->file_name, redirect->type);
+		res = redirect_input(redirect->file_name, redirect->type, is_builtin);
 	if (redirect->type == E_TYPE_REDIR_RIGHT)
-		redirect_output(redirect->file_name);
+		res = redirect_output(redirect->file_name, is_builtin);
 	if (redirect->type == E_TYPE_REDIR_HEREDOC)
-		redirect_input(redirect->file_name, redirect->type);
+		res = redirect_input(redirect->file_name, redirect->type, is_builtin);
 	if (redirect->type == E_TYPE_REDIR_APPEND)
-		redirect_append(redirect->file_name);
+		res = redirect_append(redirect->file_name, is_builtin);
+	if (res)
+		return (res);
 	if (redirect->next)
-		redirect_file(redirect->next);
+		res = redirect_file(redirect->next, is_builtin);
+	return (res);
 }
 
 void	init_pipe(int *pipe_fd, t_pipe_node *next_pipe)
