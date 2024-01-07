@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/05 22:31:13 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 21:00:50 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,9 @@ void	make_token(t_token **list, char *str, int start, int end)
 	cur->next = new;
 }
 
-void	tokenize(t_token **list, char *str)
+void	tokenize(t_token **list, char *str, t_dict *dict)
 {
 	sep_by_space(list, str);
 	remove_quote(list);
+	expand_var(list, dict);
 }
