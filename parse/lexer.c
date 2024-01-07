@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 21:00:50 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/07 15:38:30 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int	get_type(t_token *token)
 	str = token->str;
 	if (ft_strlen(str) == 1 && !ft_strncmp(str, "|", 1))
 		return (E_TYPE_PIPE);
+	else if (ft_strchr(str, '$'))
+		return (E_TYPE_EXPAND);
 	else if (ft_strlen(str) == 1 && !ft_strncmp(str, "&", 1))
 		return (E_TYPE_AMPERSAND);
 	else if (ft_strlen(str) == 1 && !ft_strncmp(str, ";", 1))
@@ -94,6 +96,11 @@ void	make_token(t_token **list, char *str, int start, int end)
 		exit(EXIT_FAILURE);
 	new->str = substr;
 	new->type = get_type(new);
+	if (new->type == E_TYPE_SEMICOLON)
+	{
+		syntax_err(new->str);
+		return ;
+	}
 	new->next = NULL;
 	if (*list == NULL)
 	{
@@ -111,4 +118,5 @@ void	tokenize(t_token **list, char *str, t_dict *dict)
 	sep_by_space(list, str);
 	remove_quote(list);
 	expand_var(list, dict);
+	remove_empty_token(list);
 }

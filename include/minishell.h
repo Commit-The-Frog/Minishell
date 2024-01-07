@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:34:04 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 16:49:21 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,8 @@ t_pipe_node	*parse(char *str, t_dict *dict);
 void		*quote_err(char c);
 char		is_quote(char *str, int	idx);
 void		expand_var(t_token **list, t_dict *dict);
+void		*syntax_err(char *str);
+void		remove_empty_token(t_token **token_list);
+int			count_word(char *str);
 
 #endif

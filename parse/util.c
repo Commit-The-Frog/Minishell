@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:31:09 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 18:43:52 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/07 16:59:01 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,28 @@ char	is_quote(char *str, int	idx)
 		else
 			return (0);
 	}
+}
+
+int	count_word(char *str)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	if (str == NULL)
+		return (0);
+	while (str[i])
+	{
+		if (str[i] != ' ')
+		{
+			count++;
+			while (str[i] && str[i] != ' ')
+				i++;
+		}
+		if (str[i] == 0)
+			break ;
+		i++;
+	}
+	return (count);
 }
