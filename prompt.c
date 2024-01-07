@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 16:48:03 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 17:36:00 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int main(int argc, char *argv[], char **envp)
 	t_pipe_node *ast;
 	t_dict		*env_dict;
 
-	atexit(f);
+	// atexit(f);
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	env_dict = dict_init(envp);
