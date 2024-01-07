@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:04:20 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 21:27:04 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 12:37:15 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	heredoc_sub_preprocess(t_redir_node *redir, int *cnt, char *start_dir)
 		return ;
 	if (redir->type == E_TYPE_REDIR_HEREDOC)
 	{
-		redir_heredoc(&redir->file_name, *cnt, start_dir);
+		redirect_heredoc(&redir->file_name, *cnt, start_dir);
 		(*cnt)++;
 	}
 	if (redir->next)
