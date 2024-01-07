@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 16:36:17 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 19:02:10 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	exit_by_child_state(t_pstat *pstat, int proc_cnt, int cnt, char *start_dir)
 	exit_stat = pstat[idx - 1].exit_stat;
 	free(pstat);
 	unlink_tmpfile(cnt, start_dir);
-	return (exit_stat);
+	return (WEXITSTATUS(exit_stat));
 }
 
 int	execute_main(t_pipe_node *head, t_dict **env_dict)

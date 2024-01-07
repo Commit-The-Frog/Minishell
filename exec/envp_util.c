@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:37:32 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:35:01 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 18:52:59 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,17 @@ char	**generate_envp(t_dict *env_dict)
 		tmp = tmp->next;
 		size++;
 	}
-	envp = (char **)malloc(sizeof(char *) * (size + 1));
+	envp = (char **)ft_calloc(size + 1, sizeof(char *));
 	if (!envp)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	idx = -1;
 	tmp = env_dict;
 	while (++idx < size)
 	{
+		if (ft_strcmp(tmp->key, "?") == 0)
+			continue;
 		envp[idx] = generate_env_str(tmp);
 		tmp = tmp->next;
 	}
-	envp[idx] = NULL;
 	return (envp);
 }

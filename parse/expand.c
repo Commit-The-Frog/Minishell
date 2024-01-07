@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:37:06 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/07 15:46:56 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/07 18:59:30 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	expand_var(t_token **list, t_dict *dict)
 			var = get_value_with_key(dict, substr);
 			free(substr);
 			tmp = cur->str;
-			cur->str = var;
+			cur->str = ft_strdup(var);
 			free(tmp);
 		}
 		cur = cur->next;

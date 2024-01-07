@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 17:36:00 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 19:05:02 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ int main(int argc, char *argv[], char **envp)
 {
 	const char	*prompt = "minishell-2.0$ ";
 	int			recent_exit = 0;
+	char		*recent_exit_str;
+	char		*recent_exit_env;
 	char		*line;
 	t_pipe_node *ast;
 	t_dict		*env_dict;
@@ -79,6 +81,15 @@ int main(int argc, char *argv[], char **envp)
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	env_dict = dict_init(envp);
+	recent_exit_str = ft_itoa(recent_exit);
+	if (!recent_exit_str)
+		exit_custom_err(NULL, NULL, "Malloc error", 1);
+	recent_exit_env = ft_strjoin("?=", recent_exit_str);
+	if (!recent_exit_env)
+		exit_custom_err(NULL, NULL, "Malloc error", 1);
+	add_node_back(&env_dict, recent_exit_env);
+	free(recent_exit_str);
+	free(recent_exit_env);
 	while (1)
 	{
 		signal(SIGINT, sig_handler);
@@ -96,9 +107,19 @@ int main(int argc, char *argv[], char **envp)
 			continue ;
 		free(line);
 		recent_exit = execute_main(ast, &env_dict);
+		// printf("recent exit : %d\n", recent_exit);
+		recent_exit_str = ft_itoa(recent_exit);
+		if (!recent_exit_str)
+			exit_custom_err(NULL, NULL, "Malloc error", 1);
+		recent_exit_env = ft_strjoin("?=", recent_exit_str);
+		if (!recent_exit_env)
+			exit_custom_err(NULL, NULL, "Malloc error", 1);
+		add_node_back(&env_dict, recent_exit_env);
+		free(recent_exit_str);
+		free(recent_exit_env);
 		free_ast(ast);
 	}
 	free_ast(ast);
 	rl_clear_history();
-	exit(WEXITSTATUS(recent_exit));
+	exit(recent_exit);
 }
