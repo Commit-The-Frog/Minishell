@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/07 17:04:59 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/07 17:39:24 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,7 @@ void	get_ast(t_pipe_node **ast, t_token **token_list)
 	t_simple_cmd_node	*cur_scmd;
 	int					i;
 
+	cur_token = *token_list;
 	get_pipe_node(ast, token_list);
 	// printing..
 	// cur = *ast;
@@ -204,11 +205,11 @@ void	get_ast(t_pipe_node **ast, t_token **token_list)
 	// }
 
 	// freeing tokenlist...
-	cur_token = *token_list;
 	while (cur_token)
 	{
 		tmp = cur_token;
 		cur_token = cur_token->next;
 		free(tmp);
+		free(tmp->str);
 	}
 }
