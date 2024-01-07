@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:58:54 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:34:58 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 13:19:26 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	redirect_input(char *file_name, int type)
 	int	fd;
 
 	fd = open(file_name, O_RDONLY);
-	if (access(file_name, R_OK) < 0)
-		exit_custom_err(NULL, file_name, "Permission denied", 1);
 	if (fd < 0)
 		exit_custom_err(NULL, file_name, "No such file or directory", 1);
+	if (access(file_name, R_OK) < 0)
+		exit_custom_err(NULL, file_name, "Permission denied", 1);
 	if (dup2(fd, STDIN_FILENO) < 0)
 		exit_custom_err(NULL, file_name, "Duplicate file error", 1);
 	close(fd);
@@ -33,10 +33,10 @@ void	redirect_output(char *file_name)
 	int	fd;
 
 	fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (access(file_name, W_OK) < 0)
-		exit_custom_err(NULL, file_name, "Permission denied", 1);
 	if (fd < 0)
 		exit_custom_err(NULL, file_name, "File create error", 1);
+	if (access(file_name, W_OK) < 0)
+		exit_custom_err(NULL, file_name, "Permission denied", 1);
 	if (dup2(fd, STDOUT_FILENO) < 0)
 		exit_custom_err(NULL, file_name, "Duplicate file error", 1);
 	close(fd);

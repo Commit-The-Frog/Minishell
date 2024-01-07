@@ -6,14 +6,12 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:51:56 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/06 21:12:33 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINI_EXEC_H
 # define MINI_EXEC_H
-
-#include "mini_type.h"
 
 char	**generate_envp(t_dict *env_dict);
 t_dict	*dict_init(char	**envp);
@@ -38,12 +36,12 @@ void	exit_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 int		print_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 void	redirect_input(char *file_name, int type);
 void	redirect_output(char *file_name);
-void	redirect_heredoc(char **deli, int cnt);
+void	redirect_heredoc(char **deli, int cnt, char *start_dir);
 void	redirect_append(char *file_name);
 void	redirect_file(t_redir_node *redirect);
-void	heredoc_sub_preprocess(t_redir_node *redirect, int *cnt);
-void	heredoc_preprocess(t_pipe_node *head, int *cnt);
-void	unlink_tmpfile(int cnt);
+void	heredoc_sub_preprocess(t_redir_node *redirect, int *cnt, char *start_dir);
+void	heredoc_preprocess(t_pipe_node *head, int *cnt, char *start_dir);
+void	unlink_tmpfile(int cnt, char *start_dir);
 void	*get_builtin_func(char *func);
 int		is_builtin_cmd(t_cmd_node *cmd);
 int		run_builtin_cmds(char **argv, t_dict **env_dict);

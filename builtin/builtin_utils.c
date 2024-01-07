@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:07:42 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:52:45 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 13:17:41 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	is_builtin_cmd(t_cmd_node *cmd)
 {
 	if (!cmd)
 		return (0);
-	if (!cmd->argv)
+	if (!cmd->argv || !cmd->argv[0])
 		return (0);
 	if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		return (1);
