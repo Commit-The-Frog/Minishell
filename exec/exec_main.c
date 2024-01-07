@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:34:58 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 21:39:32 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	execute_pipe(t_pipe_node *head, t_dict **env_dict, t_pstat *pstat)
 	}
 }
 
-int	exit_by_child_state(t_pstat *pstat, int proc_cnt)
+int	exit_by_child_state(t_pstat *pstat, int proc_cnt, int cnt, char *start_dir)
 {
 	int	idx;
 	int	exit_stat;
@@ -95,6 +95,7 @@ int	exit_by_child_state(t_pstat *pstat, int proc_cnt)
 	}
 	exit_stat = pstat[idx - 1].exit_stat;
 	free(pstat);
+	unlink_tmpfile(cnt, start_dir);
 	return (exit_stat);
 }
 
@@ -103,14 +104,18 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	int			proc_cnt;
 	t_pstat		*pstat;
 	int			tmpfile_cnt;
-	int			exit_stat;
 	int			origin_stdin;
+	char		*start_dir;
 
 	signal(SIGINT, sig_fork_handler);
 	signal(SIGQUIT, sig_fork_handler);
 	proc_cnt = get_proc_cnt(head);
 	tmpfile_cnt = 0;
-	heredoc_preprocess(head, &tmpfile_cnt);
+	start_dir = NULL;
+	start_dir = getcwd(start_dir, 0);
+	if (!start_dir)
+		exit_custom_err(NULL, NULL, "Malloc error", 1);
+	heredoc_preprocess(head, &tmpfile_cnt, start_dir);
 	if (proc_cnt == 1 && is_builtin_cmd(head->cmd))
 		return (run_builtin_cmds(head->cmd->argv, env_dict));
 	pstat = (t_pstat *)malloc(sizeof(t_pstat) * proc_cnt);
@@ -120,6 +125,5 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	execute_pipe(head, env_dict, pstat);
 	dup2(origin_stdin, STDIN_FILENO);
 	close(origin_stdin);
-	unlink_tmpfile(tmpfile_cnt);
-	return (exit_by_child_state(pstat, proc_cnt));
+	return (exit_by_child_state(pstat, proc_cnt, tmpfile_cnt, start_dir));
 }
