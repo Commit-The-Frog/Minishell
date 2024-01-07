@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/07 17:05:07 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/07 20:49:26 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,13 @@ t_pipe_node	*parse(char *str, t_dict *dict)
 	}
 	tokenize(&token_list, str, dict);
 	// ======print=======
-	// cur = token_list;
-	// while (cur)
-	// {
-	// 	printf("[%s|%u] ", cur->str, (unsigned int)cur->type);
-	// 	cur = cur->next;
-	// }
-	// printf("\n");
+	cur = token_list;
+	while (cur)
+	{
+		printf("[%s|%u] ", cur->str, (unsigned int)cur->type);
+		cur = cur->next;
+	}
+	printf("\n");
 	// ==================
 	get_ast(&ast, &token_list);
 	return (ast);

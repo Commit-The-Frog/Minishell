@@ -6,13 +6,13 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:53:35 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 19:36:40 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/07 21:32:24 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	sep_by_space(t_token **list, char *str)
+void	sep_token(t_token **list, char *str)
 {
 	int	start;
 	int	end;
@@ -47,6 +47,37 @@ void	sep_by_space(t_token **list, char *str)
 		end++;
 	}
 	make_token(list, str, start, end);
+}
+
+void	split_token(t_token **list)
+{
+	t_token	*cur;
+	int		i;
+	char	qoute;
+
+	cur = *list;
+	while (cur)
+	{
+		// printf("cur_node : %s\n", cur->str);
+		i = 0;
+		while (cur->str[i])
+		{
+			if (cur->str[i] == '\'' || cur->str[i] == '\"')
+			{
+				qoute = cur->str[i];
+				i++;
+				while (cur->str[i] && cur->str[i] != qoute)
+					i++;
+			}
+			if (cur->str[i] == ' ')
+			{
+				insert_token(&cur, cur->str, ++i);
+				break ;
+			}
+			i++;
+		}
+		cur = cur->next;
+	}
 }
 
 void	remove_quote(t_token **list)
