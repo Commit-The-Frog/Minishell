@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 18:56:00 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 19:03:58 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,33 +68,39 @@ void	free_ast(t_pipe_node **ast)
 	*ast = NULL;
 }
 
-int main(int argc, char *argv[], char **envp)
+void	restore_recent_exit(int recent_exit, t_dict **env_dict)
 {
-	const char	*prompt = "minishell-2.0$ ";
-	int			recent_exit = 0;
-	char		*recent_exit_str;
-	char		*recent_exit_env;
-	char		*line;
-	t_pipe_node *ast;
-	t_dict		*env_dict;
+	char	*recent_exit_str;
+	char	*recent_exit_env;
 
-	// atexit(f);
-	signal(SIGINT, sig_handler);
-	signal(SIGQUIT, sig_handler);
-	env_dict = dict_init(envp);
 	recent_exit_str = ft_itoa(recent_exit);
 	if (!recent_exit_str)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	recent_exit_env = ft_strjoin("?=", recent_exit_str);
 	if (!recent_exit_env)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
-	add_node_back(&env_dict, recent_exit_env);
+	add_node_back(env_dict, recent_exit_env);
 	free(recent_exit_str);
 	free(recent_exit_env);
+}
+
+int main(int argc, char *argv[], char **envp)
+{
+	const char	*prompt = "minishell-2.0$ ";
+	int			recent_exit;
+	char		*line;
+	t_pipe_node *ast;
+	t_dict		*env_dict;
+
+	// atexit(f);
+	sigemptyset(&recent_sig);
+	env_dict = dict_init(envp);
+	recent_exit = 0;
 	while (1)
 	{
 		signal(SIGINT, sig_handler);
 		signal(SIGQUIT, sig_handler);
+		restore_recent_exit(recent_exit, &env_dict);
 		line = readline(prompt);
 		// printf("[%s]\n", line);
 		if (!line)
@@ -103,22 +109,18 @@ int main(int argc, char *argv[], char **envp)
 			break ;
 		}
 		add_history(line);
+		if (ft_sigismember(&recent_sig, SIGINT))
+		{
+			// printf("%x\n", recent_sig);
+			sigemptyset(&recent_sig);
+			restore_recent_exit(1, &env_dict);
+		}
 		ast = parse(line, env_dict);
 		if (ast == NULL)
 			continue ;
 		free(line);
 		recent_exit = execute_main(ast, &env_dict);
-		// printf("recent exit : %d\n", recent_exit);
-		recent_exit_str = ft_itoa(recent_exit);
-		if (!recent_exit_str)
-			exit_custom_err(NULL, NULL, "Malloc error", 1);
-		recent_exit_env = ft_strjoin("?=", recent_exit_str);
-		if (!recent_exit_env)
-			exit_custom_err(NULL, NULL, "Malloc error", 1);
-		add_node_back(&env_dict, recent_exit_env);
-		free(recent_exit_str);
-		free(recent_exit_env);
-		free_ast(&ast);
+		free_ast(ast);
 	}
 	free_ast(&ast);
 	rl_clear_history();

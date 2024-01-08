@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
 /*   Updated: 2024/01/08 17:32:11 by junkim2          ###   ########.fr       */
@@ -51,6 +51,9 @@ void		expand_var(t_token **list, t_dict *dict);
 void		*syntax_err(char *str);
 void		remove_empty_token(t_token **token_list);
 int			count_word(char *str);
+void		restore_recent_exit(int recent_exit, t_dict **env_dict);
+int			ft_sigismember(sigset_t *dst_set, int signo);
+sigset_t	recent_sig;
 void		insert_token(t_token **list, char *str, int start);
 void		split_token(t_token **list);
 void		expand_env(t_token *token, t_dict *env_dict);
