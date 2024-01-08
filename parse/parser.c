@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/07 17:47:32 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 18:29:36 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	get_simple_cmd_node(t_simple_cmd_node **simple_cmd, t_token **cur)
 	if (new == NULL)
 		exit(EXIT_FAILURE);
 	new->is_expand = 0;
-	if ((*cur)->type == E_TYPE_EXPAND)
-		new->is_expand = 1;
+	// if ((*cur)->type == E_TYPE_EXPAND)
+	// 	new->is_expand = 1;
 	new->argv = ft_strdup((*cur)->str);
 	if (new->argv == NULL)
 		exit(EXIT_FAILURE);
@@ -82,20 +82,20 @@ void	get_argv_array(t_simple_cmd_node *list, char **arr)
 	i = 0;
 	while (cur)
 	{
-		if (cur->is_expand == 1)
-		{
-			tmp_arr = ft_split(cur->argv, ' ');
-			j = 0;
-			while (tmp_arr[j])
-			{
-				arr[i++] = ft_strdup(tmp_arr[j]);
-				free(tmp_arr[j]);
-				j++;
-			}
-			free(tmp_arr);
-			tmp_arr = NULL;
-		}
-		else
+		// if (cur->is_expand == 1)
+		// {
+		// 	tmp_arr = ft_split(cur->argv, ' ');
+		// 	j = 0;
+		// 	while (tmp_arr[j])
+		// 	{
+		// 		arr[i++] = ft_strdup(tmp_arr[j]);
+		// 		free(tmp_arr[j]);
+		// 		j++;
+		// 	}
+		// 	free(tmp_arr);
+		// 	tmp_arr = NULL;
+		// }
+		// else
 			arr[i++] = ft_strdup(cur->argv);
 		cur = cur->next;
 	}
@@ -111,10 +111,10 @@ char	**conv_list_to_array(t_simple_cmd_node *list)
 	count = 0;
 	while (cur)
 	{
-		if (cur->is_expand == 1)
-			count += count_word(cur->argv) + 1;
-		else
-			count++;
+		// if (cur->is_expand == 1)
+		// 	count += count_word(cur->argv) + 1;
+		// else
+		count++;
 		cur = cur->next;
 	}
 	arr = (char **)ft_calloc(count + 1, sizeof(char *));
@@ -191,7 +191,7 @@ void	get_ast(t_pipe_node **ast, t_token **token_list)
 	// 	printf("====simple cmd====\n");
 	// 	while (cur_scmd)
 	// 	{
-	// 		printf("[%s]", cur_scmd->argv);
+	// 		printf("[%s] ", cur_scmd->argv);
 	// 		cur_scmd = cur_scmd->next;
 	// 	}
 	// 	printf("\n====argv====\n");

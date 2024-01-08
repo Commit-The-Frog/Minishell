@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hotfix_expand.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 20:43:40 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 22:35:33 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 18:02:19 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,12 @@ void	expand_env(t_token *token, t_dict *env_dict)
 	char	*str;
 	char	*env_value;
 
+	if (ft_strchr(token->str, '$') == 0)
+		return ;
 	quote_flag = 0;
 	size = get_total_len(token->str, env_dict);
-	return_str = (char *)ft_calloc(size, sizeof(char));
+	// printf("%d\n", size);
+	return_str = (char *)ft_calloc(size + 1, sizeof(char));
 	str = token->str;
 	idx = 0;
 	sub_idx = 0;
@@ -148,5 +151,6 @@ void	expand_env(t_token *token, t_dict *env_dict)
 			idx++;
 		}
 	}
+	// printf("%s\n", return_str);
 	token->str = return_str;
 }

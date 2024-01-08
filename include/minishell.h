@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 21:25:14 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 17:32:11 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,6 @@ void		remove_empty_token(t_token **token_list);
 int			count_word(char *str);
 void		insert_token(t_token **list, char *str, int start);
 void		split_token(t_token **list);
+void		expand_env(t_token *token, t_dict *env_dict);
 
 #endif

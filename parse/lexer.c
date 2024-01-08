@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/07 22:37:14 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 18:29:04 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,9 @@ void	insert_token(t_token **list, char *str, int start)
 	substr = ft_substr(str, start, end - start);
 	if (substr == NULL)
 		exit(EXIT_FAILURE);
+	// printf("\033[31m");
+	// printf("%d %d\n", start, end);
+	// printf("sub:%s\n", substr);
 	new = (t_token *)ft_calloc(1, sizeof(t_token));
 	if (new == NULL)
 		exit(EXIT_FAILURE);
@@ -133,9 +136,12 @@ void	insert_token(t_token **list, char *str, int start)
 	tmp = (*list)->next;
 	(*list)->next = new;
 	new->next = tmp;
-	substr = ft_substr(str, 0, start + 1);
+	substr = ft_substr(str, 0, start - 1);
 	if (substr == NULL)
 		exit(EXIT_FAILURE);
+	// printf("%d %d\n", start, end);
+	// printf("sub:%s\n", substr);
+	// printf("\033[0m");
 	tmp_str = (*list)->str;
 	(*list)->str = substr;
 	free(tmp_str);
@@ -144,8 +150,8 @@ void	insert_token(t_token **list, char *str, int start)
 void	tokenize(t_token **list, char *str, t_dict *dict)
 {
 	sep_token(list, str);
-	// expand_var(list, dict);
+	expand_var(list, dict);
 	split_token(list);
-	// remove_quote(list);
+	remove_quote(list);
 	// remove_empty_token(list);
 }

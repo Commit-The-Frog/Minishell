@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 19:05:02 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 18:56:00 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ void	free_simple_cmd_node(t_simple_cmd_node *r_node)
 	}
 }
 
-void	free_ast(t_pipe_node *ast)
+void	free_ast(t_pipe_node **ast)
 {
 	t_pipe_node			*tmp;
 	t_pipe_node			*target;
 	t_cmd_node			*c_node;
 
-	tmp = ast;
+	tmp = *ast;
 	while (tmp)
 	{
 		c_node = tmp->cmd;
@@ -65,6 +65,7 @@ void	free_ast(t_pipe_node *ast)
 		tmp = tmp->next_pipe;
 		free(target);
 	}
+	*ast = NULL;
 }
 
 int main(int argc, char *argv[], char **envp)
@@ -117,9 +118,9 @@ int main(int argc, char *argv[], char **envp)
 		add_node_back(&env_dict, recent_exit_env);
 		free(recent_exit_str);
 		free(recent_exit_env);
-		free_ast(ast);
+		free_ast(&ast);
 	}
-	free_ast(ast);
+	free_ast(&ast);
 	rl_clear_history();
 	exit(recent_exit);
 }
