@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 19:03:58 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 19:47:53 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ int main(int argc, char *argv[], char **envp)
 		signal(SIGQUIT, sig_handler);
 		restore_recent_exit(recent_exit, &env_dict);
 		line = readline(prompt);
-		// printf("[%s]\n", line);
 		if (!line)
 		{
 			printf("exit\n"); // test_mini$ exit으로 표시되어야 됨.
@@ -120,7 +119,7 @@ int main(int argc, char *argv[], char **envp)
 			continue ;
 		free(line);
 		recent_exit = execute_main(ast, &env_dict);
-		free_ast(ast);
+		free_ast(&ast);
 	}
 	free_ast(&ast);
 	rl_clear_history();

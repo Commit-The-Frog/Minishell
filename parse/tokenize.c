@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:53:35 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/07 21:32:24 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:09:23 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	sep_token(t_token **list, char *str)
 		if (quote != 0)
 		{
 			end++;
-			while (str[end] && is_quote(str, end) == 0)
+			while (str[end] && is_quote(str, end) != quote)
 				end++;
 		}
 		else if (str[end] == ' ')
@@ -53,20 +53,19 @@ void	split_token(t_token **list)
 {
 	t_token	*cur;
 	int		i;
-	char	qoute;
+	char	quote;
 
 	cur = *list;
 	while (cur)
 	{
-		// printf("cur_node : %s\n", cur->str);
 		i = 0;
 		while (cur->str[i])
 		{
 			if (cur->str[i] == '\'' || cur->str[i] == '\"')
 			{
-				qoute = cur->str[i];
+				quote = cur->str[i];
 				i++;
-				while (cur->str[i] && cur->str[i] != qoute)
+				while (cur->str[i] && cur->str[i] != quote)
 					i++;
 			}
 			if (cur->str[i] == ' ')
@@ -84,7 +83,7 @@ void	remove_quote(t_token **list)
 {
 	t_token	*cur;
 	char	*new_str;
-	char	qoute;
+	char	quote;
 	char	*tmp;
 	int		i;
 	int		j;
@@ -99,11 +98,11 @@ void	remove_quote(t_token **list)
 		j = 0;
 		while (cur->str[j])
 		{
-			qoute = is_quote(cur->str, j);
-			if (qoute != 0)
+			quote = is_quote(cur->str, j);
+			if (quote != 0)
 			{
 				j++;
-				while (is_quote(cur->str, j) == 0)
+				while (cur->str[j] && is_quote(cur->str, j) != quote)
 				{
 					if (cur->str[j] == '\\' &&
 					(cur->str[j + 1] == '\'' || cur->str[j + 1] == '\"'))

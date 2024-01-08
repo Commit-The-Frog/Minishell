@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 20:43:40 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 18:02:19 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:30:46 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,8 @@ static size_t	get_total_len(char *str, t_dict *env_dict)
 	while (idx < str_len)
 	{
 		quote_flag = set_quote_flag(quote_flag, str, idx);
-		if (str[idx] == '$' && (quote_flag == '\"' || !quote_flag))
+		if (str[idx] == '$' && (quote_flag == '\"' || !quote_flag) && \
+			!(is_quote(str, idx + 1) || str[idx + 1] == ' ' || str[idx + 1] == 0))
 		{
 			env_name = ft_substr(str, idx + 1, get_var_len(&str[idx + 1]));
 			if (!env_name)
@@ -124,7 +125,6 @@ void	expand_env(t_token *token, t_dict *env_dict)
 		return ;
 	quote_flag = 0;
 	size = get_total_len(token->str, env_dict);
-	// printf("%d\n", size);
 	return_str = (char *)ft_calloc(size + 1, sizeof(char));
 	str = token->str;
 	idx = 0;
@@ -132,7 +132,8 @@ void	expand_env(t_token *token, t_dict *env_dict)
 	while (str[idx])
 	{
 		quote_flag = set_quote_flag(quote_flag, str, idx);
-		if (str[idx] == '$' && (quote_flag == '\"' || !quote_flag))
+		if (str[idx] == '$' && (quote_flag == '\"' || !quote_flag) && 
+			!(is_quote(str, idx + 1) || str[idx + 1] == ' ' || str[idx + 1] == 0))
 		{
 			env_name = ft_substr(str, idx + 1, get_var_len(&str[idx + 1]));
 			if (!env_name)
@@ -151,6 +152,5 @@ void	expand_env(t_token *token, t_dict *env_dict)
 			idx++;
 		}
 	}
-	// printf("%s\n", return_str);
 	token->str = return_str;
 }

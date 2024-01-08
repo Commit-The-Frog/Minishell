@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 17:32:11 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:13:45 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,7 @@ sigset_t	recent_sig;
 void		insert_token(t_token **list, char *str, int start);
 void		split_token(t_token **list);
 void		expand_env(t_token *token, t_dict *env_dict);
+//printer
+void	token_list_printer(t_token *token_list);
 
 #endif

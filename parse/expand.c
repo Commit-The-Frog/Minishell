@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:37:06 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/08 17:31:31 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:22:13 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ void	expand_var(t_token **list, t_dict *dict)
 	cur = *list;
 	while (cur)
 	{
-		expand_env(cur, dict);
+		// if (!(cur->str[0] == '$' && ft_strlen(cur->str) == 1))
+		if (ft_strcmp(cur->str, "$") != 0)
+			expand_env(cur, dict);
 		cur = cur->next;
 	}
 }
