@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 20:18:02 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 21:08:49 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@ void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 		|| ft_strncmp(cmd->argv[0], "../", 3) == 0
 		|| ft_strncmp(cmd->argv[0], "/", 1) == 0)
 	{
-		if (access(cmd->argv[0], X_OK) != 0)
+		if (access(cmd->argv[0], F_OK) != 0)
 			exit_custom_err(NULL, cmd->argv[0], "No such file or directory", 127);
+		if (access(cmd->argv[0], X_OK) != 0)
+			exit_custom_err(NULL, cmd->argv[0], "Permission denied", 126);
 		bin_path = cmd->argv[0];
 	}
 	else

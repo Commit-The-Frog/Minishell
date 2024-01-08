@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_io.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:58:54 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 20:13:09 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 21:03:42 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	redirect_input(char *file_name, int type, int is_builtin)
 		close(fd);
 		return (0);
 	}
-	if (fd < 0)
+	if (access(file_name, F_OK) < 0)
 		exit_custom_err(NULL, file_name, "No such file or directory", 1);
 	if (access(file_name, R_OK) < 0)
 		exit_custom_err(NULL, file_name, "Permission denied", 1);
@@ -59,7 +59,7 @@ int	redirect_output(char *file_name, int is_builtin)
 		close(fd);
 		return (0);
 	}
-	if (fd < 0)
+	if (access(file_name, F_OK) < 0)
 		exit_custom_err(NULL, file_name, "No such file or directory", 1);
 	if (access(file_name, W_OK) < 0)
 		exit_custom_err(NULL, file_name, "Permission denied", 1);
@@ -87,7 +87,7 @@ int	redirect_append(char *file_name, int is_builtin)
 		close(fd);
 		return (0);
 	}
-	if (fd < 0)
+	if (access(file_name, F_OK) < 0)
 		exit_custom_err(NULL, file_name, "No such file or directory", 1);
 	if (access(file_name, W_OK) < 0)
 		exit_custom_err(NULL, file_name, "Permission denied", 1);

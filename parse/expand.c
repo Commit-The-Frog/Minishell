@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:37:06 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/08 20:22:13 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:59:06 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,32 @@ void	expand_var(t_token **list, t_dict *dict)
 	}
 }
 
-void	remove_empty_token(t_token **list)
+void remove_empty_token(t_token **list)
 {
-	t_token	*cur;
-	t_token	*tmp;
+    t_token *cur = *list;
+    t_token *tmp;
+    t_token *prev = NULL;
 
-	cur = *list;
-	if (cur->str == NULL)
-		*list = NULL;
-	while (cur)
-	{
-		if (cur->next && cur->next->str == NULL)
-		{
-			tmp = cur->next;
-			cur->next = cur->next->next;
-			free(tmp->str);
-			free(tmp);
-		}
-		cur = cur->next;
-	}
+    while (cur)
+    {
+        if (cur->str == NULL || cur->str[0] == '\0')  // Check for empty or NULL string
+        {
+            if (prev == NULL)
+            {
+                *list = cur->next;
+            }
+            else
+            {
+                prev->next = cur->next;
+            }
+
+            free(cur->str);
+            free(cur);
+            cur = (prev == NULL) ? *list : prev->next;
+            continue;
+        }
+
+        prev = cur;
+        cur = cur->next;
+    }
 }
