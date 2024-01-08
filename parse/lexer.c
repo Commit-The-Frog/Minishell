@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/07 15:38:30 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:59:41 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	make_token(t_token **list, char *str, int start, int end)
 	t_token		*cur;
 	char		*substr;
 
-	if (start == end)
+	if (start >= end)
 		return ;
 	substr = ft_substr(str, start, end - start);
 	if (substr == NULL)
@@ -113,10 +113,46 @@ void	make_token(t_token **list, char *str, int start, int end)
 	cur->next = new;
 }
 
+void	insert_token(t_token **list, char *str, int start)
+{
+	t_token		*new;
+	t_token		*tmp;
+	char		*substr;
+	int			end;
+	char		*tmp_str;
+
+	end = ft_strlen(str);
+	substr = ft_substr(str, start, end - start);
+	if (substr == NULL)
+		exit(EXIT_FAILURE);
+	// printf("\033[31m");
+	// printf("%d %d\n", start, end);
+	// printf("sub:%s\n", substr);
+	new = (t_token *)ft_calloc(1, sizeof(t_token));
+	if (new == NULL)
+		exit(EXIT_FAILURE);
+	new->str = substr;
+	new->type = E_TYPE_SIMPLE_CMD;
+	tmp = (*list)->next;
+	(*list)->next = new;
+	new->next = tmp;
+	substr = ft_substr(str, 0, start - 1);
+	if (substr == NULL)
+		exit(EXIT_FAILURE);
+	// printf("%d %d\n", start, end);
+	// printf("sub:%s\n", substr);
+	// printf("\033[0m");
+	tmp_str = (*list)->str;
+	(*list)->str = substr;
+	free(tmp_str);
+}
+
 void	tokenize(t_token **list, char *str, t_dict *dict)
 {
-	sep_by_space(list, str);
-	remove_quote(list);
+	sep_token(list, str);
 	expand_var(list, dict);
+	split_token(list);
+	remove_quote(list);
 	remove_empty_token(list);
+	// token_list_printer(*list);
 }
