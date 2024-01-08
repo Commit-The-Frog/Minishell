@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 19:47:53 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 22:25:35 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ int main(int argc, char *argv[], char **envp)
 	sigemptyset(&recent_sig);
 	env_dict = dict_init(envp);
 	recent_exit = 0;
+	turn_off_ctrl();
 	while (1)
 	{
 		signal(SIGINT, sig_handler);
@@ -118,7 +119,9 @@ int main(int argc, char *argv[], char **envp)
 		if (ast == NULL)
 			continue ;
 		free(line);
+		turn_on_ctrl();
 		recent_exit = execute_main(ast, &env_dict);
+		turn_off_ctrl();
 		free_ast(&ast);
 	}
 	free_ast(&ast);

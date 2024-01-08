@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 21:08:49 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 22:24:27 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,26 @@ void	secur_execve(char *bin_path, char **argv, char **envp)
 	if (S_ISDIR(stat_buf.st_mode))
 		return (exit_custom_err(NULL, bin_path, "is a directory", 126));
 	execve(bin_path, argv, envp);
+}
+
+int	process_heredoc_fork(t_pipe_node *head, int *cnt, char *start_dir)
+{
+	pid_t	pid;
+	int		exit_state;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		turn_off_ctrl();
+		signal(SIGINT, SIG_DFL);
+		heredoc_preprocess(head, cnt, start_dir);
+		exit(EXIT_SUCCESS);
+	}
+	waitpid(pid, &exit_state, 0);
+	turn_on_ctrl();
+	if (exit_state != 0)
+		unlink_tmpfile(*cnt, start_dir);
+	return (exit_state);
 }
 
 void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
@@ -129,7 +149,8 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	start_dir = getcwd(start_dir, 0);
 	if (!start_dir)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
-	heredoc_preprocess(head, &tmpfile_cnt, start_dir);
+	if (process_heredoc_fork(head, &tmpfile_cnt, start_dir) != 0)
+		return (1);
 	if (proc_cnt == 1 && is_builtin_cmd(head->cmd))
 		return (run_builtin(head->cmd, env_dict, tmpfile_cnt, start_dir));
 	pstat = (t_pstat *)ft_calloc(proc_cnt, sizeof(t_pstat));

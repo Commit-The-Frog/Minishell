@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:04:20 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 16:36:07 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 22:08:27 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	unlink_tmpfile(int cnt, char *start_dir)
 	if (!heredoc_prefix)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	idx = 0;
-	while (idx < cnt)
+	while (idx < cnt + 1)
 	{
 		str_num = ft_itoa(idx);
 		if (!str_num)
