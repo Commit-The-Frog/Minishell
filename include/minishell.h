@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 17:23:14 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 21:25:14 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void		sig_fork_handler(int signo);
 void		get_more_input(char **origin);
 void		tokenize(t_token **list, char *str, t_dict *dict);
 void    	print_logo(void);
-void		sep_by_space(t_token **list, char *str);
+void		sep_token(t_token **list, char *str);
 void		make_token(t_token **list, char *str, int start, int end);
 void		remove_quote(t_token **list);
 char		is_operator(char c);
@@ -54,5 +54,7 @@ int			count_word(char *str);
 void		restore_recent_exit(int recent_exit, t_dict **env_dict);
 int			ft_sigismember(sigset_t *dst_set, int signo);
 sigset_t	recent_sig;
+void		insert_token(t_token **list, char *str, int start);
+void		split_token(t_token **list);
 
 #endif
