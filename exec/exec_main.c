@@ -6,11 +6,22 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 19:02:10 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 20:18:02 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	secur_execve(char *bin_path, char **argv, char **envp)
+{
+	struct stat	stat_buf;
+
+	if (stat(bin_path, &stat_buf) < 0)
+		return (exit_custom_err(NULL, bin_path, "stat function error", 1));
+	if (S_ISDIR(stat_buf.st_mode))
+		return (exit_custom_err(NULL, bin_path, "is a directory", 126));
+	execve(bin_path, argv, envp);
+}
 
 void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 {
@@ -18,7 +29,7 @@ void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 	char	**envp;
 	int		exit_code;
 
-	if (!cmd->argv || !cmd->argv[0])
+	if (!cmd->argv || !cmd->argv[0] || ft_strlen(cmd->argv[0]) == 0)
 		exit(EXIT_SUCCESS);
 	exit_code = run_builtin(cmd, env_dict, 0, NULL);
 	if (exit_code >= 0)
@@ -28,7 +39,7 @@ void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 		|| ft_strncmp(cmd->argv[0], "/", 1) == 0)
 	{
 		if (access(cmd->argv[0], X_OK) != 0)
-			exit_custom_err(NULL, cmd->argv[0], "No such file or directory", 1);
+			exit_custom_err(NULL, cmd->argv[0], "No such file or directory", 127);
 		bin_path = cmd->argv[0];
 	}
 	else
@@ -38,13 +49,13 @@ void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 			exit_custom_err(NULL, cmd->argv[0], "command not found", 127);
 	}
 	envp = generate_envp(*env_dict);
-	execve(bin_path, cmd->argv, envp);
+	secur_execve(bin_path, cmd->argv, envp);
 }
 
 void	execute_child(t_cmd_node *cmd, int *pipe_fd, t_dict **env_dict)
 {
-	if (!cmd)
-		return ;
+	if (!cmd || !cmd->argv || !cmd->argv[0])
+		exit(EXIT_SUCCESS);
 	if (pipe_fd[0] >= 0 && pipe_fd[1] >= 0)
 	{
 		close(pipe_fd[0]);
@@ -119,7 +130,7 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	heredoc_preprocess(head, &tmpfile_cnt, start_dir);
 	if (proc_cnt == 1 && is_builtin_cmd(head->cmd))
 		return (run_builtin(head->cmd, env_dict, tmpfile_cnt, start_dir));
-	pstat = (t_pstat *)malloc(sizeof(t_pstat) * proc_cnt);
+	pstat = (t_pstat *)ft_calloc(proc_cnt, sizeof(t_pstat));
 	if (!pstat)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	origin_stdin = dup(STDIN_FILENO);

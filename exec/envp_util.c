@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:37:32 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 18:52:59 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 20:15:09 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	**generate_envp(t_dict *env_dict)
 	while (++idx < size)
 	{
 		if (ft_strcmp(tmp->key, "?") == 0)
-			continue;
+			continue ;
 		envp[idx] = generate_env_str(tmp);
 		tmp = tmp->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:58:54 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 16:04:44 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 20:13:09 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,16 @@ int	redirect_output(char *file_name, int is_builtin)
 		if (fd < 0)
 			return (print_custom_err(NULL, file_name,
 					"No such file or directory", 1));
-		if (access(file_name, R_OK) < 0)
+		if (access(file_name, W_OK) < 0)
 			return (print_custom_err(NULL, file_name, "Permission denied", 1));
-		if (dup2(fd, STDIN_FILENO) < 0)
+		if (dup2(fd, STDOUT_FILENO) < 0)
 			return (print_custom_err(NULL, file_name,
 					"Duplicate file error", 1));
 		close(fd);
 		return (0);
 	}
 	if (fd < 0)
-		exit_custom_err(NULL, file_name, "File create error", 1);
+		exit_custom_err(NULL, file_name, "No such file or directory", 1);
 	if (access(file_name, W_OK) < 0)
 		exit_custom_err(NULL, file_name, "Permission denied", 1);
 	if (dup2(fd, STDOUT_FILENO) < 0)
@@ -87,10 +87,10 @@ int	redirect_append(char *file_name, int is_builtin)
 		close(fd);
 		return (0);
 	}
-	if (access(file_name, W_OK) < 0)
-		exit_custom_err(NULL, file_name, "Permission denied", 1);
 	if (fd < 0)
 		exit_custom_err(NULL, file_name, "No such file or directory", 1);
+	if (access(file_name, W_OK) < 0)
+		exit_custom_err(NULL, file_name, "Permission denied", 1);
 	if (dup2(fd, STDOUT_FILENO) < 0)
 		exit_custom_err(NULL, file_name, "Duplicate file error", 1);
 	close(fd);
@@ -103,6 +103,8 @@ int	redirect_file(t_redir_node *redirect, int is_builtin)
 	int	res;
 
 	res = 0;
+	if (!redirect)
+		return (0);
 	if (redirect->type == E_TYPE_REDIR_LEFT)
 		res = redirect_input(redirect->file_name, redirect->type, is_builtin);
 	if (redirect->type == E_TYPE_REDIR_RIGHT)
