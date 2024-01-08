@@ -1,49 +1,63 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executer.c                                         :+:      :+:    :+:   */
+/*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 19:32:10 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 21:08:49 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
-void	execute_simple_cmd(char **argv, t_dict **env_dict)
+void	secur_execve(char *bin_path, char **argv, char **envp)
+{
+	struct stat	stat_buf;
+
+	if (stat(bin_path, &stat_buf) < 0)
+		return (exit_custom_err(NULL, bin_path, "stat function error", 1));
+	if (S_ISDIR(stat_buf.st_mode))
+		return (exit_custom_err(NULL, bin_path, "is a directory", 126));
+	execve(bin_path, argv, envp);
+}
+
+void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 {
 	char	*bin_path;
 	char	**envp;
 	int		exit_code;
 
-	if (!argv || !argv[0])
+	if (!cmd->argv || !cmd->argv[0] || ft_strlen(cmd->argv[0]) == 0)
 		exit(EXIT_SUCCESS);
-	exit_code = run_builtin_cmds(argv, env_dict);
+	exit_code = run_builtin(cmd, env_dict, 0, NULL);
 	if (exit_code >= 0)
 		exit(exit_code);
-	if (ft_strncmp(argv[0], "./", 2) == 0 || ft_strncmp(argv[0], "../", 3) == 0
-		|| ft_strncmp(argv[0], "/", 1) == 0)
+	if (ft_strncmp(cmd->argv[0], "./", 2) == 0
+		|| ft_strncmp(cmd->argv[0], "../", 3) == 0
+		|| ft_strncmp(cmd->argv[0], "/", 1) == 0)
 	{
-		if (access(argv[0], X_OK) != 0)
-			exit_custom_err(NULL, argv[0], "No such file or directory", 1);
-		bin_path = argv[0];
+		if (access(cmd->argv[0], F_OK) != 0)
+			exit_custom_err(NULL, cmd->argv[0], "No such file or directory", 127);
+		if (access(cmd->argv[0], X_OK) != 0)
+			exit_custom_err(NULL, cmd->argv[0], "Permission denied", 126);
+		bin_path = cmd->argv[0];
 	}
 	else
 	{
-		bin_path = get_bin_path(argv[0], env_dict);
+		bin_path = get_bin_path(cmd->argv[0], env_dict);
 		if (!bin_path)
-			exit_custom_err(NULL, argv[0], "command not found", 127);
+			exit_custom_err(NULL, cmd->argv[0], "command not found", 127);
 	}
 	envp = generate_envp(*env_dict);
-	execve(bin_path, argv, envp);
+	secur_execve(bin_path, cmd->argv, envp);
 }
 
-void	execute_child(t_cmd_node *cmd, int	*pipe_fd, t_dict **env_dict)
+void	execute_child(t_cmd_node *cmd, int *pipe_fd, t_dict **env_dict)
 {
-	if (!cmd)
-		return ;
+	if (!cmd || !cmd->argv || !cmd->argv[0])
+		exit(EXIT_SUCCESS);
 	if (pipe_fd[0] >= 0 && pipe_fd[1] >= 0)
 	{
 		close(pipe_fd[0]);
@@ -52,8 +66,8 @@ void	execute_child(t_cmd_node *cmd, int	*pipe_fd, t_dict **env_dict)
 		close(pipe_fd[1]);
 	}
 	if (cmd->redirect)
-		redirect_file(cmd->redirect);
-	execute_simple_cmd(cmd->argv, env_dict);
+		redirect_file(cmd->redirect, 0);
+	execute_simple_cmd(cmd, env_dict);
 }
 
 void	execute_pipe(t_pipe_node *head, t_dict **env_dict, t_pstat *pstat)
@@ -82,7 +96,7 @@ void	execute_pipe(t_pipe_node *head, t_dict **env_dict, t_pstat *pstat)
 	}
 }
 
-int	exit_by_child_state(t_pstat *pstat, int proc_cnt)
+int	exit_by_child_state(t_pstat *pstat, int proc_cnt, int cnt, char *start_dir)
 {
 	int	idx;
 	int	exit_stat;
@@ -95,7 +109,8 @@ int	exit_by_child_state(t_pstat *pstat, int proc_cnt)
 	}
 	exit_stat = pstat[idx - 1].exit_stat;
 	free(pstat);
-	return (exit_stat);
+	unlink_tmpfile(cnt, start_dir);
+	return (WEXITSTATUS(exit_stat));
 }
 
 int	execute_main(t_pipe_node *head, t_dict **env_dict)
@@ -103,23 +118,26 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 	int			proc_cnt;
 	t_pstat		*pstat;
 	int			tmpfile_cnt;
-	int			exit_stat;
 	int			origin_stdin;
+	char		*start_dir;
 
 	signal(SIGINT, sig_fork_handler);
 	signal(SIGQUIT, sig_fork_handler);
 	proc_cnt = get_proc_cnt(head);
 	tmpfile_cnt = 0;
-	heredoc_preprocess(head, &tmpfile_cnt);
+	start_dir = NULL;
+	start_dir = getcwd(start_dir, 0);
+	if (!start_dir)
+		exit_custom_err(NULL, NULL, "Malloc error", 1);
+	heredoc_preprocess(head, &tmpfile_cnt, start_dir);
 	if (proc_cnt == 1 && is_builtin_cmd(head->cmd))
-		return (run_builtin_cmds(head->cmd->argv, env_dict));
-	pstat = (t_pstat *)malloc(sizeof(t_pstat) * proc_cnt);
+		return (run_builtin(head->cmd, env_dict, tmpfile_cnt, start_dir));
+	pstat = (t_pstat *)ft_calloc(proc_cnt, sizeof(t_pstat));
 	if (!pstat)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	origin_stdin = dup(STDIN_FILENO);
 	execute_pipe(head, env_dict, pstat);
 	dup2(origin_stdin, STDIN_FILENO);
 	close(origin_stdin);
-	unlink_tmpfile(tmpfile_cnt);
-	return (exit_by_child_state(pstat, proc_cnt));
+	return (exit_by_child_state(pstat, proc_cnt, tmpfile_cnt, start_dir));
 }

@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/05 22:31:13 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:59:41 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int	get_type(t_token *token)
 	str = token->str;
 	if (ft_strlen(str) == 1 && !ft_strncmp(str, "|", 1))
 		return (E_TYPE_PIPE);
+	else if (ft_strchr(str, '$'))
+		return (E_TYPE_EXPAND);
 	else if (ft_strlen(str) == 1 && !ft_strncmp(str, "&", 1))
 		return (E_TYPE_AMPERSAND);
 	else if (ft_strlen(str) == 1 && !ft_strncmp(str, ";", 1))
@@ -84,7 +86,7 @@ void	make_token(t_token **list, char *str, int start, int end)
 	t_token		*cur;
 	char		*substr;
 
-	if (start == end)
+	if (start >= end)
 		return ;
 	substr = ft_substr(str, start, end - start);
 	if (substr == NULL)
@@ -94,6 +96,11 @@ void	make_token(t_token **list, char *str, int start, int end)
 		exit(EXIT_FAILURE);
 	new->str = substr;
 	new->type = get_type(new);
+	if (new->type == E_TYPE_SEMICOLON)
+	{
+		syntax_err(new->str);
+		return ;
+	}
 	new->next = NULL;
 	if (*list == NULL)
 	{
@@ -106,8 +113,46 @@ void	make_token(t_token **list, char *str, int start, int end)
 	cur->next = new;
 }
 
-void	tokenize(t_token **list, char *str)
+void	insert_token(t_token **list, char *str, int start)
 {
-	sep_by_space(list, str);
+	t_token		*new;
+	t_token		*tmp;
+	char		*substr;
+	int			end;
+	char		*tmp_str;
+
+	end = ft_strlen(str);
+	substr = ft_substr(str, start, end - start);
+	if (substr == NULL)
+		exit(EXIT_FAILURE);
+	// printf("\033[31m");
+	// printf("%d %d\n", start, end);
+	// printf("sub:%s\n", substr);
+	new = (t_token *)ft_calloc(1, sizeof(t_token));
+	if (new == NULL)
+		exit(EXIT_FAILURE);
+	new->str = substr;
+	new->type = E_TYPE_SIMPLE_CMD;
+	tmp = (*list)->next;
+	(*list)->next = new;
+	new->next = tmp;
+	substr = ft_substr(str, 0, start - 1);
+	if (substr == NULL)
+		exit(EXIT_FAILURE);
+	// printf("%d %d\n", start, end);
+	// printf("sub:%s\n", substr);
+	// printf("\033[0m");
+	tmp_str = (*list)->str;
+	(*list)->str = substr;
+	free(tmp_str);
+}
+
+void	tokenize(t_token **list, char *str, t_dict *dict)
+{
+	sep_token(list, str);
+	expand_var(list, dict);
+	split_token(list);
 	remove_quote(list);
+	remove_empty_token(list);
+	// token_list_printer(*list);
 }

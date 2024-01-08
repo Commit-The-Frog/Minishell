@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:17:58 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 18:00:58 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/06 20:52:48 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 int	check_is_valid_dir(char *path)
 {

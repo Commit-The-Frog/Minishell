@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:47:43 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/05 15:29:08 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/07 19:09:29 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 int	ft_echo(char **argv, t_dict **env_dict)
 {
@@ -23,7 +23,7 @@ int	ft_echo(char **argv, t_dict **env_dict)
 	idx = 1;
 	while (argv[argc])
 		argc++;
-	if (argc > 1 && ft_strcmp(argv[1], "-n") == 0)
+	if (argc > 1 && ft_strncmp(argv[1], "-n", 2) == 0)
 		n_flag = 1;
 	if (n_flag)
 		idx++;

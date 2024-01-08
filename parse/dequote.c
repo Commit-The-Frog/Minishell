@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/06 19:54:41 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/08 20:12:54 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	check_quote(char *str)
 		if (quote != 0)
 		{
 			i++;
-			while (str[i] && is_quote(str, i) == 0)
+			while (str[i] && is_quote(str, i) != quote)
 				i++;
 			if (str[i] == 0)
 				return (quote);
@@ -49,7 +49,7 @@ char	check_quote(char *str)
 // 	}
 // }
 
-t_pipe_node	*parse(char *str)
+t_pipe_node	*parse(char *str, t_dict *dict)
 {
 	t_token		*token_list;
 	t_token		*cur;
@@ -66,17 +66,7 @@ t_pipe_node	*parse(char *str)
 		quote_err(quote);
 		return (NULL);
 	}
-	tokenize(&token_list, str);
-	// ======print=======
-	// cur = token_list;
-	// while (cur)
-	// {
-	// 	if (cur->str != NULL)
-	// 		printf("[%s|%u] ", cur->str, (unsigned int)cur->type);
-	// 	cur = cur->next;
-	// }
-	// printf("\n");
-	// ==================
+	tokenize(&token_list, str, dict);
 	get_ast(&ast, &token_list);
 	return (ast);
 }

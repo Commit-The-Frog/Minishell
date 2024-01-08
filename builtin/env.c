@@ -6,11 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:01 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/05 16:48:45 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 20:06:52 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 static void	print_env(char **envp)
 {
@@ -28,15 +28,8 @@ static void	print_env(char **envp)
 		while (envp[i][j])
 		{
 			write(STDOUT_FILENO, &envp[i][j], 1);
-			if (envp[i][j] == '=')
-			{
-				has_assign = 1;
-				write(STDOUT_FILENO, "\"", 1);
-			}
 			j++;
 		}
-		if (has_assign)
-			write(STDOUT_FILENO, "\"", 1);
 		write(STDOUT_FILENO, "\n", 1);
 	}
 }

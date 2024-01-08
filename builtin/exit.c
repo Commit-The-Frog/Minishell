@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:03 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 18:53:48 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/08 21:12:31 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_exec.h"
+#include "minishell.h"
 
 static int	ft_isspace(char c)
 {
@@ -68,7 +68,6 @@ int	ft_exit(char **argv, t_dict **env_dict)
 	int			argc;
 	int			exit_code;
 	int			custom_err;
-	const char	*err_str = "too many arguments\n";
 
 	argc = 0;
 	custom_err = 0;
@@ -82,10 +81,8 @@ int	ft_exit(char **argv, t_dict **env_dict)
 			exit(255);
 	}
 	if (argc > 2)
-	{
-		write(2, err_str, ft_strlen(err_str));
-		return (1);
-	}
+		return(print_custom_err(NULL, \
+			"exit", "too many arguments", 1));
 	if (argc == 1)
 		exit(0);
 	else
