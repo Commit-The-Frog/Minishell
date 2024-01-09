@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 22:24:27 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/09 14:17:23 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,21 @@ int	process_heredoc_fork(t_pipe_node *head, int *cnt, char *start_dir)
 	pid_t	pid;
 	int		exit_state;
 
+	turn_off_ctrl();
 	pid = fork();
 	if (pid == 0)
 	{
-		turn_off_ctrl();
 		signal(SIGINT, SIG_DFL);
 		heredoc_preprocess(head, cnt, start_dir);
 		exit(EXIT_SUCCESS);
 	}
-	waitpid(pid, &exit_state, 0);
-	turn_on_ctrl();
-	if (exit_state != 0)
-		unlink_tmpfile(*cnt, start_dir);
+	else
+	{
+		waitpid(pid, &exit_state, 0);
+		turn_on_ctrl();
+		if (WIFSIGNALED(exit_state))
+			unlink_tmpfile(get_heredoc_file_cnt(head), start_dir);
+	}
 	return (exit_state);
 }
 
@@ -130,6 +133,11 @@ int	exit_by_child_state(t_pstat *pstat, int proc_cnt, int cnt, char *start_dir)
 	exit_stat = pstat[idx - 1].exit_stat;
 	free(pstat);
 	unlink_tmpfile(cnt, start_dir);
+	if (WIFSIGNALED(exit_stat))
+	{
+		sigdelset(&recent_sig, WTERMSIG(exit_stat));
+		return (WTERMSIG(exit_stat) + 128);
+	}
 	return (WEXITSTATUS(exit_stat));
 }
 

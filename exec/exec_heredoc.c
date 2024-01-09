@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:04:20 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 22:08:27 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/09 14:14:18 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	unlink_tmpfile(int cnt, char *start_dir)
 	if (!heredoc_prefix)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	idx = 0;
-	while (idx < cnt + 1)
+	while (idx < cnt)
 	{
 		str_num = ft_itoa(idx);
 		if (!str_num)
@@ -105,4 +105,30 @@ void	unlink_tmpfile(int cnt, char *start_dir)
 	}
 	free(heredoc_prefix);
 	free(start_dir);
+}
+
+int	get_heredoc_file_cnt_sub(t_redir_node *redir)
+{
+	int cnt;
+
+	cnt = 0;
+	if (!redir)
+		return (0);
+	if (redir->type == E_TYPE_REDIR_HEREDOC)
+		cnt++;
+	if (redir->next)
+		cnt += get_heredoc_file_cnt_sub(redir->next);
+	return (cnt);
+}
+
+int	get_heredoc_file_cnt(t_pipe_node *head)
+{
+	int	cnt;
+
+	cnt = 0;
+	if (head->cmd)
+		cnt += get_heredoc_file_cnt_sub(head->cmd->redirect);
+	if (head->next_pipe)
+		cnt += get_heredoc_file_cnt(head->next_pipe);
+	return cnt;
 }
