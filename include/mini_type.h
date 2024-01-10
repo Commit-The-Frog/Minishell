@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_type.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 20:30:12 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 15:48:23 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 20:13:19 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_token
 {
 	int				type;
 	char			*str;
+	char			*origin;
 	struct s_token	*next;
 }	t_token;
 

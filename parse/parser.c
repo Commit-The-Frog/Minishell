@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 17:00:41 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 21:32:49 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	get_simple_cmd_node(t_simple_cmd_node **simple_cmd, t_token **cur)
 	cur_simple_cmd->next = new;
 }
 
-void	*get_redir_node(t_redir_node **redir, t_token **cur)
+void	*get_redir_node(t_redir_node **redir, t_token **cur, int *err_flag)
 {
 	t_redir_node	*new;
 	t_redir_node	*cur_redir;
@@ -49,7 +49,7 @@ void	*get_redir_node(t_redir_node **redir, t_token **cur)
 	if (*cur == NULL)
 		return (NULL);
 	if ((*cur)->type >= 5 && (*cur)->type <= 8)
-		return (syntax_err((*cur)->str));
+		return (syntax_err((*cur)->str, err_flag));
 	new->file_name = ft_strdup((*cur)->str);
 	if (new->file_name == NULL)
 		exit(EXIT_FAILURE);
@@ -67,8 +67,10 @@ void	*get_redir_node(t_redir_node **redir, t_token **cur)
 
 t_cmd_node	*get_cmd_node(t_pipe_node *pipe, t_token **cur)
 {
-	t_cmd_node			*cmd;
+	t_cmd_node	*cmd;
+	int			err_flag;
 
+	err_flag = 0;
 	cmd = (t_cmd_node *)ft_calloc(1, sizeof(t_cmd_node));
 	if (cmd == NULL)
 		exit(EXIT_FAILURE);
@@ -77,10 +79,12 @@ t_cmd_node	*get_cmd_node(t_pipe_node *pipe, t_token **cur)
 	while (*cur && (*cur)->type != E_TYPE_PIPE)
 	{
 		if ((*cur)->type >= 5 && (*cur)->type <= 8)
-			get_redir_node(&(cmd->redirect), cur);
+			get_redir_node(&(cmd->redirect), cur, &err_flag);
 		else if ((*cur)->type == E_TYPE_SIMPLE_CMD \
 				|| (*cur)->type == E_TYPE_EXPAND)
 			get_simple_cmd_node(&(cmd->simple_cmd), cur);
+		if (err_flag == 1)
+			return (NULL);
 		if (*cur == NULL)
 			break ;
 		*cur = (*cur)->next;
@@ -89,7 +93,7 @@ t_cmd_node	*get_cmd_node(t_pipe_node *pipe, t_token **cur)
 	return (cmd);
 }
 
-void	get_pipe_node(t_pipe_node **root, t_token **token_list)
+int	get_pipe_node(t_pipe_node **root, t_token **token_list)
 {
 	t_pipe_node	*pipe;
 
@@ -97,28 +101,20 @@ void	get_pipe_node(t_pipe_node **root, t_token **token_list)
 	if (pipe == NULL)
 		exit(EXIT_FAILURE);
 	pipe->cmd = get_cmd_node(pipe, token_list);
+	if (pipe->cmd == NULL)
+		return (-1);
 	if (*token_list && (*token_list)->type == E_TYPE_PIPE)
 	{
 		*token_list = (*token_list)->next;
 		get_pipe_node(&pipe->next_pipe, token_list);
 	}
 	*root = pipe;
+	return (0);
 }
 
 void	get_ast(t_pipe_node **ast, t_token **token_list)
 {
-	t_pipe_node			*cur;
-	t_token				*cur_token;
-	t_token				*tmp;
-
-	tmp = *token_list;
-	get_pipe_node(ast, token_list);
-	cur_token = tmp;
-	while (cur_token)
-	{
-		tmp = cur_token;
-		cur_token = cur_token->next;
-		free(tmp->str);
-		free(tmp);
-	}
+	if (get_pipe_node(ast, token_list) == -1)
+		free_ast(ast);
+	free_token_list(token_list);
 }

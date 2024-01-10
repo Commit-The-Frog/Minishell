@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 13:53:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 14:15:28 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 20:39:14 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ t_pipe_node	*parse(char *str, t_dict *dict)
 		quote_err(quote);
 		return (NULL);
 	}
-	tokenize(&token_list, str, dict);
+	if (tokenize(&token_list, str, dict) == -1)
+		return (NULL);
 	get_ast(&ast, &token_list);
 	return (ast);
 }
