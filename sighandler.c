@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:24:02 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 18:32:18 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 13:25:58 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int		ft_sigismember(sigset_t *dst_set, int signo)
 
 void	sig_handler(int signo)
 {
-	// ^C 뜨는거 없애고 새로운 줄로 출력할 필요.
 	if (signo == SIGINT)
 	{
 		sigaddset(&recent_sig, signo);
@@ -44,13 +43,10 @@ void	sig_handler(int signo)
 
 void	sig_heredoc_handler(int signo)
 {
-	// ^C 뜨는거 없애고 새로운 줄로 출력할 필요.
 	if (signo == SIGINT)
 	{
 		sigaddset(&recent_sig, signo);
 		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 	if (signo == SIGQUIT)
@@ -73,5 +69,19 @@ void	sig_fork_handler(int signo)
 		sigaddset(&recent_sig, signo);
 		printf("Quit\n");
 		rl_redisplay();
+	}
+}
+
+void	switch_signal_handler(int forked)
+{
+	if (forked)
+	{
+		signal(SIGINT, sig_fork_handler);
+		signal(SIGQUIT, sig_fork_handler);
+	}
+	else
+	{
+		signal(SIGINT, sig_handler);
+		signal(SIGQUIT, sig_handler);
 	}
 }

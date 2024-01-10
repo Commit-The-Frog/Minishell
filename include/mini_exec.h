@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 16:07:09 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 13:13:26 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,15 @@ int		ft_env(char **argv, t_dict **env_dict);
 int		ft_exit(char **argv, t_dict **env_dict);
 
 int		execute_main(t_pipe_node *head, t_dict **env_dict);
-void	exit_with_str(char *str, int custom_errno);
 void	exit_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 int		print_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 int		redirect_input(char *file_name, int type, int is_builtin);
 int		redirect_output(char *file_name, int is_builtin);
-void	redirect_heredoc(char **deli, int cnt, char *start_dir);
+void	redirect_heredoc(char **deli, int cnt, char *start_dir, int get_input);
 int		redirect_append(char *file_name, int is_builtin);
 int		redirect_file(t_redir_node *redirect, int is_builtin);
-void	heredoc_sub_preprocess(t_redir_node *redirect, int *cnt, char *start_dir);
-void	heredoc_preprocess(t_pipe_node *head, int *cnt, char *start_dir);
+void	heredoc_sub_preprocess(t_redir_node *redirect, int *cnt, char *start_dir, int get_input);
+void	heredoc_preprocess(t_pipe_node *head, int *cnt, char *start_dir, int get_input);
 void	unlink_tmpfile(int cnt, char *start_dir);
 void	*get_builtin_func(char *func);
 int		is_builtin_cmd(t_cmd_node *cmd);
@@ -53,4 +52,5 @@ char	**generate_envp(t_dict *env_dict);
 t_dict	*get_node_with_key(t_dict *list, char *key);
 void	del_node_with_key(t_dict **env_dict, char *key);
 char	*get_value_with_key(t_dict *list, char *key);
+int		return_child_state(t_pstat *pstat, int proc_cnt, int cnt, char *start_dir);
 #endif
