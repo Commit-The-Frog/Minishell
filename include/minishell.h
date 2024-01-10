@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 17:32:46 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 18:16:00 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,12 @@ int			ft_sigismember(sigset_t *dst_set, int signo);
 // ========= prompt.c =========
 void		restore_recent_exit(int recent_exit, t_dict **env_dict);
 
+// ========= prompt_util.c =========
+void		turn_off_ctrl(void);
+void		turn_on_ctrl(void);
+
 //printer
 void		token_list_printer(t_token *token_list);
-
 
 int			get_heredoc_file_cnt(t_pipe_node *head);
 void		sig_heredoc_handler(int signo);

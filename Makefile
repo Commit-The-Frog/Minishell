@@ -7,9 +7,9 @@ SRCS_BUILTIN = \
 	builtin_utils.c cd.c echo.c env.c \
 	exit.c export.c pwd.c unset.c
 SRCS_PARSE = \
-	dequote.c error.c expand.c hotfix_expand.c \
-	lexer.c logo.c parser.c tokenize.c util.c
-SRCS_ETC = minishell_utill.c prompt_util.c prompt.c sighandler.c
+	quote.c error.c expand_util.c expand.c \
+	lexer.c logo.c parser.c parser_util.c tokenize.c util.c core.c
+SRCS_ETC = minishell_util.c prompt_util.c prompt.c sighandler.c
 SRCS = \
 	$(addprefix exec/, $(SRCS_EXEC)) \
 	$(addprefix builtin/, $(SRCS_BUILTIN)) \

@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:53:35 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 14:39:28 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 18:28:01 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,17 @@
 
 static void	make_token_and_move(t_token **list, char *str, int *start, int end)
 {
-	make_token(list, str, *start, end);
-	*start = end + 1;
+	if (str[end] == ' ')
+	{
+		make_token(list, str, *start, end);
+		*start = end + 1;
+	}
+	else if (is_operator(str[end + 1]) || (is_operator(str[end]) \
+			&& !is_operator(str[end + 1])))
+	{
+		make_token(list, str, *start, end + 1);
+		*start = end + 1;
+	}
 }
 
 static void	move_until_quote(char *str, int *end, char quote)
@@ -35,19 +44,17 @@ void	sep_token(t_token **list, char *str)
 	end = 0;
 	while (str[end])
 	{
+		// printf("start:%c\n", str[start]);
 		quote = is_quote(str, end);
 		if (quote != 0)
 			move_until_quote(str, &end, quote);
-		else if (str[end] == ' ')
-			make_token_and_move(list, str, &start, end);
 		else if (is_double_operator(str[end], str[end + 1]))
 		{
 			make_token(list, str, start, end + 2);
 			start = ++end + 1;
 		}
-		else if (is_operator(str[end + 1]) || (is_operator(str[end]) \
-				&& !is_operator(str[end + 1])))
-			make_token_and_move(list, str, &start, end + 1);
+		else
+			make_token_and_move(list, str, &start, end);
 		end++;
 	}
 	make_token(list, str, start, end);
