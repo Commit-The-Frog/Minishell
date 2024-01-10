@@ -6,36 +6,34 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 12:07:21 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 14:14:12 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 20:42:42 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	process_heredoc_fork(t_pipe_node *head, int *cnt, char *start_dir)
+int	process_heredoc_fork(t_pipe_node *head, char *start_dir, t_dict **dict)
 {
 	pid_t	pid;
-	int		tmp_cnt;
 	int		exit_state;
 
 	turn_off_ctrl();
-	tmp_cnt = get_heredoc_file_cnt(head);
 	pid = fork();
 	signal(SIGINT, sig_heredoc_handler);
 	signal(SIGQUIT, sig_heredoc_handler);
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
-		heredoc_preprocess(head, cnt, start_dir, 1);
+		heredoc_preprocess(head, start_dir, 1, dict);
 		exit(EXIT_SUCCESS);
 	}
 	else
 	{
 		waitpid(pid, &exit_state, 0);
-		heredoc_preprocess(head, cnt, start_dir, 0);
+		heredoc_preprocess(head, start_dir, 0, dict);
 		turn_on_ctrl();
 		if (WIFSIGNALED(exit_state))
-			unlink_tmpfile(get_heredoc_file_cnt(head), start_dir);
+			redirect_heredoc(NULL, start_dir, 2, dict);
 	}
 	return (exit_state);
 }
