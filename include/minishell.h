@@ -43,15 +43,19 @@ char		is_quote(char *str, int idx);
 char		check_quote(char *str);
 void		remove_quote(t_token **list);
 
+// ========= checker.c =========
+int			check_ambiguous(t_token **list, char *str);
+int			check_unexpected_token(t_token **list);
+
 // ========= error.c =========
 void		*quote_err(char c);
-
-void		*syntax_err(char *str);
+void		*syntax_err(char *str, int *err_flag);
+void		*ambiguous_err(char *str);
 
 // ========= lexer.c =========
 void		*make_token(t_token **list, char *str, int start, int end);
 void		insert_token(t_token **list, char *str, int start);
-void		tokenize(t_token **list, char *str, t_dict *dict);
+int			tokenize(t_token **list, char *str, t_dict *dict);
 
 // ========= tokenize.c =========
 void		sep_token(t_token **list, char *str);
@@ -101,6 +105,7 @@ void		turn_on_ctrl(void);
 
 //printer
 void		token_list_printer(t_token *token_list);
+void		ast_printer(t_pipe_node *ast);
 
 int			get_heredoc_file_cnt(t_pipe_node *head);
 void		sig_heredoc_handler(int signo);
@@ -109,4 +114,5 @@ int			process_heredoc_fork(t_pipe_node *head, char *start_dir, t_dict **dict);
 void		sig_heredoc_handler(int signo);
 void		switch_signal_handler(int forked);
 void		free_ast(t_pipe_node **ast);
+void		free_token_list(t_token **list);
 #endif

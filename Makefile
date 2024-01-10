@@ -8,7 +8,8 @@ SRCS_BUILTIN = \
 	exit.c export.c pwd.c unset.c
 SRCS_PARSE = \
 	quote.c error.c expand_util.c expand.c \
-	lexer.c logo.c parser.c parser_util.c tokenize.c util.c core.c
+	lexer.c logo.c parser.c parser_util.c tokenize.c util.c core.c \
+	checker.c
 SRCS_ETC = minishell_util.c prompt_util.c prompt.c sighandler.c
 SRCS = \
 	$(addprefix exec/, $(SRCS_EXEC)) \

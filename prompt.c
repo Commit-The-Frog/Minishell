@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 15:50:39 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 21:21:17 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,15 @@ int	main(int argc, char *argv[], char **envp)
 	{
 		ast = get_line_return_ast(recent_exit, &env_dict);
 		if (ast == NULL)
+		{
+			recent_exit = 1;
 			continue ;
+		}
 		turn_on_ctrl();
 		recent_exit = execute_main(ast, &env_dict);
 		turn_off_ctrl();
 		free_ast(&ast);
+		ast_printer(ast);
 	}
 	free_ast(&ast);
 	rl_clear_history();
