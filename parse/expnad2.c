@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hotfix_expand.c                                    :+:      :+:    :+:   */
+/*   expnad2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 20:43:40 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 20:30:46 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 14:51:43 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static char	set_quote_flag(char quote_flag, char *str, int idx)
 {
 	char	return_flag;
 
-	if ((str[idx] == '\"' || str[idx] == '\'') && (idx == 0 || str[idx - 1] != '\\'))
+	if ((str[idx] == '\"' || str[idx] == '\'') \
+		&& (idx == 0 || str[idx - 1] != '\\'))
 	{
 		if (!quote_flag)
 			return_flag = str[idx];
@@ -42,7 +43,7 @@ static size_t	get_var_len(char *str)
 		}
 		else
 		{
-			if(!(str[idx] == '_' || ft_isalnum(str[idx])))
+			if (!(str[idx] == '_' || ft_isalnum(str[idx])))
 				return (idx);
 		}
 		idx++;
@@ -50,12 +51,14 @@ static size_t	get_var_len(char *str)
 	return (idx);
 }
 
-void	update_return_str(char **return_str, char *env_name, char *str_left, t_dict *env_dict)
+void	update_return_str(char **return_str, char *env_name, \
+						char *str_left, t_dict *env_dict)
 {
 	char	*str_prefix;
 
 	if (*return_str)
-		str_prefix = ft_strjoin(*return_str, get_value_with_key(env_dict, env_name));
+		str_prefix = ft_strjoin(*return_str, \
+		get_value_with_key(env_dict, env_name));
 	else
 		str_prefix = ft_strjoin("", get_value_with_key(env_dict, env_name));
 	free(*return_str);
