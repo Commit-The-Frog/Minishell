@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 13:26:19 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 14:38:28 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,5 @@ int	is_path(char *str);
 int	process_heredoc_fork(t_pipe_node *head, int *cnt, char *start_dir);
 void	sig_heredoc_handler(int signo);
 void	switch_signal_handler(int forked);
-
+void	free_ast(t_pipe_node **ast);
 #endif

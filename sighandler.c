@@ -6,13 +6,13 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:24:02 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 13:25:58 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 14:39:03 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_sigismember(sigset_t *dst_set, int signo)
+int	ft_sigismember(sigset_t *dst_set, int signo)
 {
 	sigset_t	now_sigset;
 
