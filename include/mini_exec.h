@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 15:49:10 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 17:41:26 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,5 @@ void	del_node_with_key(t_dict **env_dict, char *key);
 char	*get_value_with_key(t_dict *list, char *key);
 int		return_child_state(t_pstat *pstat, int proc_cnt, \
 							int cnt, char *start_dir);
+int		invalid_id_err(char *func_name, char *str);
 #endif

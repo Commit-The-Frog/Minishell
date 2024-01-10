@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:03 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 15:05:56 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 17:26:31 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	ft_exit(char **argv, t_dict **env_dict)
 			exit(255);
 	}
 	if (argc > 2)
-		return(print_custom_err(NULL, \
+		return (print_custom_err(NULL, \
 			"exit", "too many arguments", 1));
 	if (argc == 1)
 		exit(0);

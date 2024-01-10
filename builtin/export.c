@@ -6,38 +6,53 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 12:03:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:52:57 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 17:42:14 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static void	envp_printer(char *env)
+{
+	int	has_assign;
+	int	i;
+
+	has_assign = 0;
+	i = 0;
+	while (env[i])
+	{
+		if (env[i] == '\"')
+			write(STDOUT_FILENO, "\\", 1);
+		write(STDOUT_FILENO, &env[i], 1);
+		if (env[i] == '=')
+		{
+			has_assign = 1;
+			write(STDOUT_FILENO, "\"", 1);
+		}
+		i++;
+	}
+	if (has_assign)
+		write(STDOUT_FILENO, "\"", 1);
+	write(STDOUT_FILENO, "\n", 1);
+}
+
 static void	print_export(char **envp)
 {
-	int			i;
-	int			j;
-	int			has_assign;
+	int	i;
+	int	j;
+	int	has_assign;
 
-	i = -1;
-	while (envp[++i])
+	i = 0;
+	while (envp[i])
 	{
 		has_assign = 0;
-		j = 0;
-		while (envp[i][j])
+		if (ft_strncmp(envp[i], "?", 1) == 0)
 		{
-			if (envp[i][j] == '\"')
-				write(STDOUT_FILENO, "\\", 1);
-			write(STDOUT_FILENO, &envp[i][j], 1);
-			if (envp[i][j] == '=')
-			{
-				has_assign = 1;
-				write(STDOUT_FILENO, "\"", 1);
-			}
-			j++;
+			i++;
+			continue ;
 		}
-		if (has_assign)
-			write(STDOUT_FILENO, "\"", 1);
-		write(STDOUT_FILENO, "\n", 1);
+		envp_printer(envp[i]);
+		i++;
 	}
 }
 
@@ -98,17 +113,6 @@ static int	is_valid_id(char *s)
 	return (1);
 }
 
-static int	invalid_id_err(char	*str)
-{
-	const char	*err_str = ": not a valid identifier\n";
-
-	write(STDERR_FILENO, "minishell: ", 11);
-	write(STDERR_FILENO, "export: ", 8);
-	write(STDERR_FILENO, str, ft_strlen(str));
-	write(STDERR_FILENO, err_str, ft_strlen(err_str));
-	return (1);
-}
-
 int	ft_export(char **argv, t_dict **env_dict)
 {
 	int	argc;
@@ -123,9 +127,11 @@ int	ft_export(char **argv, t_dict **env_dict)
 	while (idx < argc)
 	{
 		if (is_valid_id(argv[idx]))
+		{
 			add_node_back(env_dict, argv[idx]);
+		}
 		else
-			result = invalid_id_err(argv[idx]);
+			result = invalid_id_err("export: ", argv[idx]);
 		idx++;
 	}
 	if (argc == 1)

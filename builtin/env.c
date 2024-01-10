@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:01 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 15:05:43 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 17:25:40 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,17 @@
 
 static void	print_env(char **envp)
 {
-	int			i;
-	int			j;
-	int			has_assign;
+	int	i;
+	int	j;
+	int	has_assign;
 
 	i = -1;
 	while (envp[++i])
 	{
 		has_assign = 0;
 		j = 0;
+		if (ft_strncmp(envp[i], "?", 1) == 0)
+			continue ;
 		if (!ft_strchr(envp[i], '='))
 			continue ;
 		while (envp[i][j])
