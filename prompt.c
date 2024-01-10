@@ -6,16 +6,11 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 14:40:00 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:08:22 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	f(void)
-{
-	system("leaks a.out");
-}
 
 void	restore_recent_exit(int recent_exit, t_dict **env_dict)
 {
@@ -64,7 +59,6 @@ int	main(int argc, char *argv[], char **envp)
 	t_pipe_node	*ast;
 	t_dict		*env_dict;
 
-	atexit(f);
 	sigemptyset(&recent_sig);
 	env_dict = dict_init(envp);
 	recent_exit = 0;

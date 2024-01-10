@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:47:43 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 19:09:29 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:05:37 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	ft_echo(char **argv, t_dict **env_dict)
 	argc = 0;
 	n_flag = 0;
 	idx = 1;
+	env_dict = NULL;
 	while (argv[argc])
 		argc++;
 	if (argc > 1 && ft_strncmp(argv[1], "-n", 2) == 0)

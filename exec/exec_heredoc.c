@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:04:20 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 13:21:58 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:02:32 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void	redirect_heredoc(char **deli, int cnt, char *start_dir, int get_input)
 {
 	char	*tmp_file;
 	char	*str_cnt;
-	int		fd;
 	char	*heredoc_prefix;
 
 	heredoc_prefix = ft_strjoin(start_dir, "/.heredoc-");

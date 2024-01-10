@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 13:13:26 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:04:23 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		ft_exit(char **argv, t_dict **env_dict);
 int		execute_main(t_pipe_node *head, t_dict **env_dict);
 void	exit_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 int		print_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
-int		redirect_input(char *file_name, int type, int is_builtin);
+int		redirect_input(char *file_name, int is_builtin);
 int		redirect_output(char *file_name, int is_builtin);
 void	redirect_heredoc(char **deli, int cnt, char *start_dir, int get_input);
 int		redirect_append(char *file_name, int is_builtin);

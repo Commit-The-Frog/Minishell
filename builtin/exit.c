@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:03 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 21:12:31 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 15:05:56 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	ft_exit(char **argv, t_dict **env_dict)
 
 	argc = 0;
 	custom_err = 0;
+	env_dict = NULL;
 	while (argv && argv[argc])
 		argc++;
 	write(STDOUT_FILENO, "exit\n", 5);

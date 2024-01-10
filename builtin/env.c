@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:01 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 20:06:52 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:05:43 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static void	print_env(char **envp)
 int	ft_env(char **argv, t_dict **env_dict)
 {
 	int		argc;
-	int		idx;
 	char	**envp;
 
 	argc = 0;

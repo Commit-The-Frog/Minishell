@@ -10,13 +10,17 @@ SRCS_PARSE = \
 	dequote.c error.c expand.c hotfix_expand.c \
 	lexer.c logo.c parser.c tokenize.c util.c
 SRCS_ETC = minishell_utill.c prompt_util.c prompt.c sighandler.c
-SRCS = exec/$(SRCS_EXEC) builtin/$(SRCS_BUILTIN) parse/$(SRCS_PARSE) $(SRCS_ETC)
+SRCS = \
+	$(addprefix exec/, $(SRCS_EXEC)) \
+	$(addprefix builtin/, $(SRCS_BUILTIN)) \
+	$(addprefix parse/, $(SRCS_PARSE)) \
+	$(SRCS_ETC)
 LIBFT_DIR = libft
 LIBFT_NAME = ft
 LIBFT = libft/libft.a
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
-CC = cc -Wall -Wextra -Werror -MMD -MP
+CC = cc -MMD -MP
 NAME = minishell
 -include $(DEPS)
 
@@ -32,7 +36,7 @@ $(NAME) : $(LIBFT) $(OBJS)
 	@$(CC) -o $(NAME) $(OBJS) -l$(LIBFT_NAME) -L$(LIBFT_DIR) -lreadline
 
 %.o : %.c
-	@$(CC) -c $< -I$(LIBFT_DIR) -Iinclude
+	@$(CC) -c $< -I$(LIBFT_DIR) -Iinclude -o $@
 
 clean :
 	@echo "MINISHELL : make clean"
