@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 21:20:59 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 22:27:44 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,15 @@ int	tokenize(t_token **list, char *str, t_dict *dict)
 	expand_var(list, dict);
 	split_token(list);
 	if (check_ambiguous(list, str) == -1)
+	{
+		free_token_list(list);
 		return (-1);
+	}
 	if (check_unexpected_token(list) == -1)
+	{
+		free_token_list(list);
 		return (-1);
+	}
 	remove_quote(list);
 	remove_empty_token(list);
 	return (0);

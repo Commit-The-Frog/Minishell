@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 21:32:49 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 22:14:02 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	get_simple_cmd_node(t_simple_cmd_node **simple_cmd, t_token **cur)
 	cur_simple_cmd->next = new;
 }
 
-void	*get_redir_node(t_redir_node **redir, t_token **cur, int *err_flag)
+void	*get_redir_node(t_redir_node **redir, t_token **cur)
 {
 	t_redir_node	*new;
 	t_redir_node	*cur_redir;
@@ -48,8 +48,6 @@ void	*get_redir_node(t_redir_node **redir, t_token **cur, int *err_flag)
 	*cur = (*cur)->next;
 	if (*cur == NULL)
 		return (NULL);
-	if ((*cur)->type >= 5 && (*cur)->type <= 8)
-		return (syntax_err((*cur)->str, err_flag));
 	new->file_name = ft_strdup((*cur)->str);
 	if (new->file_name == NULL)
 		exit(EXIT_FAILURE);
@@ -68,9 +66,7 @@ void	*get_redir_node(t_redir_node **redir, t_token **cur, int *err_flag)
 t_cmd_node	*get_cmd_node(t_pipe_node *pipe, t_token **cur)
 {
 	t_cmd_node	*cmd;
-	int			err_flag;
 
-	err_flag = 0;
 	cmd = (t_cmd_node *)ft_calloc(1, sizeof(t_cmd_node));
 	if (cmd == NULL)
 		exit(EXIT_FAILURE);
@@ -79,12 +75,10 @@ t_cmd_node	*get_cmd_node(t_pipe_node *pipe, t_token **cur)
 	while (*cur && (*cur)->type != E_TYPE_PIPE)
 	{
 		if ((*cur)->type >= 5 && (*cur)->type <= 8)
-			get_redir_node(&(cmd->redirect), cur, &err_flag);
+			get_redir_node(&(cmd->redirect), cur);
 		else if ((*cur)->type == E_TYPE_SIMPLE_CMD \
 				|| (*cur)->type == E_TYPE_EXPAND)
 			get_simple_cmd_node(&(cmd->simple_cmd), cur);
-		if (err_flag == 1)
-			return (NULL);
 		if (*cur == NULL)
 			break ;
 		*cur = (*cur)->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 20:08:25 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 22:20:37 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 sigset_t	g_recent_sig;
 
 // ========= core.c =========
-t_pipe_node	*parse(char *str, t_dict *dict);
+int			parse(char *str, t_dict *dict, t_pipe_node **ast);
 
 // ========= quote.c =========
 char		is_quote(char *str, int idx);
@@ -106,6 +106,7 @@ void		turn_on_ctrl(void);
 //printer
 void		token_list_printer(t_token *token_list);
 void		ast_printer(t_pipe_node *ast);
+void		fuck(void);
 
 int			get_heredoc_file_cnt(t_pipe_node *head);
 void		sig_heredoc_handler(int signo);

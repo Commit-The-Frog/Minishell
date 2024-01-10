@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 11:51:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 20:51:19 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 22:26:30 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ void	free_token_list(t_token **list)
 		cur = cur->next;
 		free(tmp->str);
 		free(tmp->origin);
+		tmp->str = NULL;
+		tmp->origin = NULL;
 		free(tmp);
+		tmp = NULL;
 	}
+	*list = NULL;
 }
