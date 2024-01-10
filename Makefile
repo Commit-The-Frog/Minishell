@@ -2,7 +2,7 @@
 SRCS_EXEC = \
 	dict.c dict_util.c envp_util.c exec_errhandle.c \
 	exec_heredoc.c exec_main.c exec_utils.c heredoc_util.c \
-	redirect_io.c
+	redirect_io.c exec_heredoc_util.c
 SRCS_BUILTIN = \
 	builtin_utils.c cd.c echo.c env.c \
 	exit.c export.c pwd.c unset.c

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 18:16:00 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 20:08:25 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void		token_list_printer(t_token *token_list);
 int			get_heredoc_file_cnt(t_pipe_node *head);
 void		sig_heredoc_handler(int signo);
 int			is_path(char *str);
-int			process_heredoc_fork(t_pipe_node *head, int *cnt, char *start_dir);
+int			process_heredoc_fork(t_pipe_node *head, char *start_dir, t_dict **dict);
 void		sig_heredoc_handler(int signo);
 void		switch_signal_handler(int forked);
 void		free_ast(t_pipe_node **ast);

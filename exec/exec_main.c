@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 13:26:17 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 20:25:06 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,11 @@ void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 
 void	execute_child(t_cmd_node *cmd, int *pipe_fd, t_dict **env_dict)
 {
-	if (!cmd || !cmd->argv || !cmd->argv[0])
+	if (!cmd)
+		exit(EXIT_SUCCESS);
+	if (cmd->redirect)
+		redirect_file(cmd->redirect, 0);
+	if (!cmd->argv || !cmd->argv[0])
 		exit(EXIT_SUCCESS);
 	if (pipe_fd[0] >= 0 && pipe_fd[1] >= 0)
 	{
@@ -64,8 +68,6 @@ void	execute_child(t_cmd_node *cmd, int *pipe_fd, t_dict **env_dict)
 			exit_custom_err(NULL, NULL, "Duplicate file error", 1);
 		close(pipe_fd[1]);
 	}
-	if (cmd->redirect)
-		redirect_file(cmd->redirect, 0);
 	execute_simple_cmd(cmd, env_dict);
 }
 
@@ -105,8 +107,8 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict)
 
 	start_dir = NULL;
 	start_dir = getcwd(start_dir, 0);
-	tmpfile_cnt = 0;
-	if (process_heredoc_fork(head, &tmpfile_cnt, start_dir) != 0)
+	tmpfile_cnt = get_heredoc_file_cnt(head);
+	if (process_heredoc_fork(head, start_dir, env_dict) != 0)
 		return (1);
 	switch_signal_handler(1);
 	proc_cnt = get_proc_cnt(head);
