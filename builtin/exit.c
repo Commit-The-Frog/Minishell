@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:03 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 17:26:31 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 19:37:37 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,22 @@ static int	return_numeric_err(const char *str, int *custom_err)
 	return (255);
 }
 
+static int	has_overflow(long long num, int next_digit)
+{
+	long long	after_cal;
+
+	after_cal = num * 10 + next_digit;
+	if ((after_cal / 10 != num) || (after_cal % 10 != next_digit))
+		return (1);
+	else
+		return (0);
+}
+
 int	exit_atoi(const char *str, int *custom_err)
 {
-	int	i;
-	int	num;
-	int	sign;
+	int			i;
+	long long	num;
+	int			sign;
 
 	i = 0;
 	num = 0;
@@ -54,7 +65,7 @@ int	exit_atoi(const char *str, int *custom_err)
 	}
 	while (str[i])
 	{
-		if (!ft_isdigit(str[i]))
+		if (!ft_isdigit(str[i]) || has_overflow(num, (str[i] - '0') * sign))
 			return (return_numeric_err(str, custom_err));
 		num *= 10;
 		num += (str[i] - '0') * sign;
