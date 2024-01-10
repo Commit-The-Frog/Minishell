@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 19:47:53 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 16:01:09 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	f(void)
 {
-	system("leaks a.out");
+	system("leaks minishell");
 }
 
 void	free_redir_node(t_redir_node *r_node)
@@ -104,7 +104,7 @@ int main(int argc, char *argv[], char **envp)
 		line = readline(prompt);
 		if (!line)
 		{
-			printf("exit\n"); // test_mini$ exit으로 표시되어야 됨.
+			printf("exit\n");
 			break ;
 		}
 		add_history(line);

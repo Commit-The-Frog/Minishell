@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 14:46:09 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 16:40:07 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,4 @@ void	tokenize(t_token **list, char *str, t_dict *dict)
 	split_token(list);
 	remove_quote(list);
 	remove_empty_token(list);
-	// token_list_printer(*list);
 }

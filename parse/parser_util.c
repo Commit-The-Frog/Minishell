@@ -1,55 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   parser_util.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/06 19:37:06 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 14:50:10 by junkim2          ###   ########.fr       */
+/*   Created: 2024/01/10 16:37:16 by junkim2           #+#    #+#             */
+/*   Updated: 2024/01/10 16:38:37 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	expand_var(t_token **list, t_dict *dict)
+void	get_argv_array(t_simple_cmd_node *list, char **arr)
 {
-	t_token	*cur;
+	t_simple_cmd_node	*cur;
+	char				**tmp_arr;
+	int					i;
+	int					j;
 
-	cur = *list;
+	cur = list;
+	i = 0;
 	while (cur)
 	{
-		if (ft_strcmp(cur->str, "$") != 0)
-			expand_env(cur, dict);
+		arr[i++] = ft_strdup(cur->argv);
 		cur = cur->next;
 	}
 }
 
-void	remove_empty_token(t_token **list)
+char	**conv_list_to_array(t_simple_cmd_node *list)
 {
-	t_token	*cur;
-	t_token	*tmp;
-	t_token	*prev;
+	t_simple_cmd_node	*cur;
+	int					count;
+	char				**arr;
 
-	cur = *list;
-	prev = NULL;
+	cur = list;
+	count = 0;
 	while (cur)
 	{
-		if (cur->str == NULL || cur->str[0] == '\0')
-		{
-			if (prev == NULL)
-				*list = cur->next;
-			else
-				prev->next = cur->next;
-			free(cur->str);
-			free(cur);
-			if (prev == NULL)
-				cur = *list;
-			else
-				cur = prev->next;
-			continue ;
-		}
-		prev = cur;
+		count++;
 		cur = cur->next;
 	}
+	arr = (char **)ft_calloc(count + 1, sizeof(char *));
+	if (arr == NULL)
+		exit(EXIT_FAILURE);
+	get_argv_array(list, arr);
+	return (arr);
 }

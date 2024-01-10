@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 14:48:46 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 16:38:09 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_pipe_node	*parse(char *str, t_dict *dict);
 // ========= quote.c =========
 char		is_quote(char *str, int idx);
 char		check_quote(char *str);
+void		remove_quote(t_token **list);
 
 // ========= error.c =========
 void		*quote_err(char c);
@@ -55,22 +56,41 @@ void		tokenize(t_token **list, char *str, t_dict *dict);
 void		sep_token(t_token **list, char *str);
 void		split_token(t_token **list);
 
-void		sig_handler(int signo);
-void		sig_fork_handler(int signo);
-void		get_more_input(char **origin);
+// ========= logo.c =========
 void		print_logo(void);
-void		remove_quote(t_token **list);
+
+// ========= expand_util.c =========
+size_t		get_total_len(char *str, t_dict *env_dict);
+size_t		get_var_len(char *str);
+size_t		get_env_length(char *env_name, t_dict *env_dict);
+char		set_quote_flag(char quote_flag, char *str, int idx);
+
+// ========= expand.c =========
+void		expand_var(t_token **list, t_dict *dict);
+void		expand_env(t_token *token, t_dict *env_dict);
+
+// ========= util.c =========
+int			count_word(char *str);
+void		remove_empty_token(t_token **token_list);
 char		is_operator(char c);
 int			is_double_operator(char c1, char c2);
-void		get_ast(t_pipe_node **ast, t_token **token_list);
-void		expand_var(t_token **list, t_dict *dict);
-void		remove_empty_token(t_token **token_list);
-int			count_word(char *str);
-void		restore_recent_exit(int recent_exit, t_dict **env_dict);
-int			ft_sigismember(sigset_t *dst_set, int signo);
-void		expand_env(t_token *token, t_dict *env_dict);
-int			is_double_operator(char c1, char c2);
 int			get_type(t_token *token);
+
+// ========= parser.c =========
+void		get_ast(t_pipe_node **ast, t_token **token_list);
+
+// ========= parser_util.c =========
+void		get_argv_array(t_simple_cmd_node *list, char **arr);
+char		**conv_list_to_array(t_simple_cmd_node *list);
+
+// ========= sighandler.c =========
+void		sig_handler(int signo);
+void		sig_fork_handler(int signo);
+int			ft_sigismember(sigset_t *dst_set, int signo);
+
+// ========= prompt.c =========
+void		restore_recent_exit(int recent_exit, t_dict **env_dict);
+
 //printer
 void		token_list_printer(t_token *token_list);
 
