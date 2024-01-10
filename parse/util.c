@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:31:09 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 16:40:13 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 17:36:03 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,17 @@ int	get_type(t_token *token)
 		return (E_TYPE_DOUBLE_PIPE);
 	else
 		return (E_TYPE_SIMPLE_CMD);
+}
+
+char	*expand_str(char *origin, t_dict *env_dict)
+{
+	size_t	size;
+	char	*return_str;
+
+	size = get_total_len(origin, env_dict);
+	return_str = (char *)ft_calloc(size + 1, sizeof(char));
+	set_expanded_str(origin, return_str, size, env_dict);
+	return (return_str);
 }
 
 void	token_list_printer(t_token *token_list)

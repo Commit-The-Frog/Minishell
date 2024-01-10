@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:37:06 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 16:04:42 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 17:50:02 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,8 @@ void	remove_empty_token(t_token **list)
 	prev = NULL;
 	while (cur)
 	{
-		if (cur->str == NULL || cur->str[0] == '\0')
+		//  || cur->str[0] == '\0'
+		if (cur->str == NULL)
 		{
 			if (prev == NULL)
 				*list = cur->next;

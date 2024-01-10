@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expnad.c                                           :+:      :+:    :+:   */
+/*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 20:43:40 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 16:04:29 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 17:36:14 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static char	*set_return_str(char *origin, size_t size, \
 	return (env_name);
 }
 
-static void	set_expanded_str(char *str, char *result, \
+void	set_expanded_str(char *str, char *result, \
 							size_t size, t_dict *env_dict)
 {
 	int		i;
@@ -68,23 +68,17 @@ static void	set_expanded_str(char *str, char *result, \
 			free(env_name);
 		}
 		else
-		{
-			result[j] = str[i];
-			j++;
-			i++;
-		}
+			result[j++] = str[i++];
 	}
 }
 
 void	expand_env(t_token *token, t_dict *env_dict)
 {
 	size_t	size;
-	char	quote_flag;
 	char	*return_str;
 
 	if (ft_strchr(token->str, '$') == 0)
 		return ;
-	quote_flag = 0;
 	size = get_total_len(token->str, env_dict);
 	return_str = (char *)ft_calloc(size + 1, sizeof(char));
 	set_expanded_str(token->str, return_str, size, env_dict);
@@ -95,12 +89,24 @@ void	expand_env(t_token *token, t_dict *env_dict)
 void	expand_var(t_token **list, t_dict *dict)
 {
 	t_token	*cur;
+	t_token	*prev;
 
 	cur = *list;
+	prev = NULL;
 	while (cur)
 	{
-		if (ft_strcmp(cur->str, "$") != 0)
-			expand_env(cur, dict);
+		if (prev == NULL)
+		{
+			if (ft_strcmp(cur->str, "$") != 0)
+				expand_env(cur, dict);
+		}
+		else
+		{
+			if (ft_strcmp(cur->str, "$") != 0 && \
+				prev->type != E_TYPE_REDIR_HEREDOC)
+				expand_env(cur, dict);
+		}
+		prev = cur;
 		cur = cur->next;
 	}
 }

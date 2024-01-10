@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 14:35:16 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 17:09:17 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,21 +83,27 @@ static void	set_str_without_quote(char *new_str, char *origin)
 void	remove_quote(t_token **list)
 {
 	t_token	*cur;
+	t_token	*prev;
 	char	*new_str;
 	char	*tmp;
 	int		i;
 
 	cur = *list;
+	prev = NULL;
 	while (cur)
 	{
-		new_str = (char *)ft_calloc(ft_strlen(cur->str) + 1, sizeof(char));
-		if (new_str == NULL)
-			exit(EXIT_FAILURE);
-		i = 0;
-		set_str_without_quote(new_str, cur->str);
-		tmp = cur->str;
-		cur->str = new_str;
-		free(tmp);
+		if (prev == NULL || prev->type != E_TYPE_REDIR_HEREDOC)
+		{
+			new_str = (char *)ft_calloc(ft_strlen(cur->str) + 1, sizeof(char));
+			if (new_str == NULL)
+				exit(EXIT_FAILURE);
+			i = 0;
+			set_str_without_quote(new_str, cur->str);
+			tmp = cur->str;
+			cur->str = new_str;
+			free(tmp);
+		}
+		prev = cur;
 		cur = cur->next;
 	}
 }
