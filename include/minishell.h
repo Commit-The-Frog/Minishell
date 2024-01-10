@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 22:20:37 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 22:47:27 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int			check_unexpected_token(t_token **list);
 
 // ========= error.c =========
 void		*quote_err(char c);
-void		*syntax_err(char *str, int *err_flag);
+void		*syntax_err(char *str);
 void		*ambiguous_err(char *str);
 
 // ========= lexer.c =========
@@ -85,7 +85,7 @@ int			get_type(t_token *token);
 char		*expand_str(char *origin, t_dict *env_dict);
 
 // ========= parser.c =========
-void		get_ast(t_pipe_node **ast, t_token **token_list);
+void		get_ast(t_pipe_node **ast, t_token **token_list, int err_flag);
 
 // ========= parser_util.c =========
 void		get_argv_array(t_simple_cmd_node *list, char **arr);

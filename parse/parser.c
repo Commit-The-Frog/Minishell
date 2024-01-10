@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 22:14:02 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 22:41:23 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,21 @@ int	get_pipe_node(t_pipe_node **root, t_token **token_list)
 	return (0);
 }
 
-void	get_ast(t_pipe_node **ast, t_token **token_list)
+void	get_ast(t_pipe_node **ast, t_token **token_list, int err_flag)
 {
-	if (get_pipe_node(ast, token_list) == -1)
-		free_ast(ast);
-	free_token_list(token_list);
+	t_token				*cur;
+	t_token				*tmp;
+
+	tmp = *token_list;
+	if (err_flag != -1)
+		get_pipe_node(ast, token_list);
+	cur = tmp;
+	while (cur)
+	{
+		tmp = cur;
+		cur = cur->next;
+		free(tmp->str);
+		free(tmp->origin);
+		free(tmp);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 21:12:54 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 22:18:30 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 22:47:43 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ int	check_unexpected_token(t_token **list)
 			cur->type == E_TYPE_DOUBLE_AMPERSAND || \
 			cur->type == E_TYPE_DOUBLE_PIPE)
 		{
-			syntax_err(cur->str, NULL);
+			syntax_err(cur->str);
 			return (-1);
 		}
 		if (prev && prev->type >= 5 && prev->type <= 8 \
 			&& (cur->type >= 5 && cur->type <= 8))
 		{
-			syntax_err(cur->str, NULL);
+			syntax_err(cur->str);
 			return (-1);
 		}
 		prev = cur;
