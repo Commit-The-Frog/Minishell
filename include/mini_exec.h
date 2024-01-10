@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 15:04:23 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:49:10 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,15 @@ int		redirect_output(char *file_name, int is_builtin);
 void	redirect_heredoc(char **deli, int cnt, char *start_dir, int get_input);
 int		redirect_append(char *file_name, int is_builtin);
 int		redirect_file(t_redir_node *redirect, int is_builtin);
-void	heredoc_sub_preprocess(t_redir_node *redirect, int *cnt, char *start_dir, int get_input);
-void	heredoc_preprocess(t_pipe_node *head, int *cnt, char *start_dir, int get_input);
+void	heredoc_sub_preprocess(t_redir_node *redirect, \
+								int *cnt, char *start_dir, int get_input);
+void	heredoc_preprocess(t_pipe_node *head, int *cnt, \
+								char *start_dir, int get_input);
 void	unlink_tmpfile(int cnt, char *start_dir);
 void	*get_builtin_func(char *func);
 int		is_builtin_cmd(t_cmd_node *cmd);
-int		run_builtin(t_cmd_node *cmd, t_dict **env_dict, int tmp_cnt, char *tmp_dir);
+int		run_builtin(t_cmd_node *cmd, t_dict **env_dict, \
+						int tmp_cnt, char *tmp_dir);
 int		get_proc_cnt(t_pipe_node *head);
 char	**get_bin_path_list(char *path);
 char	*get_bin_path(char	*bin_name, t_dict **env_dict);
@@ -52,5 +55,6 @@ char	**generate_envp(t_dict *env_dict);
 t_dict	*get_node_with_key(t_dict *list, char *key);
 void	del_node_with_key(t_dict **env_dict, char *key);
 char	*get_value_with_key(t_dict *list, char *key);
-int		return_child_state(t_pstat *pstat, int proc_cnt, int cnt, char *start_dir);
+int		return_child_state(t_pstat *pstat, int proc_cnt, \
+							int cnt, char *start_dir);
 #endif

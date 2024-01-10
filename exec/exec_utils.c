@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 18:17:51 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 12:09:32 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:50:39 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	return_child_state(t_pstat *pstat, int proc_cnt, int cnt, char *start_dir)
 	unlink_tmpfile(cnt, start_dir);
 	if (WIFSIGNALED(exit_stat))
 	{
-		sigdelset(&recent_sig, WTERMSIG(exit_stat));
+		sigdelset(&g_recent_sig, WTERMSIG(exit_stat));
 		return (WTERMSIG(exit_stat) + 128);
 	}
 	return (WEXITSTATUS(exit_stat));

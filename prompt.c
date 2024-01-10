@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 15:08:22 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:50:39 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static t_pipe_node	*get_line_return_ast(int recent_exit, t_dict **env_dict)
 		exit(recent_exit);
 	}
 	add_history(line);
-	if (ft_sigismember(&recent_sig, SIGINT))
+	if (ft_sigismember(&g_recent_sig, SIGINT))
 	{
-		sigemptyset(&recent_sig);
+		sigemptyset(&g_recent_sig);
 		restore_recent_exit(1, env_dict);
 	}
 	ast = parse(line, *env_dict);
@@ -59,7 +59,7 @@ int	main(int argc, char *argv[], char **envp)
 	t_pipe_node	*ast;
 	t_dict		*env_dict;
 
-	sigemptyset(&recent_sig);
+	sigemptyset(&g_recent_sig);
 	env_dict = dict_init(envp);
 	recent_exit = 0;
 	turn_off_ctrl();

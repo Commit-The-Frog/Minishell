@@ -6,12 +6,12 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 14:38:28 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:51:46 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEMO_MINISHELL_H
-# define DEMO_MINISHELL_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -37,7 +37,7 @@ void		sig_handler(int signo);
 void		sig_fork_handler(int signo);
 void		get_more_input(char **origin);
 void		tokenize(t_token **list, char *str, t_dict *dict);
-void    	print_logo(void);
+void		print_logo(void);
 void		sep_token(t_token **list, char *str);
 void		make_token(t_token **list, char *str, int start, int end);
 void		remove_quote(t_token **list);
@@ -46,27 +46,27 @@ int			is_double_operator(char c1, char c2);
 void		get_ast(t_pipe_node **ast, t_token **token_list);
 t_pipe_node	*parse(char *str, t_dict *dict);
 void		*quote_err(char c);
-char		is_quote(char *str, int	idx);
+char		is_quote(char *str, int idx);
 void		expand_var(t_token **list, t_dict *dict);
 void		*syntax_err(char *str);
 void		remove_empty_token(t_token **token_list);
 int			count_word(char *str);
 void		restore_recent_exit(int recent_exit, t_dict **env_dict);
 int			ft_sigismember(sigset_t *dst_set, int signo);
-sigset_t	recent_sig;
 void		insert_token(t_token **list, char *str, int start);
 void		split_token(t_token **list);
 void		expand_env(t_token *token, t_dict *env_dict);
 //printer
-void	token_list_printer(t_token *token_list);
-void	turn_off_ctrl();
-void	turn_on_ctrl();
+void		token_list_printer(t_token *token_list);
+void		turn_off_ctrl(void);
+void		turn_on_ctrl(void);
+sigset_t	g_recent_sig;
 
-int	get_heredoc_file_cnt(t_pipe_node *head);
-void	sig_heredoc_handler(int signo);
-int	is_path(char *str);
-int	process_heredoc_fork(t_pipe_node *head, int *cnt, char *start_dir);
-void	sig_heredoc_handler(int signo);
-void	switch_signal_handler(int forked);
-void	free_ast(t_pipe_node **ast);
+int			get_heredoc_file_cnt(t_pipe_node *head);
+void		sig_heredoc_handler(int signo);
+int			is_path(char *str);
+int			process_heredoc_fork(t_pipe_node *head, int *cnt, char *start_dir);
+void		sig_heredoc_handler(int signo);
+void		switch_signal_handler(int forked);
+void		free_ast(t_pipe_node **ast);
 #endif
