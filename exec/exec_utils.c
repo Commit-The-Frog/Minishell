@@ -6,40 +6,43 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 18:17:51 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:34:57 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:50:39 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_double_ptr(char **lists)
+int	return_child_state(t_pstat *pstat, int proc_cnt, int cnt, char *start_dir)
 {
 	int	idx;
+	int	exit_stat;
 
 	idx = 0;
-	while (lists && lists[idx])
+	while (idx < proc_cnt)
 	{
-		free(lists[idx]);
+		waitpid(pstat[idx].pid, &pstat[idx].exit_stat, 0);
 		idx++;
 	}
-	free(lists);
+	exit_stat = pstat[idx - 1].exit_stat;
+	free(pstat);
+	unlink_tmpfile(cnt, start_dir);
+	if (WIFSIGNALED(exit_stat))
+	{
+		sigdelset(&g_recent_sig, WTERMSIG(exit_stat));
+		return (WTERMSIG(exit_stat) + 128);
+	}
+	return (WEXITSTATUS(exit_stat));
 }
 
-int	ft_strcmp(char *s1, char *s2)
+int	is_path(char *str)
 {
-	unsigned char	*c1;
-	unsigned char	*c2;
-
-	c1 = (unsigned char *)s1;
-	c2 = (unsigned char *)s2;
-	while (*c1 && *c2)
-	{
-		if (*c1 != *c2)
-			return (*c1 - *c2);
-		c1++;
-		c2++;
-	}
-	return (*c1 - *c2);
+	if (ft_strncmp(str, "./", 2) == 0)
+		return (1);
+	if (ft_strncmp(str, "../", 3) == 0)
+		return (1);
+	if (ft_strncmp(str, "/", 1) == 0)
+		return (1);
+	return (0);
 }
 
 int	get_proc_cnt(t_pipe_node *head)

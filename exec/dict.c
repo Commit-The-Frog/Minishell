@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:49:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:35:02 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 14:52:36 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 t_dict	*create_dict_node_env(char *env)
 {
-	char	*key;
 	char	*value;
 	t_dict	*env_dict;
 	char	*assign_loc;
@@ -62,7 +61,6 @@ void	add_node_back(t_dict **list, char *env)
 	t_dict	*tmp;
 	t_dict	*prev;
 	t_dict	*new_node;
-	char	*tmp_value;
 
 	if (!list)
 		return ;
@@ -89,7 +87,6 @@ void	add_node_back(t_dict **list, char *env)
 t_dict	*dict_init(char	**envp)
 {
 	int		idx;
-	char	**key_value;
 	t_dict	*dict_list;
 	t_dict	*tmp;
 

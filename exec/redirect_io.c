@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_io.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:58:54 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 21:03:42 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 15:04:29 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	redirect_input(char *file_name, int type, int is_builtin)
+int	redirect_input(char *file_name, int is_builtin)
 {
 	int	fd;
-	int	res;
 
 	fd = open(file_name, O_RDONLY);
 	if (is_builtin)
@@ -99,18 +98,17 @@ int	redirect_append(char *file_name, int is_builtin)
 
 int	redirect_file(t_redir_node *redirect, int is_builtin)
 {
-	int	fd;
 	int	res;
 
 	res = 0;
 	if (!redirect)
 		return (0);
 	if (redirect->type == E_TYPE_REDIR_LEFT)
-		res = redirect_input(redirect->file_name, redirect->type, is_builtin);
+		res = redirect_input(redirect->file_name, is_builtin);
 	if (redirect->type == E_TYPE_REDIR_RIGHT)
 		res = redirect_output(redirect->file_name, is_builtin);
 	if (redirect->type == E_TYPE_REDIR_HEREDOC)
-		res = redirect_input(redirect->file_name, redirect->type, is_builtin);
+		res = redirect_input(redirect->file_name, is_builtin);
 	if (redirect->type == E_TYPE_REDIR_APPEND)
 		res = redirect_append(redirect->file_name, is_builtin);
 	if (res)

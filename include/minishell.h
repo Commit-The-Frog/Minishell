@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
 /*   Updated: 2024/01/10 17:32:46 by junkim2          ###   ########.fr       */
@@ -33,7 +33,7 @@
 # include "mini_type.h"
 # include "mini_exec.h"
 
-sigset_t	recent_sig;
+sigset_t	g_recent_sig;
 
 // ========= core.c =========
 t_pipe_node	*parse(char *str, t_dict *dict);
@@ -45,6 +45,7 @@ void		remove_quote(t_token **list);
 
 // ========= error.c =========
 void		*quote_err(char c);
+
 void		*syntax_err(char *str);
 
 // ========= lexer.c =========
@@ -97,4 +98,12 @@ void		restore_recent_exit(int recent_exit, t_dict **env_dict);
 //printer
 void		token_list_printer(t_token *token_list);
 
+
+int			get_heredoc_file_cnt(t_pipe_node *head);
+void		sig_heredoc_handler(int signo);
+int			is_path(char *str);
+int			process_heredoc_fork(t_pipe_node *head, int *cnt, char *start_dir);
+void		sig_heredoc_handler(int signo);
+void		switch_signal_handler(int forked);
+void		free_ast(t_pipe_node **ast);
 #endif
