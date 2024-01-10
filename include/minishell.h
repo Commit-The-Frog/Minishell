@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 16:38:09 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 17:32:46 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,20 @@ size_t		get_total_len(char *str, t_dict *env_dict);
 size_t		get_var_len(char *str);
 size_t		get_env_length(char *env_name, t_dict *env_dict);
 char		set_quote_flag(char quote_flag, char *str, int idx);
+void		remove_empty_token(t_token **token_list);
 
 // ========= expand.c =========
 void		expand_var(t_token **list, t_dict *dict);
 void		expand_env(t_token *token, t_dict *env_dict);
+void		set_expanded_str(char *str, char *result, \
+							size_t size, t_dict *env_dict);
 
 // ========= util.c =========
 int			count_word(char *str);
-void		remove_empty_token(t_token **token_list);
 char		is_operator(char c);
 int			is_double_operator(char c1, char c2);
 int			get_type(t_token *token);
+char		*expand_str(char *origin, t_dict *env_dict);
 
 // ========= parser.c =========
 void		get_ast(t_pipe_node **ast, t_token **token_list);
