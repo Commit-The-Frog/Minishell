@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 20:06:56 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 11:47:28 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		ft_unset(char **argv, t_dict **env_dict);
 int		ft_env(char **argv, t_dict **env_dict);
 int		ft_exit(char **argv, t_dict **env_dict);
 
-int		execute_main(t_pipe_node *head, t_dict **env_dict);
+int		execute_main(t_pipe_node *head, t_dict **env_dict, char *start_dir);
 void	exit_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 int		print_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 int		redirect_input(char *file_name, int is_builtin);

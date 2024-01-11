@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 15:50:39 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 11:45:30 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,13 @@ int	main(int argc, char *argv[], char **envp)
 	int			recent_exit;
 	t_pipe_node	*ast;
 	t_dict		*env_dict;
+	char		*start_dir;
 
 	sigemptyset(&g_recent_sig);
 	env_dict = dict_init(envp);
 	recent_exit = 0;
+	start_dir = NULL;
+	start_dir = getcwd(start_dir, 0);
 	turn_off_ctrl();
 	while (1)
 	{
@@ -69,7 +72,7 @@ int	main(int argc, char *argv[], char **envp)
 		if (ast == NULL)
 			continue ;
 		turn_on_ctrl();
-		recent_exit = execute_main(ast, &env_dict);
+		recent_exit = execute_main(ast, &env_dict, start_dir);
 		turn_off_ctrl();
 		free_ast(&ast);
 	}
