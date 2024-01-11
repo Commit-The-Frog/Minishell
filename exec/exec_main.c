@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 14:37:52 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 16:19:03 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	secur_execve(char *bin_path, char **argv, t_dict *env_dict)
+static void	secur_execve(char *bin_path, char **argv, t_dict *env_dict)
 {
 	struct stat	stat_buf;
 	char		**envp;
@@ -25,7 +25,7 @@ void	secur_execve(char *bin_path, char **argv, t_dict *env_dict)
 	execve(bin_path, argv, envp);
 }
 
-void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
+static void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 {
 	char	*bin_path;
 	int		exit_code;
@@ -53,7 +53,7 @@ void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 	secur_execve(bin_path, cmd->argv, *env_dict);
 }
 
-void	execute_child(t_cmd_node *cmd, int *pipe_fd, t_dict **env_dict)
+static void	execute_child(t_cmd_node *cmd, int *pipe_fd, t_dict **env_dict)
 {
 	if (!cmd)
 		exit(EXIT_SUCCESS);
@@ -71,7 +71,7 @@ void	execute_child(t_cmd_node *cmd, int *pipe_fd, t_dict **env_dict)
 	execute_simple_cmd(cmd, env_dict);
 }
 
-void	execute_pipe(t_pipe_node *head, t_dict **env_dict, t_pstat *pstat)
+static void	execute_pipe(t_pipe_node *head, t_dict **env_dict, t_pstat *pstat)
 {
 	t_pipe_node	*pipe_node;
 	int			idx;

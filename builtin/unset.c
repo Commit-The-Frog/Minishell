@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:19:12 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 15:54:11 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 16:11:47 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_valid_id(char *str)
+static int	is_valid_id(char *str)
 {
 	int	idx;
 	int	after_assign;

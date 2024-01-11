@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:04:20 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 21:08:20 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 17:27:54 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	expand_buf(char **buf, t_dict *dict)
 {
 	char	*tmp;
 
-	tmp = expand_str(*buf, dict);
+	tmp = heredoc_expand_str(*buf, dict);
 	free(*buf);
 	*buf = tmp;
 }

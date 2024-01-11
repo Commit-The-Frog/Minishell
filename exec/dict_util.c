@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dict_util.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:39:23 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 15:53:28 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 16:14:00 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*get_value_with_key(t_dict *list, char *key)
 	return (tmp->value);
 }
 
-void	del_one_node(t_dict *tmp)
+static void	del_one_node(t_dict *tmp)
 {
 	free(tmp->key);
 	free(tmp->value);

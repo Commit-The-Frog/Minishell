@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 15:49:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 14:52:36 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:14:49 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_dict	*create_dict_node_env(char *env)
 	return (env_dict);
 }
 
-void	exchange_node_content(t_dict *dst, t_dict *src)
+static void	exchange_node_content(t_dict *dst, t_dict *src)
 {
 	char	*tmp_value;
 

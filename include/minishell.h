@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 16:01:12 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 17:29:11 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ void		expand_var(t_token **list, t_dict *dict);
 void		expand_env(t_token *token, t_dict *env_dict);
 void		set_expanded_str(char *str, char *result, \
 							size_t size, t_dict *env_dict);
+char		*set_return_str(char *origin, size_t size, \
+							t_dict *env_dict, char *return_str);
 
 // ========= util.c =========
 int			count_word(char *str);
@@ -92,7 +94,9 @@ char		**conv_list_to_array(t_simple_cmd_node *list);
 // ========= sighandler.c =========
 void		sig_handler(int signo);
 void		sig_fork_handler(int signo);
+void		sig_heredoc_handler(int signo);
 int			ft_sigismember(sigset_t *dst_set, int signo);
+void		switch_signal_handler(int forked);
 
 // ========= prompt.c =========
 void		restore_recent_exit(int recent_exit, t_dict **env_dict);
@@ -101,8 +105,5 @@ void		restore_recent_exit(int recent_exit, t_dict **env_dict);
 void		turn_off_ctrl(void);
 void		turn_on_ctrl(void);
 void		free_ast(t_pipe_node **ast);
-
-// ========= prompt_util.c =========
-int			is_path(char *str);
 
 #endif

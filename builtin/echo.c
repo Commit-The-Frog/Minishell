@@ -6,13 +6,13 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:47:43 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 17:59:12 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:10:25 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_nl_opt(char *arg)
+static int	is_nl_opt(char *arg)
 {
 	int	i;
 

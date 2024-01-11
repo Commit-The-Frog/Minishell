@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 20:43:40 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 19:48:14 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 17:28:53 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	update_return_str(char **return_str, char *env_name, \
 		exit(EXIT_FAILURE);
 }
 
-static char	*set_return_str(char *origin, size_t size, \
+char	*set_return_str(char *origin, size_t size, \
 							t_dict *env_dict, char *return_str)
 {
 	char	*env_name;

@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 12:07:21 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 11:48:43 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:21:05 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	process_heredoc_fork(t_pipe_node *head, char *start_dir, t_dict **dict)
 	return (exit_state);
 }
 
-int	get_heredoc_file_cnt_sub(t_redir_node *redir)
+static int	get_heredoc_file_cnt_sub(t_redir_node *redir)
 {
 	int	cnt;
 

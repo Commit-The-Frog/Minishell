@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:17:58 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 14:38:00 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 16:10:11 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_is_valid_dir(char *path)
+static int	check_is_valid_dir(char *path)
 {
 	struct stat	stat_buf;
 

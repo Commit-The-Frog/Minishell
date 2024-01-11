@@ -21,7 +21,7 @@ LIBFT_NAME = ft
 LIBFT = libft/libft.a
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
-CC = cc -MMD -MP -Wall -Wextra -Werror -fsanitize=address -g
+CC = cc -MMD -MP -Wall -Wextra -Werror
 NAME = minishell
 -include $(DEPS)
 

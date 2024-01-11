@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:03 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 19:37:37 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:10:43 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	has_overflow(long long num, int next_digit)
 		return (0);
 }
 
-int	exit_atoi(const char *str, int *custom_err)
+static int	exit_atoi(const char *str, int *custom_err)
 {
 	int			i;
 	long long	num;
