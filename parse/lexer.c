@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 22:35:43 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:29:57 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,20 @@ void	*make_token(t_token **list, char *str, int start, int end)
 	if (substr == NULL || new == NULL)
 		exit(EXIT_FAILURE);
 	new->str = substr;
+	new->origin = ft_strdup(substr);
+	if (new->origin == NULL)
+		exit(EXIT_FAILURE);
 	new->type = get_type(new);
-	new->next = NULL;
 	if (*list == NULL)
+	{
 		*list = new;
-	if (*list == new)
 		return (NULL);
+	}
 	cur = *list;
 	while (cur->next)
 		cur = cur->next;
 	cur->next = new;
-	return (set_origin_of_token(list));
+	return (NULL);
 }
 
 void	insert_token(t_token **list, char *str, int start)

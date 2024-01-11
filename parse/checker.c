@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 21:12:54 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 22:47:43 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:04:39 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	check_ambiguous(t_token **list, char *str)
 			&& ft_strlen(cur->str) == 0)
 		{
 			ambiguous_err(cur->origin);
-			free_token_list(list);
 			return (-1);
 		}
 		prev = cur;

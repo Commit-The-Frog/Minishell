@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 22:41:23 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:12:20 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,9 @@ void	get_ast(t_pipe_node **ast, t_token **token_list, int err_flag)
 		cur = cur->next;
 		free(tmp->str);
 		free(tmp->origin);
+		tmp->str = NULL;
+		tmp->origin = NULL;
 		free(tmp);
 	}
+	*token_list = NULL;
 }
