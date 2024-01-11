@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 12:07:21 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 20:42:42 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 11:48:43 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,4 @@ void	unlink_tmpfile(int cnt, char *start_dir)
 		idx++;
 	}
 	free(heredoc_prefix);
-	free(start_dir);
 }
