@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dict_util.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:39:23 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:34:37 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 15:53:28 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ char	*get_value_with_key(t_dict *list, char *key)
 	return (tmp->value);
 }
 
+void	del_one_node(t_dict *tmp)
+{
+	free(tmp->key);
+	free(tmp->value);
+	free(tmp);
+}
+
 void	del_node_with_key(t_dict **env_dict, char *key)
 {
 	t_dict	*tmp;
@@ -48,12 +55,14 @@ void	del_node_with_key(t_dict **env_dict, char *key)
 		if (ft_strcmp(tmp->key, key) == 0)
 		{
 			if (tmp == prev)
+			{
 				*env_dict = tmp->next;
+				del_one_node(tmp);
+				break ;
+			}
 			else
 				prev->next = tmp->next;
-			free(tmp->key);
-			free(tmp->value);
-			free(tmp);
+			del_one_node(tmp);
 			tmp = prev->next;
 			break ;
 		}

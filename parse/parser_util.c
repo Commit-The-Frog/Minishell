@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 16:37:16 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 16:38:37 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:40:17 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 void	get_argv_array(t_simple_cmd_node *list, char **arr)
 {
 	t_simple_cmd_node	*cur;
-	char				**tmp_arr;
 	int					i;
-	int					j;
 
 	cur = list;
 	i = 0;

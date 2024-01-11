@@ -6,13 +6,13 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 21:12:54 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/11 14:04:39 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 15:33:25 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_ambiguous(t_token **list, char *str)
+int	check_ambiguous(t_token **list)
 {
 	t_token	*cur;
 	t_token	*prev;

@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 17:58:25 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 17:09:17 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:38:25 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ static void	set_str_without_quote(char *new_str, char *origin)
 	int		j;
 	char	quote;
 
+	i = 0;
 	j = 0;
 	while (origin[j])
 	{

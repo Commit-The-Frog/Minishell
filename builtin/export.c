@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 12:03:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 17:42:14 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:38:07 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ static void	envp_printer(char *env)
 static void	print_export(char **envp)
 {
 	int	i;
-	int	j;
 	int	has_assign;
 
 	i = 0;

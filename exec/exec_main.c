@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 11:56:55 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:37:52 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,5 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict, char *start_dir)
 	execute_pipe(head, env_dict, pstat);
 	dup2(origin_stdin, STDIN_FILENO);
 	close(origin_stdin);
-	return (return_child_state(pstat, proc_cnt, tmpfile_cnt, start_dir));
+	return (return_child_state(pstat, proc_cnt, start_dir));
 }

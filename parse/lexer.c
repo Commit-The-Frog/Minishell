@@ -6,26 +6,11 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/11 14:29:57 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 15:03:02 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	*set_origin_of_token(t_token **list)
-{
-	t_token	*cur;
-
-	cur = *list;
-	while (cur)
-	{
-		cur->origin = ft_strdup(cur->str);
-		if (cur->origin == NULL)
-			exit(EXIT_FAILURE);
-		cur = cur->next;
-	}
-	return (0);
-}
 
 void	*make_token(t_token **list, char *str, int start, int end)
 {
@@ -89,7 +74,7 @@ int	tokenize(t_token **list, char *str, t_dict *dict)
 	sep_token(list, str);
 	expand_var(list, dict);
 	split_token(list);
-	if (check_ambiguous(list, str) == -1)
+	if (check_ambiguous(list) == -1)
 		return (-1);
 	if (check_unexpected_token(list) == -1)
 		return (-1);

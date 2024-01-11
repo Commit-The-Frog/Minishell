@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_exec.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 11:47:28 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:51:53 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void	exit_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 int		print_custom_err(char *cmd, char *str, char *err_msg, int custom_errno);
 int		redirect_input(char *file_name, int is_builtin);
 int		redirect_output(char *file_name, int is_builtin);
-void	redirect_heredoc(char **deli, char *start_dir, int get_input, t_dict **dict);
+void	redirect_heredoc(char **deli, char *start_dir, \
+						int get_input, t_dict **dict);
 int		redirect_append(char *file_name, int is_builtin);
 int		redirect_file(t_redir_node *redirect, int is_builtin);
 void	heredoc_sub_preprocess(t_redir_node *redirect, \
@@ -56,6 +57,13 @@ t_dict	*get_node_with_key(t_dict *list, char *key);
 void	del_node_with_key(t_dict **env_dict, char *key);
 char	*get_value_with_key(t_dict *list, char *key);
 int		return_child_state(t_pstat *pstat, int proc_cnt, \
-							int cnt, char *start_dir);
+							char *start_dir);
 int		invalid_id_err(char *func_name, char *str);
+
+int			get_heredoc_file_cnt(t_pipe_node *head);
+void		sig_heredoc_handler(int signo);
+int			process_heredoc_fork(t_pipe_node *head, char *start_dir, t_dict **dict);
+void		sig_heredoc_handler(int signo);
+void		switch_signal_handler(int forked);
+
 #endif

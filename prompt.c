@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 11:45:30 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 15:38:29 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ static int	get_line_return_ast(int recent_exit, \
 		printf("exit\n");
 		exit(recent_exit);
 	}
+	if (ft_strlen(line) == 0)
+		return (2);
 	add_history(line);
 	if (ft_sigismember(&g_recent_sig, SIGINT))
 	{
@@ -55,9 +57,30 @@ static int	get_line_return_ast(int recent_exit, \
 	return (err_flag);
 }
 
-void	fuck(void)
+int	minishell_loop(t_dict **env_dict, t_pipe_node **ast, char *start_dir)
 {
-	system("leaks minishell");
+	int	err_flag;
+	int	recent_exit;
+
+	err_flag = 0;
+	recent_exit = 0;
+	turn_off_ctrl();
+	while (1)
+	{
+		err_flag = get_line_return_ast(recent_exit, env_dict, ast);
+		if (err_flag == -1)
+		{
+			recent_exit = 258;
+			continue ;
+		}
+		if (err_flag == 2)
+			continue ;
+		turn_on_ctrl();
+		recent_exit = execute_main(*ast, env_dict, start_dir);
+		turn_off_ctrl();
+		free_ast(ast);
+	}
+	return (recent_exit);
 }
 
 int	main(int argc, char *argv[], char **envp)
@@ -66,27 +89,15 @@ int	main(int argc, char *argv[], char **envp)
 	t_pipe_node	*ast;
 	t_dict		*env_dict;
 	char		*start_dir;
-	int			err_flag;
 
+	argc = 0;
+	argv = NULL;
 	sigemptyset(&g_recent_sig);
 	env_dict = dict_init(envp);
 	recent_exit = 0;
 	start_dir = NULL;
 	start_dir = getcwd(start_dir, 0);
-	turn_off_ctrl();
-	while (1)
-	{
-		err_flag = get_line_return_ast(recent_exit, &env_dict, &ast);
-		if (err_flag == -1)
-		{
-			recent_exit = 1;
-			continue ;
-		}
-		turn_on_ctrl();
-		recent_exit = execute_main(ast, &env_dict, start_dir);
-		turn_off_ctrl();
-		free_ast(&ast);
-	}
+	minishell_loop(&env_dict, &ast, start_dir);
 	free_ast(&ast);
 	rl_clear_history();
 	exit(recent_exit);

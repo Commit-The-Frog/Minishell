@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 22:47:27 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 16:01:12 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/stat.h>
@@ -24,10 +23,9 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include <dirent.h>
-# include <sys/ioctl.h>
 # include <termios.h>
-# include <curses.h>
-# include <term.h>
+// # include <curses.h>
+// # include <term.h>
 # include <sys/errno.h>
 # include "libft.h"
 # include "mini_type.h"
@@ -44,7 +42,7 @@ char		check_quote(char *str);
 void		remove_quote(t_token **list);
 
 // ========= checker.c =========
-int			check_ambiguous(t_token **list, char *str);
+int			check_ambiguous(t_token **list);
 int			check_unexpected_token(t_token **list);
 
 // ========= error.c =========
@@ -102,18 +100,9 @@ void		restore_recent_exit(int recent_exit, t_dict **env_dict);
 // ========= prompt_util.c =========
 void		turn_off_ctrl(void);
 void		turn_on_ctrl(void);
-
-//printer
-void		token_list_printer(t_token *token_list);
-void		ast_printer(t_pipe_node *ast);
-void		fuck(void);
-
-int			get_heredoc_file_cnt(t_pipe_node *head);
-void		sig_heredoc_handler(int signo);
-int			is_path(char *str);
-int			process_heredoc_fork(t_pipe_node *head, char *start_dir, t_dict **dict);
-void		sig_heredoc_handler(int signo);
-void		switch_signal_handler(int forked);
 void		free_ast(t_pipe_node **ast);
-void		free_token_list(t_token **list);
+
+// ========= prompt_util.c =========
+int			is_path(char *str);
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:37:06 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 19:29:17 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 15:02:30 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 size_t	get_total_len(char *str, t_dict *env_dict)
 {
 	size_t	size;
-	int		idx;
+	size_t	idx;
 	char	quote_flag;
 	char	*env_name;
 
 	quote_flag = 0;
-	idx = -1;
+	idx = 0;
 	size = 0;
-	while (++idx < ft_strlen(str))
+	while (idx < ft_strlen(str))
 	{
 		quote_flag = set_quote_flag(quote_flag, str, idx);
 		if (str[idx] == '$' && (quote_flag == '\"' || !quote_flag) && \
@@ -36,6 +36,7 @@ size_t	get_total_len(char *str, t_dict *env_dict)
 			free(env_name);
 		}
 		size++;
+		idx++;
 	}
 	return (size);
 }
@@ -78,7 +79,6 @@ size_t	get_env_length(char *env_name, t_dict *env_dict)
 void	remove_empty_token(t_token **list)
 {
 	t_token	*cur;
-	t_token	*tmp;
 	t_token	*prev;
 
 	cur = *list;
@@ -92,6 +92,7 @@ void	remove_empty_token(t_token **list)
 			else
 				prev->next = cur->next;
 			free(cur->str);
+			free(cur->origin);
 			free(cur);
 			if (prev == NULL)
 				cur = *list;
@@ -108,6 +109,7 @@ char	set_quote_flag(char quote_flag, char *str, int idx)
 {
 	char	return_flag;
 
+	return_flag = 0;
 	if ((str[idx] == '\"' || str[idx] == '\'') \
 		&& (idx == 0 || str[idx - 1] != '\\'))
 	{

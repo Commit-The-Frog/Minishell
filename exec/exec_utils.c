@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 18:17:51 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 20:40:22 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:37:24 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	return_child_state(t_pstat *pstat, int proc_cnt, int cnt, char *start_dir)
+int	return_child_state(t_pstat *pstat, int proc_cnt, char *start_dir)
 {
 	int	idx;
 	int	exit_stat;

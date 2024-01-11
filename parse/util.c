@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:31:09 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 21:00:46 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:44:32 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ int	is_double_operator(char c1, char c2)
 	i = 0;
 	while (i < 4)
 	{
-		if (c1 == control_operator_double[i][0] && \
-			c2 == control_operator_double[i][1] || \
-			c2 == control_operator_double[i][1] && \
-			c1 == control_operator_double[i][0])
+		if ((c1 == control_operator_double[i][0] && \
+			c2 == control_operator_double[i][1]) || \
+			(c2 == control_operator_double[i][1] && \
+			c1 == control_operator_double[i][0]))
 			return (1);
 		i++;
 	}
@@ -116,56 +116,4 @@ char	*expand_str(char *origin, t_dict *env_dict)
 	return_str = (char *)ft_calloc(size + 1, sizeof(char));
 	set_expanded_str(origin, return_str, size, env_dict);
 	return (return_str);
-}
-
-void	token_list_printer(t_token *token_list)
-{
-	t_token	*cur;
-
-	cur = token_list;
-	while (cur)
-	{
-		printf("[%s|%u] ", cur->str, (unsigned int)cur->type);
-		cur = cur->next;
-	}
-	printf("\n");
-}
-
-void	ast_printer(t_pipe_node *ast)
-{
-	t_pipe_node			*cur;
-	t_cmd_node			*cur_cmd;
-	t_redir_node		*cur_redir;
-	t_simple_cmd_node	*cur_scmd;
-	int					i;
-
-	cur = ast;
-	printf("<ast_printer start>\n");
-	while (cur)
-	{
-		cur_cmd = cur->cmd;
-		cur_redir = cur_cmd->redirect;
-		cur_scmd = cur_cmd->simple_cmd;
-		printf("====redirects====\n");
-		while (cur_redir)
-		{
-			printf("%u, %s\n", (unsigned int)cur_redir->type, \
-			cur_redir->file_name);
-			cur_redir = cur_redir->next;
-		}
-		printf("====simple cmd====\n");
-		while (cur_scmd)
-		{
-			printf("[%s] ", cur_scmd->argv);
-			cur_scmd = cur_scmd->next;
-		}
-		printf("\n====argv====\n");
-		i = 0;
-		while (cur_cmd->argv[i])
-		{
-			printf("[%s] ", cur_cmd->argv[i++]);
-		}
-		printf("\n");
-		cur = cur->next_pipe;
-	}
 }

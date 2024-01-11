@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:17:58 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 12:51:16 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:38:00 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ static void	set_pwd_env(int argc, char **argv, t_dict **env_dict)
 {
 	char	*pwd;
 	char	*env;
-	char	*old_pwd;
 
 	if (argc == 1)
 	{

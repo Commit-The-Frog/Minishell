@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 20:31:52 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/11 14:12:20 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:40:06 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	*get_redir_node(t_redir_node **redir, t_token **cur)
 	return (NULL);
 }
 
-t_cmd_node	*get_cmd_node(t_pipe_node *pipe, t_token **cur)
+t_cmd_node	*get_cmd_node(t_token **cur)
 {
 	t_cmd_node	*cmd;
 
@@ -94,7 +94,7 @@ int	get_pipe_node(t_pipe_node **root, t_token **token_list)
 	pipe = (t_pipe_node *)ft_calloc(1, sizeof(t_pipe_node));
 	if (pipe == NULL)
 		exit(EXIT_FAILURE);
-	pipe->cmd = get_cmd_node(pipe, token_list);
+	pipe->cmd = get_cmd_node(token_list);
 	if (pipe->cmd == NULL)
 		return (-1);
 	if (*token_list && (*token_list)->type == E_TYPE_PIPE)
