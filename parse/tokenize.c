@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:53:35 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 18:28:01 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:23:02 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	sep_token(t_token **list, char *str)
 	end = 0;
 	while (str[end])
 	{
-		// printf("start:%c\n", str[start]);
 		quote = is_quote(str, end);
 		if (quote != 0)
 			move_until_quote(str, &end, quote);

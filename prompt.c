@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 15:50:39 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 22:26:59 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,14 @@ void	restore_recent_exit(int recent_exit, t_dict **env_dict)
 	free(recent_exit_env);
 }
 
-static t_pipe_node	*get_line_return_ast(int recent_exit, t_dict **env_dict)
+static int	get_line_return_ast(int recent_exit, \
+										t_dict **env_dict, t_pipe_node **ast)
 {
 	const char	*prompt = "minishell-2.0$ ";
 	char		*line;
-	t_pipe_node	*ast;
+	int			err_flag;
 
+	err_flag = 0;
 	switch_signal_handler(0);
 	restore_recent_exit(recent_exit, env_dict);
 	line = readline(prompt);
@@ -48,9 +50,14 @@ static t_pipe_node	*get_line_return_ast(int recent_exit, t_dict **env_dict)
 		sigemptyset(&g_recent_sig);
 		restore_recent_exit(1, env_dict);
 	}
-	ast = parse(line, *env_dict);
+	err_flag = parse(line, *env_dict, ast);
 	free(line);
-	return (ast);
+	return (err_flag);
+}
+
+void	fuck(void)
+{
+	system("leaks minishell");
 }
 
 int	main(int argc, char *argv[], char **envp)
@@ -58,6 +65,7 @@ int	main(int argc, char *argv[], char **envp)
 	int			recent_exit;
 	t_pipe_node	*ast;
 	t_dict		*env_dict;
+	int			err_flag;
 
 	sigemptyset(&g_recent_sig);
 	env_dict = dict_init(envp);
@@ -65,9 +73,12 @@ int	main(int argc, char *argv[], char **envp)
 	turn_off_ctrl();
 	while (1)
 	{
-		ast = get_line_return_ast(recent_exit, &env_dict);
-		if (ast == NULL)
+		err_flag = get_line_return_ast(recent_exit, &env_dict, &ast);
+		if (err_flag == -1)
+		{
+			recent_exit = 1;
 			continue ;
+		}
 		turn_on_ctrl();
 		recent_exit = execute_main(ast, &env_dict);
 		turn_off_ctrl();

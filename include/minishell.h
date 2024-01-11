@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 20:08:25 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 22:47:27 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,26 @@
 sigset_t	g_recent_sig;
 
 // ========= core.c =========
-t_pipe_node	*parse(char *str, t_dict *dict);
+int			parse(char *str, t_dict *dict, t_pipe_node **ast);
 
 // ========= quote.c =========
 char		is_quote(char *str, int idx);
 char		check_quote(char *str);
 void		remove_quote(t_token **list);
 
+// ========= checker.c =========
+int			check_ambiguous(t_token **list, char *str);
+int			check_unexpected_token(t_token **list);
+
 // ========= error.c =========
 void		*quote_err(char c);
-
 void		*syntax_err(char *str);
+void		*ambiguous_err(char *str);
 
 // ========= lexer.c =========
 void		*make_token(t_token **list, char *str, int start, int end);
 void		insert_token(t_token **list, char *str, int start);
-void		tokenize(t_token **list, char *str, t_dict *dict);
+int			tokenize(t_token **list, char *str, t_dict *dict);
 
 // ========= tokenize.c =========
 void		sep_token(t_token **list, char *str);
@@ -81,7 +85,7 @@ int			get_type(t_token *token);
 char		*expand_str(char *origin, t_dict *env_dict);
 
 // ========= parser.c =========
-void		get_ast(t_pipe_node **ast, t_token **token_list);
+void		get_ast(t_pipe_node **ast, t_token **token_list, int err_flag);
 
 // ========= parser_util.c =========
 void		get_argv_array(t_simple_cmd_node *list, char **arr);
@@ -101,6 +105,8 @@ void		turn_on_ctrl(void);
 
 //printer
 void		token_list_printer(t_token *token_list);
+void		ast_printer(t_pipe_node *ast);
+void		fuck(void);
 
 int			get_heredoc_file_cnt(t_pipe_node *head);
 void		sig_heredoc_handler(int signo);
@@ -109,4 +115,5 @@ int			process_heredoc_fork(t_pipe_node *head, char *start_dir, t_dict **dict);
 void		sig_heredoc_handler(int signo);
 void		switch_signal_handler(int forked);
 void		free_ast(t_pipe_node **ast);
+void		free_token_list(t_token **list);
 #endif

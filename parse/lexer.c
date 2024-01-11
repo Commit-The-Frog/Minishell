@@ -6,11 +6,26 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:30:30 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 19:29:38 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 14:29:57 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	*set_origin_of_token(t_token **list)
+{
+	t_token	*cur;
+
+	cur = *list;
+	while (cur)
+	{
+		cur->origin = ft_strdup(cur->str);
+		if (cur->origin == NULL)
+			exit(EXIT_FAILURE);
+		cur = cur->next;
+	}
+	return (0);
+}
 
 void	*make_token(t_token **list, char *str, int start, int end)
 {
@@ -25,14 +40,15 @@ void	*make_token(t_token **list, char *str, int start, int end)
 	if (substr == NULL || new == NULL)
 		exit(EXIT_FAILURE);
 	new->str = substr;
+	new->origin = ft_strdup(substr);
+	if (new->origin == NULL)
+		exit(EXIT_FAILURE);
 	new->type = get_type(new);
-	if (new->type == E_TYPE_SEMICOLON)
-		return (syntax_err(new->str));
-	new->next = NULL;
 	if (*list == NULL)
+	{
 		*list = new;
-	if (*list == new)
 		return (NULL);
+	}
 	cur = *list;
 	while (cur->next)
 		cur = cur->next;
@@ -68,12 +84,16 @@ void	insert_token(t_token **list, char *str, int start)
 	free(tmp_str);
 }
 
-void	tokenize(t_token **list, char *str, t_dict *dict)
+int	tokenize(t_token **list, char *str, t_dict *dict)
 {
 	sep_token(list, str);
 	expand_var(list, dict);
 	split_token(list);
+	if (check_ambiguous(list, str) == -1)
+		return (-1);
+	if (check_unexpected_token(list) == -1)
+		return (-1);
 	remove_quote(list);
 	remove_empty_token(list);
-	// token_list_printer(*list);
+	return (0);
 }

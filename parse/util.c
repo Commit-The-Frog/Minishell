@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:31:09 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/10 17:36:03 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 21:00:46 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ void	ast_printer(t_pipe_node *ast)
 	int					i;
 
 	cur = ast;
+	printf("<ast_printer start>\n");
 	while (cur)
 	{
 		cur_cmd = cur->cmd;
