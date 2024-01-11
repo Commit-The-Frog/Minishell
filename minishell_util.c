@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 11:51:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 19:26:52 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/10 22:37:18 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,20 @@ int	ft_strcmp(char *s1, char *s2)
 		c2++;
 	}
 	return (*c1 - *c2);
+}
+
+void	free_token_list(t_token **list)
+{
+	t_token	*cur;
+	t_token	*tmp;
+
+	cur = *list;
+	while (cur)
+	{
+		tmp = cur;
+		cur = cur->next;
+		free(tmp->str);
+		free(tmp->origin);
+		free(tmp);
+	}
 }
