@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:17:58 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 12:37:06 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 12:51:16 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static char	*get_relative_path(char **argv, t_dict **env_dict)
 	char	*old_pwd;
 	char	*pwd;
 
+	print_custom_err("cd", "getcwd", "error retrieving current directory", 1);
 	old_pwd = get_value_with_key(*env_dict, "PWD");
 	if (!old_pwd)
 		return (NULL);
