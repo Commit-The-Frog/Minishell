@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 12:03:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 14:38:07 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/12 11:02:34 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ static void	envp_printer(char *env)
 		write(STDOUT_FILENO, &env[i], 1);
 		if (env[i] == '=')
 		{
+			if (!has_assign)
+				write(STDOUT_FILENO, "\"", 1);
 			has_assign = 1;
-			write(STDOUT_FILENO, "\"", 1);
 		}
 		i++;
 	}
