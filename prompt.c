@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 15:38:29 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/12 11:19:02 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	return_with_free(char *line)
+{
+	free(line);
+	return (2);
+}
 
 void	restore_recent_exit(int recent_exit, t_dict **env_dict)
 {
@@ -45,7 +51,7 @@ static int	get_line_return_ast(int recent_exit, \
 		exit(recent_exit);
 	}
 	if (ft_strlen(line) == 0)
-		return (2);
+		return (return_with_free(line));
 	add_history(line);
 	if (ft_sigismember(&g_recent_sig, SIGINT))
 	{
