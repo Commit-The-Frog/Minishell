@@ -6,13 +6,13 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:19:12 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:53:04 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:11:47 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_valid_id(char *str)
+static int	is_valid_id(char *str)
 {
 	int	idx;
 	int	after_assign;
@@ -37,17 +37,6 @@ int	is_valid_id(char *str)
 	return (1);
 }
 
-static int	invalid_id_err(char	*str)
-{
-	const char	*err_str = ": not a valid identifier\n";
-
-	write(STDERR_FILENO, "minishell: ", 11);
-	write(STDERR_FILENO, "unset: ", 7);
-	write(STDERR_FILENO, str, ft_strlen(str));
-	write(STDERR_FILENO, err_str, ft_strlen(err_str));
-	return (1);
-}
-
 int	ft_unset(char **argv, t_dict **env_dict)
 {
 	int	argc;
@@ -64,7 +53,7 @@ int	ft_unset(char **argv, t_dict **env_dict)
 		if (is_valid_id(argv[idx]))
 			del_node_with_key(env_dict, argv[idx]);
 		else
-			result = invalid_id_err(argv[idx]);
+			result = invalid_id_err("unset: ", argv[idx]);
 		idx++;
 	}
 	return (0);

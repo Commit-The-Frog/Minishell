@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:37:32 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 20:15:09 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/10 17:40:34 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,10 @@ static char	*generate_env_str(t_dict *env_dict)
 	return (env);
 }
 
-char	**generate_envp(t_dict *env_dict)
+static int	get_env_size(t_dict *env_dict)
 {
-	char	**envp;
-	int		size;
-	int		idx;
 	t_dict	*tmp;
+	int		size;
 
 	size = 0;
 	tmp = env_dict;
@@ -48,17 +46,38 @@ char	**generate_envp(t_dict *env_dict)
 		tmp = tmp->next;
 		size++;
 	}
+	return (size);
+}
+
+char	**generate_envp(t_dict *env_dict)
+{
+	char	**envp;
+	int		size;
+	int		idx;
+	t_dict	*tmp;
+
+	size = get_env_size(env_dict);
 	envp = (char **)ft_calloc(size + 1, sizeof(char *));
 	if (!envp)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
-	idx = -1;
+	idx = 0;
 	tmp = env_dict;
-	while (++idx < size)
+	while (idx < size)
 	{
-		if (ft_strcmp(tmp->key, "?") == 0)
-			continue ;
 		envp[idx] = generate_env_str(tmp);
 		tmp = tmp->next;
+		idx++;
 	}
 	return (envp);
+}
+
+int	invalid_id_err(char *func_name, char *str)
+{
+	const char	*err_str = ": not a valid identifier\n";
+
+	write(STDERR_FILENO, "minishell: ", 11);
+	write(STDERR_FILENO, func_name, ft_strlen(func_name));
+	write(STDERR_FILENO, str, ft_strlen(str));
+	write(STDERR_FILENO, err_str, ft_strlen(err_str));
+	return (1);
 }

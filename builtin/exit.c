@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:18:03 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 21:12:31 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/11 16:10:43 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,22 @@ static int	return_numeric_err(const char *str, int *custom_err)
 	return (255);
 }
 
-int	exit_atoi(const char *str, int *custom_err)
+static int	has_overflow(long long num, int next_digit)
 {
-	int	i;
-	int	num;
-	int	sign;
+	long long	after_cal;
+
+	after_cal = num * 10 + next_digit;
+	if ((after_cal / 10 != num) || (after_cal % 10 != next_digit))
+		return (1);
+	else
+		return (0);
+}
+
+static int	exit_atoi(const char *str, int *custom_err)
+{
+	int			i;
+	long long	num;
+	int			sign;
 
 	i = 0;
 	num = 0;
@@ -54,7 +65,7 @@ int	exit_atoi(const char *str, int *custom_err)
 	}
 	while (str[i])
 	{
-		if (!ft_isdigit(str[i]))
+		if (!ft_isdigit(str[i]) || has_overflow(num, (str[i] - '0') * sign))
 			return (return_numeric_err(str, custom_err));
 		num *= 10;
 		num += (str[i] - '0') * sign;
@@ -71,6 +82,7 @@ int	ft_exit(char **argv, t_dict **env_dict)
 
 	argc = 0;
 	custom_err = 0;
+	env_dict = NULL;
 	while (argv && argv[argc])
 		argc++;
 	write(STDOUT_FILENO, "exit\n", 5);
@@ -81,7 +93,7 @@ int	ft_exit(char **argv, t_dict **env_dict)
 			exit(255);
 	}
 	if (argc > 2)
-		return(print_custom_err(NULL, \
+		return (print_custom_err(NULL, \
 			"exit", "too many arguments", 1));
 	if (argc == 1)
 		exit(0);

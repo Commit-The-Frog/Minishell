@@ -6,13 +6,13 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 15:17:58 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/06 20:52:48 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:10:11 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_is_valid_dir(char *path)
+static int	check_is_valid_dir(char *path)
 {
 	struct stat	stat_buf;
 
@@ -25,6 +25,53 @@ int	check_is_valid_dir(char *path)
 	if (access(path, X_OK) < 0)
 		return (print_custom_err("cd", path, "Permission denied", 1));
 	return (0);
+}
+
+static char	*get_relative_path(char **argv, t_dict **env_dict)
+{
+	char	*old_pwd;
+	char	*pwd;
+
+	print_custom_err("cd", "getcwd", "error retrieving current directory", 1);
+	old_pwd = get_value_with_key(*env_dict, "PWD");
+	if (!old_pwd)
+		return (NULL);
+	old_pwd = ft_strjoin(old_pwd, "/");
+	if (!old_pwd)
+		exit_custom_err("NULL", "NULL", "Malloc error", 1);
+	pwd = ft_strjoin(old_pwd, argv[1]);
+	if (!pwd)
+		exit_custom_err("NULL", "NULL", "Malloc error", 1);
+	free(old_pwd);
+	return (pwd);
+}
+
+static void	set_pwd_env(int argc, char **argv, t_dict **env_dict)
+{
+	char	*pwd;
+	char	*env;
+
+	if (argc == 1)
+	{
+		pwd = ft_strdup(get_value_with_key(*env_dict, "HOME"));
+		if (!pwd)
+			exit_custom_err("NULL", "NULL", "Malloc error", 1);
+	}
+	else
+	{
+		pwd = NULL;
+		pwd = getcwd(pwd, 0);
+		if (!pwd)
+			pwd = get_relative_path(argv, env_dict);
+	}
+	if (!pwd)
+		return ;
+	env = ft_strjoin("PWD=", pwd);
+	if (!env)
+		exit_custom_err("NULL", "NULL", "Malloc error", 1);
+	add_node_back(env_dict, env);
+	free(env);
+	free(pwd);
 }
 
 int	ft_cd(char **argv, t_dict **env_dict)
@@ -52,5 +99,6 @@ int	ft_cd(char **argv, t_dict **env_dict)
 		if (chdir(home_dict->value) < 0)
 			return (print_custom_err("cd", argv[1], "chdir function error", 1));
 	}
+	set_pwd_env(argc, argv, env_dict);
 	return (0);
 }

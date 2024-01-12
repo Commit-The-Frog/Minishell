@@ -6,37 +6,50 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:04:20 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 16:36:07 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 17:27:54 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	heredoc_sub_preprocess(t_redir_node *redir, int *cnt, char *start_dir)
+static int	trim_quote(char **deli)
 {
-	if (!redir)
-		return ;
-	if (redir->type == E_TYPE_REDIR_HEREDOC)
+	char	set[2];
+	char	*new_str;
+
+	set[0] = is_quote(*deli, 0);
+	set[1] = 0;
+	if (set[0])
 	{
-		redirect_heredoc(&redir->file_name, *cnt, start_dir);
-		(*cnt)++;
+		new_str = ft_strtrim(*deli, set);
+		if (!new_str)
+			exit_custom_err(NULL, NULL, "Malloc error", 1);
+		free(*deli);
+		*deli = new_str;
+		return (1);
 	}
-	if (redir->next)
-		heredoc_sub_preprocess(redir->next, cnt, start_dir);
+	return (0);
 }
 
-void	heredoc_preprocess(t_pipe_node *head, int *cnt, char *start_dir)
+static void	expand_buf(char **buf, t_dict *dict)
 {
-	if (head->cmd)
-		heredoc_sub_preprocess(head->cmd->redirect, cnt, start_dir);
-	if (head->next_pipe)
-		heredoc_preprocess(head->next_pipe, cnt, start_dir);
+	char	*tmp;
+
+	tmp = heredoc_expand_str(*buf, dict);
+	free(*buf);
+	*buf = tmp;
 }
 
-static void	heredoc_file(int fd, char **deli)
+static void	heredoc_file(char *tmp_file, char **deli, t_dict **dict)
 {
+	int		fd;
 	char	*buf;
+	int		deli_has_quote;
 
+	fd = open(tmp_file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if (fd < 0)
+		exit_custom_err(NULL, tmp_file, "File open error", 1);
+	deli_has_quote = trim_quote(deli);
 	while (1)
 	{
 		buf = readline("> ");
@@ -44,25 +57,32 @@ static void	heredoc_file(int fd, char **deli)
 			break ;
 		else
 		{
+			if (!deli_has_quote && ft_strchr(buf, '$'))
+				expand_buf(&buf, *dict);
 			write(fd, buf, ft_strlen(buf));
 			write(fd, "\n", 1);
 			free(buf);
 		}
 	}
 	free(buf);
+	close(fd);
 }
 
-void	redirect_heredoc(char **deli, int cnt, char *start_dir)
+void	redirect_heredoc(char **deli, \
+			char *start_dir, int get_input, t_dict **dict)
 {
-	char	*tmp_file;
-	char	*str_cnt;
-	int		fd;
-	char	*heredoc_prefix;
+	static int	cnt = 0;
+	char		*tmp_file;
+	char		*str_cnt;
+	char		*heredoc_prefix;
 
+	if (get_input == 2)
+		return (unlink_tmpfile(cnt, start_dir));
 	heredoc_prefix = ft_strjoin(start_dir, "/.heredoc-");
 	if (!heredoc_prefix)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	str_cnt = ft_itoa(cnt);
+	cnt++;
 	if (!str_cnt)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	tmp_file = ft_strjoin(heredoc_prefix, str_cnt);
@@ -70,39 +90,8 @@ void	redirect_heredoc(char **deli, int cnt, char *start_dir)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
 	free(str_cnt);
 	free(heredoc_prefix);
-	fd = open(tmp_file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	if (fd < 0)
-		exit_custom_err(NULL, tmp_file, "File open error", 1);
-	heredoc_file(fd, deli);
+	if (get_input)
+		heredoc_file(tmp_file, deli, dict);
 	free(*deli);
 	*deli = tmp_file;
-	close(fd);
-}
-
-void	unlink_tmpfile(int cnt, char *start_dir)
-{
-	char	*str_num;
-	char	*file_name;
-	int		idx;
-	char	*heredoc_prefix;
-
-	heredoc_prefix = ft_strjoin(start_dir, "/.heredoc-");
-	if (!heredoc_prefix)
-		exit_custom_err(NULL, NULL, "Malloc error", 1);
-	idx = 0;
-	while (idx < cnt)
-	{
-		str_num = ft_itoa(idx);
-		if (!str_num)
-			exit_custom_err(NULL, NULL, "Malloc error", 1);
-		file_name = ft_strjoin(heredoc_prefix, str_num);
-		if (!file_name)
-			exit_custom_err(NULL, NULL, "Malloc error", 1);
-		unlink(file_name);
-		free(str_num);
-		free(file_name);
-		idx++;
-	}
-	free(heredoc_prefix);
-	free(start_dir);
 }

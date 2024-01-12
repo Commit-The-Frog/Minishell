@@ -3,69 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
+/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/08 19:47:53 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/12 14:20:37 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	f(void)
+int	return_with_free(char *line)
 {
-	system("leaks a.out");
-}
-
-void	free_redir_node(t_redir_node *r_node)
-{
-	t_redir_node	*target;
-	t_redir_node	*tmp;
-
-	tmp = r_node;
-	while (tmp)
-	{
-		target = tmp;
-		tmp = tmp->next;
-		free(target->file_name);
-		free(target);
-	}
-}
-
-void	free_simple_cmd_node(t_simple_cmd_node *r_node)
-{
-	t_simple_cmd_node	*target;
-	t_simple_cmd_node	*tmp;
-
-	tmp = r_node;
-	while (tmp)
-	{
-		target = tmp;
-		tmp = tmp->next;
-		free(target->argv);
-		free(target);
-	}
-}
-
-void	free_ast(t_pipe_node **ast)
-{
-	t_pipe_node			*tmp;
-	t_pipe_node			*target;
-	t_cmd_node			*c_node;
-
-	tmp = *ast;
-	while (tmp)
-	{
-		c_node = tmp->cmd;
-		free_redir_node(c_node->redirect);
-		free_double_ptr(c_node->argv);
-		free_simple_cmd_node(c_node->simple_cmd);
-		free(c_node);
-		target = tmp;
-		tmp = tmp->next_pipe;
-		free(target);
-	}
-	*ast = NULL;
+	free(line);
+	return (2);
 }
 
 void	restore_recent_exit(int recent_exit, t_dict **env_dict)
@@ -84,43 +34,77 @@ void	restore_recent_exit(int recent_exit, t_dict **env_dict)
 	free(recent_exit_env);
 }
 
-int main(int argc, char *argv[], char **envp)
+static int	get_line_return_ast(int recent_exit, \
+										t_dict **env_dict, t_pipe_node **ast)
 {
 	const char	*prompt = "minishell-2.0$ ";
-	int			recent_exit;
 	char		*line;
-	t_pipe_node *ast;
-	t_dict		*env_dict;
+	int			err_flag;
 
-	// atexit(f);
-	sigemptyset(&recent_sig);
-	env_dict = dict_init(envp);
+	err_flag = 0;
+	switch_signal_handler(0);
+	restore_recent_exit(recent_exit, env_dict);
+	line = readline(prompt);
+	if (!line)
+	{
+		printf("exit\n");
+		exit(recent_exit);
+	}
+	if (ft_strlen(line) == 0)
+		return (return_with_free(line));
+	add_history(line);
+	if (ft_sigismember(&g_recent_sig, SIGINT))
+	{
+		sigemptyset(&g_recent_sig);
+		restore_recent_exit(1, env_dict);
+	}
+	err_flag = parse(line, *env_dict, ast);
+	free(line);
+	return (err_flag);
+}
+
+int	minishell_loop(t_dict **env_dict, t_pipe_node **ast, char *start_dir)
+{
+	int	err_flag;
+	int	recent_exit;
+
+	err_flag = 0;
 	recent_exit = 0;
+	turn_off_ctrl();
 	while (1)
 	{
-		signal(SIGINT, sig_handler);
-		signal(SIGQUIT, sig_handler);
-		restore_recent_exit(recent_exit, &env_dict);
-		line = readline(prompt);
-		if (!line)
+		err_flag = get_line_return_ast(recent_exit, env_dict, ast);
+		if (err_flag == -1)
 		{
-			printf("exit\n"); // test_mini$ exit으로 표시되어야 됨.
-			break ;
-		}
-		add_history(line);
-		if (ft_sigismember(&recent_sig, SIGINT))
-		{
-			// printf("%x\n", recent_sig);
-			sigemptyset(&recent_sig);
-			restore_recent_exit(1, &env_dict);
-		}
-		ast = parse(line, env_dict);
-		if (ast == NULL)
+			recent_exit = 258;
 			continue ;
-		free(line);
-		recent_exit = execute_main(ast, &env_dict);
-		free_ast(&ast);
+		}
+		if (err_flag == 2)
+			continue ;
+		turn_on_ctrl();
+		recent_exit = execute_main(*ast, env_dict, start_dir);
+		turn_off_ctrl();
+		free_ast(ast);
 	}
+	return (recent_exit);
+}
+
+int	main(int argc, char *argv[], char **envp)
+{
+	int			recent_exit;
+	t_pipe_node	*ast;
+	t_dict		*env_dict;
+	char		*start_dir;
+
+	argc = 0;
+	argv = NULL;
+	sigemptyset(&g_recent_sig);
+	env_dict = dict_init(envp);
+	recent_exit = 0;
+	start_dir = NULL;
+	start_dir = getcwd(start_dir, 0);
+	print_logo();
+	minishell_loop(&env_dict, &ast, start_dir);
 	free_ast(&ast);
 	rl_clear_history();
 	exit(recent_exit);

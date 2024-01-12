@@ -1,57 +1,52 @@
 .DEFAULT_GOAL := all
+SRCS_EXEC = \
+	dict.c dict_util.c envp_util.c exec_errhandle.c \
+	exec_heredoc.c exec_main.c exec_utils.c heredoc_util.c \
+	redirect_io.c exec_heredoc_util.c
+SRCS_BUILTIN = \
+	builtin_utils.c cd.c echo.c env.c \
+	exit.c export.c pwd.c unset.c
+SRCS_PARSE = \
+	quote.c error.c expand_util.c expand.c \
+	lexer.c logo.c parser.c parser_util.c tokenize.c util.c core.c \
+	checker.c
+SRCS_ETC = minishell_util.c prompt_util.c prompt.c sighandler.c
 SRCS = \
-		demo_main.c sighandler.c
-SRCS_BONUS = \
-
-LIBFT_DIR = ./libft
+	$(addprefix exec/, $(SRCS_EXEC)) \
+	$(addprefix builtin/, $(SRCS_BUILTIN)) \
+	$(addprefix parse/, $(SRCS_PARSE)) \
+	$(SRCS_ETC)
+LIBFT_DIR = libft
 LIBFT_NAME = ft
 LIBFT = libft/libft.a
 OBJS = $(SRCS:.c=.o)
-OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 DEPS = $(SRCS:.c=.d)
-DEPS_BONUS = $(SRCS_BONUS:.c=.d)
-CC = cc -Wall -Wextra -Werror -MMD -MP
+CC = cc -MMD -MP -Wall -Wextra -Werror
 NAME = minishell
-MANDA = .manda
-BONUS = .bonus
 -include $(DEPS)
 
 all :
 	@echo "MINISHELL : make $(NAME)"
-	@make $(MANDA)
-
-bonus :
-	@echo "MINISHELL : make BONUS"
-	@make $(BONUS)
+	@make $(NAME)
 
 $(LIBFT) :
 	@ echo "MINISHELL : make $(LIBFT)"
 	@ make -C $(LIBFT_DIR)
 
 $(NAME) : $(LIBFT) $(OBJS)
-	@make $(MANDA)
-
-$(MANDA) : $(LIBFT) $(OBJS)
-	@rm -rf $(BONUS)
-	@touch $(MANDA)
-	@$(CC) -o $(NAME) $(OBJS) -l$(LIBFT_NAME) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -lreadline
-
-$(BONUS) : $(LIBFT) $(OBJS_BONUS)
-	@rm -rf $(MANDA)
-	@touch $(BONUS)
-	@$(CC) -o $(NAME) $(OBJS_BONUS) -l$(LIBFT_NAME) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -lreadline
+	@$(CC) -o $(NAME) $(OBJS) -l$(LIBFT_NAME) -L$(LIBFT_DIR) -lreadline
 
 %.o : %.c
-	@$(CC) -c $<  -I$(LIBFT_DIR)
+	@$(CC) -c $< -I$(LIBFT_DIR) -Iinclude -o $@
 
 clean :
 	@echo "MINISHELL : make clean"
-	@rm -f $(OBJS) $(DEPS) $(OBJS_BONUS) $(BONUS) $(MANDA) $(DEPS_BONUS)
+	@rm -f $(OBJS) $(DEPS) $(BONUS)
 	@make -C $(LIBFT_DIR) clean
 
 fclean :
 	@echo "MINISHELL : make fclean"
-	@rm -f $(OBJS) $(NAME) $(DEPS) $(OBJS_BONUS) $(BONUS) $(MANDA) $(DEPS_BONUS)
+	@rm -f $(OBJS) $(NAME) $(DEPS)
 	@make -C $(LIBFT_DIR) fclean
 
 re : fclean

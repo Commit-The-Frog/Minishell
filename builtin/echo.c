@@ -6,11 +6,27 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:47:43 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/07 19:09:29 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:10:25 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_nl_opt(char *arg)
+{
+	int	i;
+
+	if (ft_strncmp(arg, "-n", 2) != 0)
+		return (0);
+	i = 1;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 int	ft_echo(char **argv, t_dict **env_dict)
 {
@@ -20,19 +36,20 @@ int	ft_echo(char **argv, t_dict **env_dict)
 
 	argc = 0;
 	n_flag = 0;
-	idx = 1;
+	idx = 0;
+	env_dict = NULL;
 	while (argv[argc])
 		argc++;
-	if (argc > 1 && ft_strncmp(argv[1], "-n", 2) == 0)
-		n_flag = 1;
-	if (n_flag)
-		idx++;
-	while (idx < argc)
+	while (++idx < argc)
 	{
+		if (is_nl_opt(argv[idx]) && (idx == 1 || is_nl_opt(argv[idx - 1])))
+		{
+			n_flag = 1;
+			continue ;
+		}
 		write(STDOUT_FILENO, argv[idx], ft_strlen(argv[idx]));
 		if (idx != argc - 1)
 			write(STDOUT_FILENO, " ", 1);
-		idx++;
 	}
 	if (!n_flag)
 		write(STDOUT_FILENO, "\n", 1);
