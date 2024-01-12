@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 17:29:11 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/12 10:45:50 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdlib.h>
+# include <string.h>
 # include <unistd.h>
 # include <sys/stat.h>
 # include <fcntl.h>
@@ -24,8 +25,6 @@
 # include <signal.h>
 # include <dirent.h>
 # include <termios.h>
-// # include <curses.h>
-// # include <term.h>
 # include <sys/errno.h>
 # include "libft.h"
 # include "mini_type.h"
