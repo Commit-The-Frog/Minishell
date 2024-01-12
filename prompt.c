@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:20:24 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/12 11:19:02 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/12 14:20:37 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int	main(int argc, char *argv[], char **envp)
 	recent_exit = 0;
 	start_dir = NULL;
 	start_dir = getcwd(start_dir, 0);
+	print_logo();
 	minishell_loop(&env_dict, &ast, start_dir);
 	free_ast(&ast);
 	rl_clear_history();

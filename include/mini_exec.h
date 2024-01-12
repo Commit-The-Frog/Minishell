@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:04 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 17:26:51 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/12 14:25:53 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ int		ft_exit(char **argv, t_dict **env_dict);
 // ========= builtin_utils.c =========
 void	*get_builtin_func(char *func);
 int		is_builtin_cmd(t_cmd_node *cmd);
-int		run_builtin(t_cmd_node *cmd, t_dict **env_dict, \
-						int tmp_cnt, char *tmp_dir);
+int		run_builtin(t_cmd_node *cmd, t_dict **env_dict, char *tmp_dir);
 
 // ========= dict_utils.c =========
 t_dict	*get_node_with_key(t_dict *list, char *key);

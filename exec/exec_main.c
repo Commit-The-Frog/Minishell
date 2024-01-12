@@ -6,7 +6,7 @@
 /*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:37:17 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/11 16:19:03 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/12 14:27:48 by minjacho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	execute_simple_cmd(t_cmd_node *cmd, t_dict **env_dict)
 
 	if (!cmd->argv || !cmd->argv[0] || ft_strlen(cmd->argv[0]) == 0)
 		exit(EXIT_SUCCESS);
-	exit_code = run_builtin(cmd, env_dict, 0, NULL);
+	exit_code = run_builtin(cmd, env_dict, NULL);
 	if (exit_code >= 0)
 		exit(exit_code);
 	if (is_path(cmd->argv[0]))
@@ -101,18 +101,16 @@ int	execute_main(t_pipe_node *head, t_dict **env_dict, char *start_dir)
 {
 	int			proc_cnt;
 	t_pstat		*pstat;
-	int			tmpfile_cnt;
 	int			origin_stdin;
 
 	if (!start_dir)
 		exit_custom_err(NULL, NULL, "init dir error!", 1);
-	tmpfile_cnt = get_heredoc_file_cnt(head);
 	if (process_heredoc_fork(head, start_dir, env_dict) != 0)
 		return (1);
 	switch_signal_handler(1);
 	proc_cnt = get_proc_cnt(head);
 	if (proc_cnt == 1 && is_builtin_cmd(head->cmd))
-		return (run_builtin(head->cmd, env_dict, tmpfile_cnt, start_dir));
+		return (run_builtin(head->cmd, env_dict, start_dir));
 	pstat = (t_pstat *)ft_calloc(proc_cnt, sizeof(t_pstat));
 	if (!pstat)
 		exit_custom_err(NULL, NULL, "Malloc error", 1);
