@@ -16,5 +16,21 @@ Mini-Shell works almost same as bash, except '\', ';', '&', '&&', '||', etc...<b
 </p>
 
 ## How to install
+1. Clone this repo into your local directory and move into it.
 ```
-git clone 
+git clone https://github.com/K-Minishell/Minishell.git
+cd Minishell
+```
+2. Make minishell
+```
+make
+./minishell
+```
+
+
+## How to remove
+```
+make clean // removes all object files.
+make fclean // removes all object files and also minishell program.
+```
+
