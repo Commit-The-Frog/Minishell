@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 21:12:54 by junkim2           #+#    #+#             */
-/*   Updated: 2024/01/11 15:33:25 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/12 14:49:12 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,23 @@ int	check_unexpected_token(t_token **list)
 			return (-1);
 		}
 		prev = cur;
+		cur = cur->next;
+	}
+	return (0);
+}
+
+int	check_unexpected_token_nl(t_token **list)
+{
+	t_token	*cur;
+
+	cur = *list;
+	while (cur)
+	{
+		if (cur && (cur->type >= 5 && cur->type <= 8) && cur->next == NULL)
+		{
+			syntax_err("newline");
+			return (-1);
+		}
 		cur = cur->next;
 	}
 	return (0);

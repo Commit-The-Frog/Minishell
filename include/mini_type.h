@@ -6,7 +6,7 @@
 /*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 20:30:12 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/10 20:13:19 by junkim2          ###   ########.fr       */
+/*   Updated: 2024/01/12 14:39:47 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ enum e_token_type {
 	E_TYPE_DEFAULT = 10,
 	E_TYPE_SEMICOLON = 11,
 	E_TYPE_EXPAND = 12
-}	t_token_type;
+};
 
 typedef struct s_token
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minjacho <minjacho@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: junkim2 <junkim2@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 11:53:33 by minjacho          #+#    #+#             */
-/*   Updated: 2024/01/12 10:45:50 by minjacho         ###   ########.fr       */
+/*   Updated: 2024/01/12 14:49:35 by junkim2          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void		remove_quote(t_token **list);
 // ========= checker.c =========
 int			check_ambiguous(t_token **list);
 int			check_unexpected_token(t_token **list);
+int			check_unexpected_token_nl(t_token **list);
 
 // ========= error.c =========
 void		*quote_err(char c);
