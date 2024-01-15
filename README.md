@@ -30,7 +30,9 @@ make
 
 ## How to remove
 ```
-make clean // removes all object files.
-make fclean // removes all object files and also minishell program.
+// removes all object files.
+make clean
+// removes all object files and also minishell program.
+make fclean 
 ```
 
